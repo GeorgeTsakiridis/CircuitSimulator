@@ -1,23 +1,28 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
 public class PinGround extends Pin{
-    private boolean isGrounded = false;
-    private boolean isGround = false;
+    private final boolean isGroundSource;
+
+    public PinGround(String pinName, int pinID, boolean isGroundSource){
+        super(pinName, pinID);
+        this.isGroundSource = isGroundSource;
+    }
 
     public PinGround(String pinName, int pinID) {
-        super(pinName, pinID);
+        this(pinName, pinID, false);
     }
 
     public boolean isGrounded() {
-        return isGrounded;
-    }
 
-    public void setGrounded(boolean grounded) {
-        isGrounded = grounded;
-    }
+        if(isGroundSource)return true;
 
-    public boolean canConnectTo(Pin pin) {
-        return pin instanceof PinGround;
+        if(hasLink()){
+            for(Pin pin : getLink().getPins()){
+                if(pin instanceof PinGround && ((PinGround)pin).isGroundSource)return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -25,7 +30,7 @@ public class PinGround extends Pin{
         return "PinGround{" +
                 "pinID=" + getPinID() +
                 ", pinName='" + getName() + '\'' +
-                ", isGrounded=" + isGrounded +
+                ", isGrounded=" + isGrounded() +
                 '}';
     }
 

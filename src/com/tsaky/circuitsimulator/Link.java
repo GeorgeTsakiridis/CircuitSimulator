@@ -1,7 +1,9 @@
 package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.chip.pin.PinGround;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
+import com.tsaky.circuitsimulator.chip.pin.PinPower;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,6 +69,9 @@ public class Link {
         boolean first = true;
         boolean isHigh = false;
 
+        boolean hasGroundSource = false;
+        boolean hasVoltageSource = false;
+
         for (Pin pin : pins) {
             if (pin instanceof PinOutput) {
                 PinOutput pinOutput = (PinOutput) pin;
@@ -84,6 +89,24 @@ public class Link {
                 }
             }
         }
+
+        for (Pin pin : pins){
+            if(pin instanceof PinPower){
+                hasVoltageSource = true;
+                if(hasGroundSource || (!first && !isHigh)){
+                    Handler.SHORTED = true;
+                    return true;
+                }
+            }
+            else if(pin instanceof PinGround){
+                hasGroundSource = true;
+                if(hasVoltageSource || (!first && isHigh)){
+                    Handler.SHORTED = true;
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -93,7 +116,15 @@ public class Link {
         if(checkAndRemoveShorts())return lastIsLineHigh;
 
         for(Pin pin : pins){
-            if(pin instanceof PinOutput && !((PinOutput) pin).isHighZMode()){
+            if(pin instanceof PinPower){
+                lastIsLineHigh = true;
+                return true;
+            }
+            else if(pin instanceof PinGround){
+                lastIsLineHigh = false;
+                return false;
+            }
+            else if(pin instanceof PinOutput && !((PinOutput) pin).isHighZMode()){
                 if(((PinOutput) pin).isHigh()){
                     lastIsLineHigh = true;
                     return true;

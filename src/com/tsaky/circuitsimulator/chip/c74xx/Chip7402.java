@@ -32,12 +32,12 @@ public class Chip7402 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else{
             getOutputPin(0).setHigh(!getInputPin(1).isLinkHigh() && !getInputPin(2).isLinkHigh());
-            //getOutputPin(0).setHigh(!getInputPin(1).isHigh() && !getInputPin(2).isHigh());
-            //getOutputPin(3).setHigh(!getInputPin(4).isHigh() && !getInputPin(5).isHigh());
-            //getOutputPin(9).setHigh(!getInputPin(7).isHigh() && !getInputPin(8).isHigh());
-            //getOutputPin(12).setHigh(!getInputPin(10).isHigh() && !getInputPin(11).isHigh());
+            getOutputPin(3).setHigh(!getInputPin(4).isLinkHigh() && !getInputPin(5).isLinkHigh());
+            getOutputPin(9).setHigh(!getInputPin(8).isLinkHigh() && !getInputPin(7).isLinkHigh());
+            getOutputPin(12).setHigh(!getInputPin(11).isLinkHigh() && !getInputPin(10).isLinkHigh());
         }
     }
 

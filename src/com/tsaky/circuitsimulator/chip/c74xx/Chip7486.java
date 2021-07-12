@@ -32,6 +32,7 @@ public class Chip7486 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else{
             boolean a1 = getInputPin(0).isLinkHigh();
             boolean a2 = getInputPin(1).isLinkHigh();

@@ -34,6 +34,7 @@ public class Chip74257 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else{
             turnAllOutputsOff();
 

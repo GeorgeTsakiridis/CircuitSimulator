@@ -32,6 +32,7 @@ public class Chip7432 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else{
             getOutputPin(2).setHigh(getInputPin(0).isLinkHigh() || getInputPin(1).isLinkHigh());
             getOutputPin(5).setHigh(getInputPin(3).isLinkHigh() || getInputPin(4).isLinkHigh());

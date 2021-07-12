@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip;
 
-import com.sun.istack.internal.Nullable;
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 
@@ -43,7 +42,7 @@ public class ChipUtils {
         }
     }
 
-    public static boolean chipCollidesWithOtherChip(Chip chip, @Nullable ArrayList<Chip> chips){
+    public static boolean chipCollidesWithOtherChip(Chip chip, ArrayList<Chip> chips){
         if(chips == null)return false;
 
         for(Chip c : chips){

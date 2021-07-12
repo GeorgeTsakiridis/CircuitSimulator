@@ -47,6 +47,7 @@ public class Chip74573 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else {
             boolean OE = getInputPin(0).isLinkHigh();
             boolean LE = getInputPin(10).isLinkHigh();

@@ -65,7 +65,7 @@ public abstract class Chip {
         PinPower power = getPowerPin();
         PinGround ground = getGroundPin();
 
-        return (power == null || power.isPowered()) && (ground == null || ground.isGrounded()) || true;//TODO remove true
+        return power.isPowered() && ground.isGrounded() || true;//TODO remove true. Used for quicker testing
     }
 
     /**

@@ -7,9 +7,7 @@ import com.tsaky.circuitsimulator.chip.c74xxx.Chip74283;
 import com.tsaky.circuitsimulator.chip.c74xxx.Chip74573;
 import com.tsaky.circuitsimulator.chip.c74xxx.Chip74574;
 import com.tsaky.circuitsimulator.chip.c74xxxx.Chip744511;
-import com.tsaky.circuitsimulator.chip.generic.Chip7SegmentDisplay;
-import com.tsaky.circuitsimulator.chip.generic.ChipLED;
-import com.tsaky.circuitsimulator.chip.generic.ChipSwitch;
+import com.tsaky.circuitsimulator.chip.generic.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +15,8 @@ import java.awt.*;
 public class ChipSimulator {
 
     public ChipSimulator() {
+        ChipManager.addChip("Ground", new ChipGround());
+        ChipManager.addChip("Power", new ChipPower());
         ChipManager.addChip("Switch", new ChipSwitch());
         ChipManager.addChip("LED Red", new ChipLED("Red", Color.RED));
         ChipManager.addChip("LED Green", new ChipLED("Green", Color.GREEN));

@@ -33,6 +33,7 @@ public class Chip7404 extends Chip {
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
+            turnAllOutputsToHighZ();
         }else{
             getOutputPin(1).setHigh(!getInputPin(0).isLinkHigh());
             getOutputPin(3).setHigh(!getInputPin(2).isLinkHigh());

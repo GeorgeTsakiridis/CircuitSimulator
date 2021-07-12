@@ -1,18 +1,28 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
 public class PinPower extends Pin{
-    private boolean isPowered = false;
+    private final boolean isPowerSource;
+
+    public PinPower(String pinName, int pinID, boolean isPowerSource){
+        super(pinName, pinID);
+        this.isPowerSource = isPowerSource;
+    }
 
     public PinPower(String pinName, int pinID) {
-        super(pinName, pinID);
+        this(pinName, pinID, false);
     }
 
     public boolean isPowered() {
-        return isPowered;
-    }
 
-    public void setPowered(boolean powered) {
-        isPowered = powered;
+        if(isPowerSource)return true;
+
+        if(hasLink()){
+            for(Pin pin : getLink().getPins()){
+                if(pin instanceof PinPower && ((PinPower)pin).isPowerSource)return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -20,7 +30,7 @@ public class PinPower extends Pin{
         return "PinPower{" +
                 "pinID=" + getPinID() +
                 ", pinName='" + getName() + '\'' +
-                ", isPowered=" + isPowered +
+                ", isPowered=" + isPowered() +
                 '}';
     }
 }

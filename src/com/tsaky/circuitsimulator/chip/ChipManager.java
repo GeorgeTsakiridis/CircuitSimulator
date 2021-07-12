@@ -1,7 +1,5 @@
 package com.tsaky.circuitsimulator.chip;
 
-import com.sun.deploy.util.ArrayUtil;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
