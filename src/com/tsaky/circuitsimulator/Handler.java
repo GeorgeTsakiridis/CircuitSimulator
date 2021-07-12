@@ -21,7 +21,6 @@ public class Handler{
     private MouseMode mouseMode = MouseMode.CAMERA;
     private Window window;
     private ViewportPanel viewportPanel;
-    private Linker linker;
     private Chip selectedComponent = null;
     private ArrayList<Chip> chipsOnScreen = new ArrayList<>();
     private Pin lastSelectedPin = null;
@@ -31,8 +30,7 @@ public class Handler{
     private int emulationSpeed = 20;
 
     public Handler() {
-        linker = new Linker();
-        viewportPanel = new ViewportPanel(linker);
+        viewportPanel = new ViewportPanel();
         window = new Window(this, viewportPanel);
 
         Timer timer = new Timer();
@@ -111,9 +109,9 @@ public class Handler{
                         pin.setSelected(true);
                     } else {
                         if (lastSelectedPin != pin) {
-                            linker.linkPins(pin, lastSelectedPin);
+                            Linker.linkPins(pin, lastSelectedPin);
                         } else {
-                            linker.unlinkPin(pin);
+                            Linker.unlinkPin(pin);
                         }
                         lastSelectedPin = null;
                     }
@@ -131,7 +129,7 @@ public class Handler{
             else if(mouseMode == MouseMode.REMOVE){
                 Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY());
                 if(chip != null){
-                    ChipUtils.safelyRemoveChip(chipsOnScreen, chip, linker);
+                    ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
                 }
             }
         }
@@ -204,7 +202,7 @@ public class Handler{
     public void run() {
         while(true) {
             if (EMULATION_RUNNING) {
-                linker.checkForEmptyLinks();
+                //linker.checkForEmptyLinks(); //TODO remove the line. Left for reference
                 for (Chip chip : chipsOnScreen) {
                     chip.calculateOutputs();
                 }

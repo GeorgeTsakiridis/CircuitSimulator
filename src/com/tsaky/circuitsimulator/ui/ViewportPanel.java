@@ -18,12 +18,10 @@ public class ViewportPanel extends JPanel {
     private int offsetY = 0;
     private float scale = 1f;
 
-    private Linker linker;
     private ArrayList<Chip> chips = null;
     private Chip ghostChip = null;
 
-    public ViewportPanel(Linker linker){
-        this.linker = linker;
+    public ViewportPanel(){
     }
 
     public void addOffset(int offsetX, int offsetY){
@@ -90,7 +88,7 @@ public class ViewportPanel extends JPanel {
             ghostChip.paintComponent(g, offsetX, offsetY);
         }
 
-        linker.paint(g);
+        Linker.paint(g);
 
         if(Handler.SHORTED){
             g.setColor(Color.RED);

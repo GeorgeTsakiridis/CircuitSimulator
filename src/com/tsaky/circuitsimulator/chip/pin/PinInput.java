@@ -1,5 +1,7 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
+import com.tsaky.circuitsimulator.Linker;
+
 import java.awt.*;
 
 public class PinInput extends Pin{
@@ -13,7 +15,7 @@ public class PinInput extends Pin{
     }
 
     public boolean isLinkHigh(){
-        return getLink() != null && getLink().isLineHigh();
+        return Linker.isLineHighForPin(this);
     }
 
     @Override

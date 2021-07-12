@@ -1,5 +1,7 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
+import com.tsaky.circuitsimulator.Linker;
+
 public class PinGround extends Pin{
     private final boolean isGroundSource;
 
@@ -16,10 +18,8 @@ public class PinGround extends Pin{
 
         if(isGroundSource)return true;
 
-        if(hasLink()){
-            for(Pin pin : getLink().getPins()){
-                if(pin instanceof PinGround && ((PinGround)pin).isGroundSource)return true;
-            }
+        for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
+            if(pin instanceof PinGround && ((PinGround)pin).isGroundSource)return true;
         }
 
         return false;

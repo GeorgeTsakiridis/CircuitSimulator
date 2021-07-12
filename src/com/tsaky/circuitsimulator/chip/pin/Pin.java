@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
-import com.tsaky.circuitsimulator.Link;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
@@ -12,7 +11,6 @@ public abstract class Pin {
     private Rectangle bounds;
     private boolean isSelected = false;
     private boolean isToggleable = false;
-    private Link link = null;
 
     public Pin(String pinName, int pinID){
         this.pinName = pinName;
@@ -24,18 +22,6 @@ public abstract class Pin {
     public Pin(String pinName, int pinID, boolean isToggleable){
         this(pinName, pinID);
         this.isToggleable = isToggleable;
-    }
-
-    public boolean hasLink(){
-        return link != null;
-    }
-
-    public Link getLink() {
-        return link;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
     }
 
     public boolean isSelected() {

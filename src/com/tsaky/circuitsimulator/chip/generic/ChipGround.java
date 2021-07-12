@@ -31,7 +31,7 @@ public class ChipGround extends Chip {
         Color c = g.getColor();
 
         g.setColor(Color.GREEN.darker());
-        g.fillRect(x, y, getWidth()*2, getHeight()*2);
+        g.fillRect(x, y, getWidth(), getHeight());
         g.setColor(c);
         getPin(0).paintWithPinName(g, x, y, getWidth(), "0V");
     }

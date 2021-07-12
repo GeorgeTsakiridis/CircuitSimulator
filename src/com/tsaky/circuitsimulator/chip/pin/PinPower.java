@@ -1,5 +1,7 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
+import com.tsaky.circuitsimulator.Linker;
+
 public class PinPower extends Pin{
     private final boolean isPowerSource;
 
@@ -16,10 +18,8 @@ public class PinPower extends Pin{
 
         if(isPowerSource)return true;
 
-        if(hasLink()){
-            for(Pin pin : getLink().getPins()){
-                if(pin instanceof PinPower && ((PinPower)pin).isPowerSource)return true;
-            }
+        for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
+            if(pin instanceof PinPower && ((PinPower)pin).isPowerSource)return true;
         }
 
         return false;

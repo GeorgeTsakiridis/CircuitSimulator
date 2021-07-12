@@ -17,7 +17,7 @@ public class ChipUtils {
     public static Pin getPinBellowMouse(ArrayList<Chip> chips, int x, int y){
         for(Chip chip : chips){
             for(Pin pin : chip.getPins()){
-                if(pin.getBounds().contains(x, y))return pin;
+                if(pin.getBounds().contains(x+pin.getBounds().width/2, y-pin.getBounds().height/2))return pin;
             }
         }
         return null;
@@ -53,9 +53,9 @@ public class ChipUtils {
         return false;
     }
 
-    public static void safelyRemoveChip(ArrayList<Chip> chips, Chip chip, Linker linker) {
+    public static void safelyRemoveChip(ArrayList<Chip> chips, Chip chip) {
         for (Pin pin : chip.getPins()) {
-            linker.unlinkPin(pin);
+            Linker.unlinkPin(pin);
         }
 
         chips.remove(chip);
