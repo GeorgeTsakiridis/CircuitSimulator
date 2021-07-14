@@ -1,8 +1,5 @@
 package com.tsaky.circuitsimulator.chip;
 
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,8 +7,8 @@ public class ChipManager {
 
     private static final Map<String, Chip> chips = new LinkedHashMap<>();
 
-    public static void addChip(String name, Chip chip){
-        chips.put(name, chip);
+    public static void addChip(Chip chip){
+        chips.put(chip.getChipName(), chip);
     }
 
     public static Chip getNewChipInstance(String name){

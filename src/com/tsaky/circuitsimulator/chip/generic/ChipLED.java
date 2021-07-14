@@ -12,11 +12,11 @@ public class ChipLED extends Chip {
     private Color color;
 
     public ChipLED(){
-        this("None", Color.BLACK);
+        this("Red", Color.BLACK);
     }
 
     public ChipLED(String ledColor, Color color) {
-        super(ledColor + "LED",
+        super("LED " + ledColor,
                 new InfoPage("Colored LED"),
                 new Pin[]{new PinInput("IN", 0)});
         this.color = color;
@@ -30,34 +30,37 @@ public class ChipLED extends Chip {
 
     @Override
     public byte[] getExtraDataBytes() {
-        byte b;
 
-        if (color == Color.RED) {
+        if (color.equals(Color.RED)) {
             return new byte[]{0};
-        } else if (color == Color.GREEN) {
+        } else if (color.equals(Color.GREEN)) {
             return new byte[]{1};
-        } else if (color == Color.YELLOW) {
+        } else if (color.equals(Color.YELLOW)) {
             return new byte[]{2};
-        } else if (color == Color.BLUE) {
+        } else if (color.equals(Color.BLUE)) {
             return new byte[]{3};
         }
+
         return new byte[]{-1};
 
     }
 
     @Override
     public void setExtraData(byte[] bytes) {
-
+        System.out.println("EXTRA DATA");
         if(bytes[0] == 0){
-            color = Color.RED;
+            setColor(Color.RED);
+            System.out.println("RED");
         }else if(bytes[0] == 1){
-            color = Color.GREEN;
+            setColor(Color.GREEN);
+            System.out.println("GREEN");
         }else if(bytes[0] == 2){
-            color = Color.YELLOW;
+            setColor(Color.YELLOW);
+            System.out.println("YELLOW");
         }else if(bytes[0] == 3){
-            color = Color.BLUE;
+            System.out.println("BLUE");
+            setColor(Color.BLUE);
         }
-
     }
 
     @Override

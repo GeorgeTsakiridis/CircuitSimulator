@@ -17,25 +17,25 @@ public class ChipSimulator {
     public static final int PROGRAM_VERSION = 14072100;
 
     public ChipSimulator() {
-        ChipManager.addChip("Ground", new ChipGround());
-        ChipManager.addChip("Vcc", new ChipPower());
-        ChipManager.addChip("Switch", new ChipSwitch());
-        ChipManager.addChip("LED Red", new ChipLED("Red", Color.RED));
-        ChipManager.addChip("LED Green", new ChipLED("Green", Color.GREEN));
-        ChipManager.addChip("LED Yellow", new ChipLED("Yellow", Color.YELLOW));
-        ChipManager.addChip("LED Blue", new ChipLED("Blue", Color.BLUE));
-        ChipManager.addChip("7-Segment Display", new Chip7SegmentDisplay());
+        ChipManager.addChip(new ChipGround());
+        ChipManager.addChip(new ChipPower());
+        ChipManager.addChip(new ChipSwitch());
+        ChipManager.addChip(new ChipLED("Red", Color.RED));
+        ChipManager.addChip(new ChipLED("Green", Color.GREEN));
+        ChipManager.addChip(new ChipLED("Yellow", Color.YELLOW));
+        ChipManager.addChip(new ChipLED("Blue", Color.BLUE));
+        ChipManager.addChip(new Chip7SegmentDisplay());
 
-        ChipManager.addChip("7402", new Chip7402()); //Texture OK
-        ChipManager.addChip("7404", new Chip7404()); //Texture OK
-        ChipManager.addChip("7408", new Chip7408()); //Texture OK
-        ChipManager.addChip("7432", new Chip7432()); //Texture OK
-        ChipManager.addChip("7486", new Chip7486()); //Texture OK
-        ChipManager.addChip("74257", new Chip74257()); //Texture OK
-        ChipManager.addChip("74283", new Chip74283()); //Texture OK
-        ChipManager.addChip("74573", new Chip74573()); //Texture OK
-        ChipManager.addChip("74574", new Chip74574()); //Texture OK
-        ChipManager.addChip("744511", new Chip744511()); //Texture OK
+        ChipManager.addChip(new Chip7402());
+        ChipManager.addChip(new Chip7404());
+        ChipManager.addChip(new Chip7408());
+        ChipManager.addChip(new Chip7432());
+        ChipManager.addChip(new Chip7486());
+        ChipManager.addChip(new Chip74257());
+        ChipManager.addChip(new Chip74283());
+        ChipManager.addChip(new Chip74573());
+        ChipManager.addChip(new Chip74574());
+        ChipManager.addChip(new Chip744511());
 
         new Handler();
 

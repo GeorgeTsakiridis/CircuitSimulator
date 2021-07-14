@@ -10,7 +10,7 @@ import java.awt.*;
 public class ChipPower extends Chip {
 
     public ChipPower() {
-        super("+V", new InfoPage("Positive voltage source."),
+        super("Power", new InfoPage("Positive voltage source."),
                 new Pin[]{
                         new PinPower("+V", 0, true)
         });

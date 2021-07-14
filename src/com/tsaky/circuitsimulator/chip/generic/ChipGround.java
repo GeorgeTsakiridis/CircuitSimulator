@@ -10,10 +10,10 @@ import java.awt.*;
 public class ChipGround extends Chip {
 
     public ChipGround() {
-        super("0V",
+        super("Ground",
                 new InfoPage("Ground."),
                 new Pin[]{
-                new PinGround("0V", 0, true)
+                new PinGround("GND", 0, true)
         });
 
         setSizeWithoutPins(20, 20);
