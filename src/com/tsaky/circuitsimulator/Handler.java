@@ -147,6 +147,7 @@ public class Handler{
     }
 
     public void mouseMoved(MouseData mouse){
+
         if(selectedComponent != null){
             selectedComponent.setPosition(mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY());
         }
@@ -154,6 +155,7 @@ public class Handler{
 
     private int lastX = 0, lastY = 0;
     public void mouseDragged(MouseData mouse){
+
         if(mouseMode == MouseMode.CAMERA) {
             viewportPanel.addOffset(mouse.x - lastX, mouse.y - lastY);
         }
@@ -318,15 +320,21 @@ public class Handler{
             Linker.linkPins(pin1, pin2);
         }
 
+        viewportPanel.setChipsToPaint(chipsOnScreen);
+
+        System.out.println(chipsOnScreen.size());
+
         return true;
     }
 
-    private void reset(){
+    public void reset(){
         Linker.clearPairs();
         mouseMode = MouseMode.CAMERA;
         setViewMode(ViewMode.NORMAL);
         selectedComponent = null;
-        chipsOnScreen.clear();;
+        chipsOnScreen.clear();
+        ChipUtils.unselectAllChips(chipsOnScreen);
+        viewportPanel.setChipsToPaint(chipsOnScreen);
         lastSelectedPin = null;
         EMULATION_RUNNING = false;
         SHORTED = false;

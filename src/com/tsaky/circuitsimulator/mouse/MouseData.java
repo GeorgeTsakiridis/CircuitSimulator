@@ -10,8 +10,6 @@ public class MouseData {
     public boolean isInsideViewport;
 
     public MouseData(int mouseX, int mouseY, Rectangle viewport){
-        mouseX -= 8;
-        mouseY -= 31;
         x = mouseX;
         y = mouseY;
         xViewport = mouseX - (int)viewport.getX();

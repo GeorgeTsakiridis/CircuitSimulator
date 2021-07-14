@@ -20,10 +20,13 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     private final Handler handler;
     private final ViewportPanel viewportPanel;
 
+    private final JFrame mainFrame;
+
     private final JLabel infoLabel = new JLabel("Info Label");
     private final JLabel schematicLabel = new JLabel();
     private final JFrame pinoutFrame;
 
+    private final ImageButton newButton = new ImageButton("new.png");
     private final ImageButton saveButton = new ImageButton("save.png");
     private final ImageButton loadButton = new ImageButton("load.png");
 
@@ -64,6 +67,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         JPanel upPanel = new JPanel();
         upPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit"));
 
+        upPanel.add(newButton);
         upPanel.add(saveButton);
         upPanel.add(loadButton);
         upPanel.add(getNewSeperator());
@@ -88,12 +92,20 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
         downPanel.add(infoLabel);
 
-        JFrame frame = new JFrame("Circuit Simulator by George Tsakiridis");
+        mainFrame = new JFrame("Circuit Simulator by George Tsakiridis");
+
+        newButton.setToolTipText("New Project");
+        saveButton.setToolTipText("Save Project");
+        loadButton.setToolTipText("Open Project");
+
+        newButton.addActionListener(e -> {
+            handler.reset();
+        });
 
         saveButton.addActionListener(e -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showSaveDialog(frame);
+                fileChooser.showSaveDialog(mainFrame);
                 handler.saveToFile(fileChooser.getSelectedFile());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -103,34 +115,34 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         loadButton.addActionListener(e -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(frame);
+                fileChooser.showOpenDialog(mainFrame);
                 handler.loadFromFile(fileChooser.getSelectedFile());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
 
-        frame.setSize(680, 480);
-        frame.setMinimumSize(new Dimension(680, 400));
-        frame.setLayout(new BorderLayout(10, 10));
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(viewportPanel, "Center");
-        frame.add(leftPanel, "West");
-        frame.add(upPanel, "North");
-        frame.add(downPanel, "South");
-        frame.addKeyListener(this);
-        frame.addMouseListener(this);
-        frame.addMouseMotionListener(this);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        mainFrame.setSize(680, 480);
+        mainFrame.setMinimumSize(new Dimension(680, 400));
+        mainFrame.setLayout(new BorderLayout(10, 10));
+        mainFrame.setFocusable(true);
+        mainFrame.setFocusTraversalKeysEnabled(false);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.add(viewportPanel, "Center");
+        mainFrame.add(leftPanel, "West");
+        mainFrame.add(upPanel, "North");
+        mainFrame.add(downPanel, "South");
+        mainFrame.addKeyListener(this);
+        mainFrame.addMouseListener(this);
+        mainFrame.addMouseMotionListener(this);
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
 
         pinoutFrame = new JFrame("Component Pinout");
         pinoutFrame.add(rightPanel);
         pinoutFrame.setAlwaysOnTop(true);
         pinoutFrame.setSize(380, 400);
-        pinoutFrame.setLocation(frame.getLocationOnScreen().x + frame.getSize().width, frame.getLocationOnScreen().y );
+        pinoutFrame.setLocation(mainFrame.getLocationOnScreen().x + mainFrame.getSize().width, mainFrame.getLocationOnScreen().y );
         pinoutFrame.setVisible(true);
         pinoutFrame.addComponentListener(new ComponentListener() {
             @Override
@@ -154,12 +166,12 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
             }
         });
 
-        int w1 = frame.getSize().width;
+        int w1 = mainFrame.getSize().width;
         int w2 = pinoutFrame.getSize().width;
         int space = 40;
         int x = Toolkit.getDefaultToolkit().getScreenSize().width/2 - (w1 + w2 + space)/2;
-        int y = frame.getLocationOnScreen().y;
-        frame.setLocation(x, y);
+        int y = mainFrame.getLocationOnScreen().y;
+        mainFrame.setLocation(x, y);
         pinoutFrame.setLocation(x + w1 + space, y);
 
     }
@@ -274,7 +286,11 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     private MouseData generateMouseData(int mouseX, int mouseY){
-        return new MouseData(mouseX, mouseY, viewportPanel.getBounds());
+        Rectangle mainFrameBounds = mainFrame.getContentPane().getBounds();
+        int posX = mouseX - mainFrameBounds.x;
+        int posY = mouseY - viewportPanel.getY()/2;
+
+        return new MouseData(posX, posY, viewportPanel.getBounds());
     }
 
     private void enableOtherMouseButtons(MouseMode mouseMode){

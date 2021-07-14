@@ -12,7 +12,6 @@ public class ChipManager {
     }
 
     public static Chip getNewChipInstance(String name){
-        System.out.println("REQUESTED " + name);
         return chips.get(name).createNewInstance();
     }
 

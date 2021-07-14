@@ -12,7 +12,7 @@ public class ChipLED extends Chip {
     private Color color;
 
     public ChipLED(){
-        this("Red", Color.BLACK);
+        this("Red", Color.RED);
     }
 
     public ChipLED(String ledColor, Color color) {
@@ -47,18 +47,14 @@ public class ChipLED extends Chip {
 
     @Override
     public void setExtraData(byte[] bytes) {
-        System.out.println("EXTRA DATA");
+
         if(bytes[0] == 0){
             setColor(Color.RED);
-            System.out.println("RED");
         }else if(bytes[0] == 1){
             setColor(Color.GREEN);
-            System.out.println("GREEN");
         }else if(bytes[0] == 2){
             setColor(Color.YELLOW);
-            System.out.println("YELLOW");
         }else if(bytes[0] == 3){
-            System.out.println("BLUE");
             setColor(Color.BLUE);
         }
     }
