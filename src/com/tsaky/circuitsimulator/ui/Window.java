@@ -26,6 +26,8 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     private final JLabel schematicLabel = new JLabel();
     private final JFrame pinoutFrame;
 
+    private final JSlider simulationSpeedSlider;
+
     private final ImageButton newButton = new ImageButton("new.png");
     private final ImageButton saveButton = new ImageButton("save.png");
     private final ImageButton loadButton = new ImageButton("load.png");
@@ -59,10 +61,10 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         componentsList.addListSelectionListener(e -> handler.setSelectedComponent(((JList<String>) (e.getSource())).getSelectedValue()));
 
         //UP PANEL START
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 20);
-        slider.setPreferredSize(new Dimension(90, 20));
-        slider.addChangeListener(e -> handler.setEmulationSpeed(((JSlider)e.getSource()).getValue()));
-        slider.setToolTipText("Emulation Speed");
+        simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 20);
+        simulationSpeedSlider.setPreferredSize(new Dimension(90, 20));
+        simulationSpeedSlider.addChangeListener(e -> handler.setSimulationSpeed(((JSlider)e.getSource()).getValue()));
+        simulationSpeedSlider.setToolTipText("Simulation Speed");
 
         JPanel upPanel = new JPanel();
         upPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit"));
@@ -74,7 +76,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         addMouseButtonsToPanel(upPanel);
         upPanel.add(getNewSeperator());
         addEmulationButtonsToPanel(upPanel);
-        upPanel.add(slider);
+        upPanel.add(simulationSpeedSlider);
         upPanel.add(getNewSeperator());
         addViewButtonsToPanel(upPanel);
         //UP PANEL END
@@ -311,6 +313,15 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
             startEmulationButton.setEnabled(false);
             stepEmulationButton.setEnabled(false);
         }
+    }
+
+    public void reset(){
+        enableOtherEmulationButtons(EmulationAction.STOP);
+        enableOtherMouseButtons(MouseMode.CAMERA);
+        cameraButton.setEnabled(false);
+        simulationSpeedSlider.setValue(20);
+        normalViewButton.setEnabled(false);
+        lineViewButton.setEnabled(true);
     }
 
     private class EmulationChangeButton extends ImageButton{

@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
+import com.tsaky.circuitsimulator.chip.generic.ChipGround;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
 import com.tsaky.circuitsimulator.mouse.MouseData;
@@ -30,7 +31,7 @@ public class Handler{
     public static boolean EMULATION_RUNNING = false;
     public static boolean SHORTED = false;
     private EmulationAction emulationMode = EmulationAction.STOP;
-    private int emulationSpeed = 20;
+    private int simulationSpeed = 20;
 
     public Handler() {
         viewportPanel = new ViewportPanel();
@@ -59,8 +60,8 @@ public class Handler{
         }
     }
 
-    public void setEmulationSpeed(int emulationSpeed){
-        this.emulationSpeed = emulationSpeed;
+    public void setSimulationSpeed(int emulationSpeed){
+        this.simulationSpeed = emulationSpeed;
     }
 
     public void setEmulationMode(EmulationAction emulationMode){
@@ -160,13 +161,13 @@ public class Handler{
             viewportPanel.addOffset(mouse.x - lastX, mouse.y - lastY);
         }
         else if(mouseMode == MouseMode.MOVE){
-            if(selectedComponent != null) {
+            System.out.println("MOVE MODE");
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
+                        System.out.println("FOUND SELECTED CHIP");
                         chip.setPosition(chip.getPosX() + mouse.x-lastX, chip.getPosY() + mouse.y - lastY);
                     }
                 }
-            }
         }
         lastX = mouse.x;
         lastY = mouse.y;
@@ -214,7 +215,7 @@ public class Handler{
                 }
             }
             try {
-                Thread.sleep(emulationSpeed);
+                Thread.sleep(simulationSpeed);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -233,7 +234,7 @@ public class Handler{
         dataOutputStream.writeFloat(viewportPanel.getScale());
         dataOutputStream.writeInt(mouseMode.ordinal());
         dataOutputStream.writeInt(viewportPanel.getViewMode().ordinal());
-        dataOutputStream.writeInt(emulationSpeed);
+        dataOutputStream.writeInt(simulationSpeed);
 
         dataOutputStream.writeInt(chipsOnScreen.size());
         for(Chip chip : chipsOnScreen){
@@ -293,7 +294,7 @@ public class Handler{
         viewportPanel.setScale(dataInputStream.readFloat());
         mouseMode = MouseMode.values()[dataInputStream.readInt()];
         setViewMode(ViewMode.values()[dataInputStream.readInt()]);
-        emulationSpeed = dataInputStream.readInt();
+        simulationSpeed = dataInputStream.readInt();
 
         int totalChips = dataInputStream.readInt();
         for(int i = 0; i < totalChips; i++){
@@ -321,25 +322,30 @@ public class Handler{
         }
 
         viewportPanel.setChipsToPaint(chipsOnScreen);
-
-        System.out.println(chipsOnScreen.size());
-
+        chipsOnScreen.add(new ChipGround());
+        chipsOnScreen.remove(chipsOnScreen.size()-1);
         return true;
     }
 
     public void reset(){
-        Linker.clearPairs();
         mouseMode = MouseMode.CAMERA;
         setViewMode(ViewMode.NORMAL);
-        selectedComponent = null;
-        chipsOnScreen.clear();
+        emulationMode = EmulationAction.STOP;
+        simulationSpeed = 20;
+
+        Linker.clearPairs();
         ChipUtils.unselectAllChips(chipsOnScreen);
+        ChipUtils.unselectAllPins(chipsOnScreen);
+        chipsOnScreen.clear();
         viewportPanel.setChipsToPaint(chipsOnScreen);
+
+        selectedComponent = null;
         lastSelectedPin = null;
         EMULATION_RUNNING = false;
         SHORTED = false;
-        emulationMode = EmulationAction.STOP;
-        emulationSpeed = 20;
+        lastX = 0;
+        lastY = 0;
+        window.reset();
     }
 
     private int[] getChipIndexAndPinIndex(Pin pin){
