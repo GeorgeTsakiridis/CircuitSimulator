@@ -101,6 +101,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         loadButton.setToolTipText("Open Project");
 
         newButton.addActionListener(e -> {
+            if(!getValidation())return;
             handler.reset();
         });
 
@@ -108,7 +109,8 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
             try {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.showSaveDialog(mainFrame);
-                handler.saveToFile(fileChooser.getSelectedFile());
+
+                if(fileChooser.getSelectedFile() != null) handler.saveToFile(fileChooser.getSelectedFile());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -116,9 +118,11 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
         loadButton.addActionListener(e -> {
             try {
+                if(!getValidation())return;
+
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.showOpenDialog(mainFrame);
-                handler.loadFromFile(fileChooser.getSelectedFile());
+                if(fileChooser.getSelectedFile() == null) handler.loadFromFile(fileChooser.getSelectedFile());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -176,6 +180,10 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         mainFrame.setLocation(x, y);
         pinoutFrame.setLocation(x + w1 + space, y);
 
+    }
+
+    private boolean getValidation(){
+        return JOptionPane.showConfirmDialog(null, "Any unsaved progress will be lost.\nAre you sure you want to continue?") == 0;
     }
 
     private JSeparator getNewSeperator(){
