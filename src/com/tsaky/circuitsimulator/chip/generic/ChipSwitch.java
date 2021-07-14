@@ -22,6 +22,25 @@ public class ChipSwitch extends Chip {
     }
 
     @Override
+    public byte[] getExtraDataBytes() {
+        byte b;
+
+        if(((PinOutput)getPin(0)).isHigh()){
+            b = 1;
+        }
+        else{
+            b = 0;
+        }
+
+        return new byte[]{b};
+    }
+
+    @Override
+    public void setExtraData(byte[] bytes) {
+        ((PinOutput)getPin(0)).setHigh(bytes[0] == (byte)1);
+    }
+
+    @Override
     public void paintComponent(Graphics g, int offsetX, int offsetY) {
         int x = getPosX() + offsetX - getWidth() / 2;
         int y = getPosY() + offsetY - getHeight() / 2;

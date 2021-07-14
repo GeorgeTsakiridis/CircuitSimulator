@@ -17,34 +17,39 @@ import java.util.ArrayList;
 
 public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
-    private Handler handler;
-    private ViewportPanel viewportPanel;
+    private final Handler handler;
+    private final ViewportPanel viewportPanel;
 
-    private JLabel infoLabel = new JLabel("Info Label");
-    private JLabel schematicLabel = new JLabel();
-    private JFrame pinoutFrame;
+    private final JLabel infoLabel = new JLabel("Info Label");
+    private final JLabel schematicLabel = new JLabel();
+    private final JFrame pinoutFrame;
 
-    private MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, "cameraMove.png", "Move Camera");
-    private MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, "toggle.png", "Toggle Component");
-    private MouseModeChangeButton moveButton = new MouseModeChangeButton(MouseMode.MOVE, "move.png", "Move Component");
-    private MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, "add.png", "Add Component");
-    private MouseModeChangeButton linkButton = new MouseModeChangeButton(MouseMode.LINK, "link.png", "Link Pins");
-    private MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, "remove.png", "Remove Component");
-    private ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
+    private final ImageButton saveButton = new ImageButton("save.png");
+    private final ImageButton loadButton = new ImageButton("load.png");
 
-    private EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "emulationStart.png", "Start Emulation");
-    private EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "emulationStop.png", "Start Emulation");
-    private EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "emulationStep.png", "Step Emulation");
-    private ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
+    private final MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, "cameraMove.png", "Move Camera");
+    private final MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, "toggle.png", "Toggle Component");
+    private final MouseModeChangeButton moveButton = new MouseModeChangeButton(MouseMode.MOVE, "move.png", "Move Component");
+    private final MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, "add.png", "Add Component");
+    private final MouseModeChangeButton linkButton = new MouseModeChangeButton(MouseMode.LINK, "link.png", "Link Pins");
+    private final MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, "remove.png", "Remove Component");
+    private final ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
 
-    private ViewChangeButton normalViewButton = new ViewChangeButton(ViewMode.NORMAL, "normalView.png", "Resume Normal View");
-    private ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "View/Hide Lines Status");
-    private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
+    private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "emulationStart.png", "Start Emulation");
+    private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "emulationStop.png", "Start Emulation");
+    private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "emulationStep.png", "Step Emulation");
+    private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
+
+    private final ViewChangeButton normalViewButton = new ViewChangeButton(ViewMode.NORMAL, "normalView.png", "Resume Normal View");
+    private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "View/Hide Lines Status");
+    //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
 
     @SuppressWarnings("unchecked")
     public Window(Handler handler, ViewportPanel viewportPanel){
         this.handler = handler;
         this.viewportPanel = viewportPanel;
+
+        normalViewButton.setEnabled(false);
 
         JList<String> componentsList = new JList<>(ChipManager.getAllChipNames());
         componentsList.setBackground(UIManager.getColor("background"));
@@ -58,6 +63,10 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
         JPanel upPanel = new JPanel();
         upPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit"));
+
+        upPanel.add(saveButton);
+        upPanel.add(loadButton);
+        upPanel.add(getNewSeperator());
         addMouseButtonsToPanel(upPanel);
         upPanel.add(getNewSeperator());
         addEmulationButtonsToPanel(upPanel);
@@ -79,7 +88,28 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
         downPanel.add(infoLabel);
 
-        JFrame frame = new JFrame("Circuit Emulator by George Tsakiridis");
+        JFrame frame = new JFrame("Circuit Simulator by George Tsakiridis");
+
+        saveButton.addActionListener(e -> {
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showSaveDialog(frame);
+                handler.saveToFile(fileChooser.getSelectedFile());
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        loadButton.addActionListener(e -> {
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showOpenDialog(frame);
+                handler.loadFromFile(fileChooser.getSelectedFile());
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
         frame.setSize(680, 480);
         frame.setMinimumSize(new Dimension(680, 400));
         frame.setLayout(new BorderLayout(10, 10));
@@ -169,7 +199,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     private void addViewButtonsToPanel(JPanel panel){
         panel.add(normalViewButton);
         panel.add(lineViewButton);
-        panel.add(powerViewButton);
+        //panel.add(powerViewButton);
     }
 
     BufferedImage image = null;
@@ -294,7 +324,13 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         }
 
         public void actionPerformed(ActionEvent e){
-            handler.toggleViewmode(viewMode);
+            handler.setViewMode(viewMode);
+            this.setEnabled(false);
+            if (this == normalViewButton) {
+                lineViewButton.setEnabled(true);
+            } else {
+                normalViewButton.setEnabled(true);
+            }
         }
 
     }

@@ -4,16 +4,18 @@ import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinGround;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
 import com.tsaky.circuitsimulator.chip.pin.PinPower;
+import com.tsaky.circuitsimulator.ui.ViewMode;
 
 import java.awt.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Linker {
 
-    private static ArrayList<Pair> pairs = new ArrayList<>();
-    private boolean lastIsLineHigh = false;
+    private static final ArrayList<Pair> pairs = new ArrayList<>();
 
-    public static void paint(Graphics g){
+    public static void paint(Graphics g, ViewMode viewMode){
         for(Pair pair : pairs){
             Pin pin1 = pair.getPin1();
             Pin pin2 = pair.getPin2();
@@ -22,7 +24,11 @@ public class Linker {
             Rectangle bounds2 = pin2.getBounds();
 
             Color c = g.getColor();
-            g.setColor(Color.BLACK);
+            if(viewMode == ViewMode.NORMAL) {
+                g.setColor(Color.BLACK);
+            }else if(viewMode == ViewMode.LINE_STATUS){
+                g.setColor(isLineHighForPin(pin1) ? Color.GREEN : Color.RED);
+            }
 
             g.drawLine(bounds1.x + bounds1.width/2, bounds1.y + bounds1.height/2,
                     bounds2.x + bounds2.width/2, bounds2.y + bounds2.height/2);
@@ -134,4 +140,17 @@ public class Linker {
 
         return false;
     }
+
+    public static int getTotalPairs(){
+        return pairs.size();
+    }
+
+    public static Pair getPair(int index){
+        return pairs.get(index);
+    }
+
+    public static void clearPairs(){
+        pairs.clear();
+    }
+
 }

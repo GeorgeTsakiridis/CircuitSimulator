@@ -14,9 +14,11 @@ import java.awt.*;
 
 public class ChipSimulator {
 
+    public static final int PROGRAM_VERSION = 14072100;
+
     public ChipSimulator() {
         ChipManager.addChip("Ground", new ChipGround());
-        ChipManager.addChip("Power", new ChipPower());
+        ChipManager.addChip("Vcc", new ChipPower());
         ChipManager.addChip("Switch", new ChipSwitch());
         ChipManager.addChip("LED Red", new ChipLED("Red", Color.RED));
         ChipManager.addChip("LED Green", new ChipLED("Green", Color.GREEN));

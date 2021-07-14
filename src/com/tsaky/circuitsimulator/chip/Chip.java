@@ -12,13 +12,13 @@ import java.util.Arrays;
  */
 public abstract class Chip {
 
-    private String chipName; //The name of the chip
-    private Pin[] pins; //A Pin array that contains all pins of the chip
+    private final String chipName; //The name of the chip
+    private final Pin[] pins; //A Pin array that contains all pins of the chip
     private int posX = 0; //The X position of the chip on the viewport
     private int posY = 0; //The Y position of the chip on the viewport
     private int width = 0; //The width of the chip not containing the pins
     private int height = 0; //The height of the chip not containing the pins
-    private Rectangle border; //The border of the chip containing the pins
+    private final Rectangle border; //The border of the chip containing the pins
     private boolean isSelected = false; //Whether or not the chip is selected
     private int pinSize; //The width/height of each pin rectangle
     private InfoPage infoPage; //The info page of the chip
@@ -64,7 +64,7 @@ public abstract class Chip {
     public boolean isPowered(){
         PinPower power = getPowerPin();
         PinGround ground = getGroundPin();
-
+        if(power == null || ground == null)return true;
         return power.isPowered() && ground.isGrounded() || true;//TODO remove true. Used for quicker testing
     }
 
@@ -263,6 +263,19 @@ public abstract class Chip {
     public String getPinName(int pin){
         return pins[pin].getName();
     }
+
+    /**
+     * @return the bytes of the extra data; this data can be used for example store a state of a switch
+     */
+    public byte[] getExtraDataBytes(){
+        return null;
+    }
+
+    /**
+     * If extra data bytes were given when saving the chip, this function will return these bytes when loadings
+     * @param bytes
+     */
+    public void setExtraData(byte[] bytes){}
 
     /**
      * Creates a new instance of the chip

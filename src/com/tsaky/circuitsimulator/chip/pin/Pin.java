@@ -6,8 +6,8 @@ import java.awt.*;
 
 public abstract class Pin {
 
-    private String pinName;
-    private int pinID;
+    private final String pinName;
+    private final int pinID;
     private Rectangle bounds;
     private boolean isSelected = false;
     private boolean isToggleable = false;

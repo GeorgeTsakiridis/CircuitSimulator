@@ -29,6 +29,38 @@ public class ChipLED extends Chip {
     }
 
     @Override
+    public byte[] getExtraDataBytes() {
+        byte b;
+
+        if (color == Color.RED) {
+            return new byte[]{0};
+        } else if (color == Color.GREEN) {
+            return new byte[]{1};
+        } else if (color == Color.YELLOW) {
+            return new byte[]{2};
+        } else if (color == Color.BLUE) {
+            return new byte[]{3};
+        }
+        return new byte[]{-1};
+
+    }
+
+    @Override
+    public void setExtraData(byte[] bytes) {
+
+        if(bytes[0] == 0){
+            color = Color.RED;
+        }else if(bytes[0] == 1){
+            color = Color.GREEN;
+        }else if(bytes[0] == 2){
+            color = Color.YELLOW;
+        }else if(bytes[0] == 3){
+            color = Color.BLUE;
+        }
+
+    }
+
+    @Override
     public void calculateOutputs() {
 
     }

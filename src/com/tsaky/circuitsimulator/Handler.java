@@ -12,11 +12,14 @@ import com.tsaky.circuitsimulator.ui.ViewportPanel;
 import com.tsaky.circuitsimulator.ui.Window;
 
 import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Handler{
+
+    private final long magicNumber = 1073147341387874804L;
 
     private MouseMode mouseMode = MouseMode.CAMERA;
     private Window window;
@@ -44,7 +47,6 @@ public class Handler{
 
         Thread simulationThread = new Thread(this::run);
         simulationThread.start();
-
     }
 
     public void setMouseMode(MouseMode mouseMode){
@@ -67,8 +69,8 @@ public class Handler{
         window.enableOtherEmulationButtons(emulationMode);
     }
 
-    public void toggleViewmode(ViewMode viewMode){
-        System.out.println(viewMode);
+    public void setViewMode(ViewMode viewMode){
+        viewportPanel.setViewMode(viewMode);
     }
 
     public void setSelectedComponent(String componentName){
@@ -183,7 +185,7 @@ public class Handler{
             viewportPanel.addOffset(0, -5);
         }
         else if(keyCode == KeyEvent.VK_R){
-            viewportPanel.resetOffset();
+            viewportPanel.resetOffsetAndScale();
         }
         else if(keyCode == KeyEvent.VK_Q){
             viewportPanel.increaseScale();
@@ -202,7 +204,6 @@ public class Handler{
     public void run() {
         while(true) {
             if (EMULATION_RUNNING) {
-                //linker.checkForEmptyLinks(); //TODO remove the line. Left for reference
                 for (Chip chip : chipsOnScreen) {
                     chip.calculateOutputs();
                 }
@@ -216,6 +217,139 @@ public class Handler{
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean saveToFile(File file) throws IOException {
+
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file));
+
+        dataOutputStream.writeLong(magicNumber);
+        dataOutputStream.writeInt(ChipSimulator.PROGRAM_VERSION);
+
+        dataOutputStream.writeInt(viewportPanel.getOffsetX());
+        dataOutputStream.writeInt(viewportPanel.getOffsetY());
+        dataOutputStream.writeFloat(viewportPanel.getScale());
+        dataOutputStream.writeInt(mouseMode.ordinal());
+        dataOutputStream.writeInt(viewportPanel.getViewMode().ordinal());
+        dataOutputStream.writeInt(emulationSpeed);
+
+        dataOutputStream.writeInt(chipsOnScreen.size());
+        for(Chip chip : chipsOnScreen){
+            byte[] extraDataBytes = chip.getExtraDataBytes();
+
+            dataOutputStream.writeUTF(chip.getChipName());
+            dataOutputStream.writeInt(chip.getPosX());
+            dataOutputStream.writeInt(chip.getPosY());
+            dataOutputStream.writeInt(extraDataBytes == null ? 0 : extraDataBytes.length);
+            if(extraDataBytes != null && extraDataBytes.length > 0) {
+                dataOutputStream.write(extraDataBytes, 0, extraDataBytes.length);
+            }
+        }
+
+        int totalPairs = Linker.getTotalPairs();
+
+        dataOutputStream.writeInt(totalPairs);
+
+        for(int i = 0; i < totalPairs; i++){
+            Pair pair = Linker.getPair(i);
+            int[] indexes1 = getChipIndexAndPinIndex(pair.getPin1());
+            int[] indexes2 = getChipIndexAndPinIndex(pair.getPin2());
+
+            if(indexes1[0] == -1 || indexes1[1] == -1 || indexes2[0] == -1 || indexes2[1] == -1){
+                return false;
+            }
+
+            dataOutputStream.writeInt(indexes1[0]);
+            dataOutputStream.writeInt(indexes1[1]);
+            dataOutputStream.writeInt(indexes2[0]);
+            dataOutputStream.writeInt(indexes2[1]);
+        }
+
+        return true;
+    }
+
+    public boolean loadFromFile(File file) throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
+
+        reset();
+
+        if(dataInputStream.readLong() != magicNumber){
+            //not a valid file
+            return false;
+        }
+
+        if(dataInputStream.readInt() != ChipSimulator.PROGRAM_VERSION){
+            //not same version
+
+        }
+
+        int offsetX = dataInputStream.readInt();
+        int offsetY = dataInputStream.readInt();
+
+        viewportPanel.resetOffsetAndScale();
+        viewportPanel.addOffset(offsetX, offsetY);
+        viewportPanel.setScale(dataInputStream.readFloat());
+        mouseMode = MouseMode.values()[dataInputStream.readInt()];
+        setViewMode(ViewMode.values()[dataInputStream.readInt()]);
+        emulationSpeed = dataInputStream.readInt();
+
+        int totalChips = dataInputStream.readInt();
+        for(int i = 0; i < totalChips; i++){
+            String chipName = dataInputStream.readUTF();
+            int posX = dataInputStream.readInt();
+            int posY = dataInputStream.readInt();
+
+            Chip chip = ChipManager.getNewChipInstance(chipName);
+            chip.setPosition(posX, posY);
+            chip.setExtraData(dataInputStream.readNBytes(dataInputStream.readInt()));
+            chipsOnScreen.add(chip);
+        }
+
+        int totalPairs = dataInputStream.readInt();
+        for(int i = 0; i < totalPairs; i++){
+            int chipIndex1 = dataInputStream.readInt();
+            int pinIndex1 = dataInputStream.readInt();
+            int chipIndex2 = dataInputStream.readInt();
+            int pinIndex2 = dataInputStream.readInt();
+
+            Pin pin1 = chipsOnScreen.get(chipIndex1).getPin(pinIndex1);
+            Pin pin2 = chipsOnScreen.get(chipIndex2).getPin(pinIndex2);
+
+            Linker.linkPins(pin1, pin2);
+        }
+
+        return true;
+    }
+
+    private void reset(){
+        Linker.clearPairs();
+        mouseMode = MouseMode.CAMERA;
+        setViewMode(ViewMode.NORMAL);
+        selectedComponent = null;
+        chipsOnScreen.clear();;
+        lastSelectedPin = null;
+        EMULATION_RUNNING = false;
+        SHORTED = false;
+        emulationMode = EmulationAction.STOP;
+        emulationSpeed = 20;
+    }
+
+    private int[] getChipIndexAndPinIndex(Pin pin){
+        int[] indexes = new int[]{-1, -1};
+
+        for(int j = 0; j < chipsOnScreen.size(); j++){
+            Pin[] pins = chipsOnScreen.get(j).getPins();
+
+            for(int k = 0; k < pins.length; k++){
+                if(pins[k] == pin){
+                    indexes[0] = j;
+                    indexes[1] = k;
+                    return indexes;
+                }
+            }
+        }
+
+        return indexes;
     }
 
 }

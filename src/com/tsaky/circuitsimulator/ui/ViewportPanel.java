@@ -21,7 +21,14 @@ public class ViewportPanel extends JPanel {
     private ArrayList<Chip> chips = null;
     private Chip ghostChip = null;
 
-    public ViewportPanel(){
+    private ViewMode viewMode = ViewMode.NORMAL;
+
+    public void setViewMode(ViewMode viewMode){
+        this.viewMode = viewMode;
+    }
+
+    public ViewMode getViewMode() {
+        return viewMode;
     }
 
     public void addOffset(int offsetX, int offsetY){
@@ -29,7 +36,7 @@ public class ViewportPanel extends JPanel {
         this.offsetY += (int)((float)offsetY/scale);
     }
 
-    public void resetOffset(){
+    public void resetOffsetAndScale(){
         offsetX = offsetY = 0;
         scale = 1f;
     }
@@ -41,6 +48,10 @@ public class ViewportPanel extends JPanel {
     public int getOffsetY() {
         return offsetY;
     }
+
+    public float getScale(){ return scale; }
+
+    public void setScale(float scale){ this.scale = scale; }
 
     public void setChipsToPaint(ArrayList<Chip> chips){
         this.chips = chips;
@@ -88,7 +99,7 @@ public class ViewportPanel extends JPanel {
             ghostChip.paintComponent(g, offsetX, offsetY);
         }
 
-        Linker.paint(g);
+        Linker.paint(g, viewMode);
 
         if(Handler.SHORTED){
             g.setColor(Color.RED);

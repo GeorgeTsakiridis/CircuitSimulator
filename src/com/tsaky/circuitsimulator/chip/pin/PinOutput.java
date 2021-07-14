@@ -1,7 +1,5 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
-import java.awt.*;
-
 public class PinOutput extends Pin{
     boolean isOutputHigh = false;
     boolean highZMode = false;
@@ -29,11 +27,6 @@ public class PinOutput extends Pin{
 
     public void setHighZMode(boolean highZMode) {
         this.highZMode = highZMode;
-    }
-
-    @Override
-    public Color getPinColor() {
-        return isSelected() ? Color.RED : (isHigh() ? Color.GREEN.darker() : Color.BLACK);
     }
 
     @Override
