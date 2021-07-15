@@ -3,7 +3,6 @@ package com.tsaky.circuitsimulator;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
-import com.tsaky.circuitsimulator.chip.generic.ChipGround;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
 import com.tsaky.circuitsimulator.mouse.MouseData;
@@ -12,7 +11,7 @@ import com.tsaky.circuitsimulator.ui.ViewMode;
 import com.tsaky.circuitsimulator.ui.ViewportPanel;
 import com.tsaky.circuitsimulator.ui.Window;
 
-import java.awt.event.KeyEvent;
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -20,18 +19,18 @@ import java.util.TimerTask;
 
 public class Handler{
 
-    private final long magicNumber = 1073147341387874804L;
-
     private MouseMode mouseMode = MouseMode.CAMERA;
-    private Window window;
-    private ViewportPanel viewportPanel;
+    private final Window window;
+    private final ViewportPanel viewportPanel;
     private Chip selectedComponent = null;
-    private ArrayList<Chip> chipsOnScreen = new ArrayList<>();
+    private final ArrayList<Chip> chipsOnScreen = new ArrayList<>();
     private Pin lastSelectedPin = null;
     public static boolean EMULATION_RUNNING = false;
     public static boolean SHORTED = false;
     private EmulationAction emulationMode = EmulationAction.STOP;
     private int simulationSpeed = 20;
+    private int lastX = 0;
+    private int lastY = 0;
 
     public Handler() {
         viewportPanel = new ViewportPanel();
@@ -43,7 +42,7 @@ public class Handler{
             public void run() {
                 viewportPanel.repaint();
             }
-        }, 0, 16);
+        }, 0, 16); //Target for 60 fps
 
 
         Thread simulationThread = new Thread(this::run);
@@ -52,12 +51,10 @@ public class Handler{
 
     public void setMouseMode(MouseMode mouseMode){
         this.mouseMode = mouseMode;
-
         if(mouseMode != MouseMode.ADD){
             viewportPanel.updateGhostChip(null);
-        }else{
-            viewportPanel.updateGhostChip(selectedComponent);
         }
+
     }
 
     public void setSimulationSpeed(int emulationSpeed){
@@ -135,6 +132,7 @@ public class Handler{
                     ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
                 }
             }
+
         }
     }
 
@@ -154,17 +152,14 @@ public class Handler{
         }
     }
 
-    private int lastX = 0, lastY = 0;
     public void mouseDragged(MouseData mouse){
 
         if(mouseMode == MouseMode.CAMERA) {
             viewportPanel.addOffset(mouse.x - lastX, mouse.y - lastY);
         }
         else if(mouseMode == MouseMode.MOVE){
-            System.out.println("MOVE MODE");
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
-                        System.out.println("FOUND SELECTED CHIP");
                         chip.setPosition(chip.getPosX() + mouse.x-lastX, chip.getPosY() + mouse.y - lastY);
                     }
                 }
@@ -172,36 +167,6 @@ public class Handler{
         lastX = mouse.x;
         lastY = mouse.y;
 
-    }
-
-    public void pressedKey(int keyCode){
-        if(keyCode == KeyEvent.VK_LEFT){
-            viewportPanel.addOffset(5, 0);
-        }
-        else if(keyCode == KeyEvent.VK_RIGHT){
-            viewportPanel.addOffset(-5, 0);
-        }
-        else if(keyCode == KeyEvent.VK_UP){
-            viewportPanel.addOffset(0, 5);
-        }
-        else if(keyCode == KeyEvent.VK_DOWN){
-            viewportPanel.addOffset(0, -5);
-        }
-        else if(keyCode == KeyEvent.VK_R){
-            viewportPanel.resetOffsetAndScale();
-        }
-        else if(keyCode == KeyEvent.VK_Q){
-            viewportPanel.increaseScale();
-        }
-        else if(keyCode == KeyEvent.VK_W){
-            viewportPanel.decreaseScale();
-        }
-        else if(keyCode == KeyEvent.VK_A){
-            viewportPanel.repaint();
-        }
-        else if(keyCode == KeyEvent.VK_ESCAPE){
-            System.exit(0);
-        }
     }
 
     public void run() {
@@ -222,19 +187,37 @@ public class Handler{
         }
     }
 
-    public boolean saveToFile(File file) throws IOException {
+    public void reset(){
+        mouseMode = MouseMode.CAMERA;
+        setViewMode(ViewMode.NORMAL);
+        emulationMode = EmulationAction.STOP;
+        simulationSpeed = 20;
+
+        Linker.clearPairs();
+        ChipUtils.unselectAllChips(chipsOnScreen);
+        ChipUtils.unselectAllPins(chipsOnScreen);
+        chipsOnScreen.clear();
+        viewportPanel.setChipsToPaint(chipsOnScreen);
+
+        selectedComponent = null;
+        lastSelectedPin = null;
+        EMULATION_RUNNING = false;
+        SHORTED = false;
+        lastX = 0;
+        lastY = 0;
+        window.reset();
+    }
+
+    public void saveToFile(File file) throws IOException {
 
         DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file));
 
-        dataOutputStream.writeLong(magicNumber);
+        dataOutputStream.writeLong(ChipSimulator.MAGIC_NUMBER);
         dataOutputStream.writeInt(ChipSimulator.PROGRAM_VERSION);
 
         dataOutputStream.writeInt(viewportPanel.getOffsetX());
         dataOutputStream.writeInt(viewportPanel.getOffsetY());
         dataOutputStream.writeFloat(viewportPanel.getScale());
-        dataOutputStream.writeInt(mouseMode.ordinal());
-        dataOutputStream.writeInt(viewportPanel.getViewMode().ordinal());
-        dataOutputStream.writeInt(simulationSpeed);
 
         dataOutputStream.writeInt(chipsOnScreen.size());
         for(Chip chip : chipsOnScreen){
@@ -255,11 +238,11 @@ public class Handler{
 
         for(int i = 0; i < totalPairs; i++){
             Pair pair = Linker.getPair(i);
-            int[] indexes1 = getChipIndexAndPinIndex(pair.getPin1());
-            int[] indexes2 = getChipIndexAndPinIndex(pair.getPin2());
+            int[] indexes1 = ChipUtils.getChipIndexAndPinIndex(chipsOnScreen, pair.getPin1());
+            int[] indexes2 = ChipUtils.getChipIndexAndPinIndex(chipsOnScreen, pair.getPin2());
 
             if(indexes1[0] == -1 || indexes1[1] == -1 || indexes2[0] == -1 || indexes2[1] == -1){
-                return false;
+                return;
             }
 
             dataOutputStream.writeInt(indexes1[0]);
@@ -267,34 +250,34 @@ public class Handler{
             dataOutputStream.writeInt(indexes2[0]);
             dataOutputStream.writeInt(indexes2[1]);
         }
-
-        return true;
     }
 
-    public boolean loadFromFile(File file) throws IOException {
+    public void loadFromFile(File file) throws IOException {
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
 
         reset();
 
-        if(dataInputStream.readLong() != magicNumber){
-            //not a valid file
-            return false;
+        Long fileMagicNumber = dataInputStream.readLong();
+
+        if(!fileMagicNumber.equals(ChipSimulator.MAGIC_NUMBER)){
+            JOptionPane.showMessageDialog(null, "This is not a valid project.",
+                    "Failed to open project", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         if(dataInputStream.readInt() != ChipSimulator.PROGRAM_VERSION){
-            //not same version
-
+            JOptionPane.showMessageDialog(null,
+                    "This save file has been created with a different program version.\n" +
+                            "Project may not be loaded successfully.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
         int offsetX = dataInputStream.readInt();
         int offsetY = dataInputStream.readInt();
+        float scale = dataInputStream.readFloat();
 
         viewportPanel.resetOffsetAndScale();
         viewportPanel.addOffset(offsetX, offsetY);
-        viewportPanel.setScale(dataInputStream.readFloat());
-        mouseMode = MouseMode.values()[dataInputStream.readInt()];
-        setViewMode(ViewMode.values()[dataInputStream.readInt()]);
-        simulationSpeed = dataInputStream.readInt();
+        viewportPanel.setScale(scale);
 
         int totalChips = dataInputStream.readInt();
         for(int i = 0; i < totalChips; i++){
@@ -322,48 +305,6 @@ public class Handler{
         }
 
         viewportPanel.setChipsToPaint(chipsOnScreen);
-        chipsOnScreen.add(new ChipGround());
-        chipsOnScreen.remove(chipsOnScreen.size()-1);
-        return true;
-    }
-
-    public void reset(){
-        mouseMode = MouseMode.CAMERA;
-        setViewMode(ViewMode.NORMAL);
-        emulationMode = EmulationAction.STOP;
-        simulationSpeed = 20;
-
-        Linker.clearPairs();
-        ChipUtils.unselectAllChips(chipsOnScreen);
-        ChipUtils.unselectAllPins(chipsOnScreen);
-        chipsOnScreen.clear();
-        viewportPanel.setChipsToPaint(chipsOnScreen);
-
-        selectedComponent = null;
-        lastSelectedPin = null;
-        EMULATION_RUNNING = false;
-        SHORTED = false;
-        lastX = 0;
-        lastY = 0;
-        window.reset();
-    }
-
-    private int[] getChipIndexAndPinIndex(Pin pin){
-        int[] indexes = new int[]{-1, -1};
-
-        for(int j = 0; j < chipsOnScreen.size(); j++){
-            Pin[] pins = chipsOnScreen.get(j).getPins();
-
-            for(int k = 0; k < pins.length; k++){
-                if(pins[k] == pin){
-                    indexes[0] = j;
-                    indexes[1] = k;
-                    return indexes;
-                }
-            }
-        }
-
-        return indexes;
     }
 
 }

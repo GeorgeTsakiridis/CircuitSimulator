@@ -26,7 +26,6 @@ public class ChipUtils {
     public static Chip getChipBellowMouse(ArrayList<Chip> chips, int x, int y){
         for(Chip chip : chips){
             if(chip.getBorder().contains(x, y)){
-                System.out.println("Moved " + chip.getChipName());
                 return chip;
             }
         }
@@ -60,6 +59,23 @@ public class ChipUtils {
         }
 
         chips.remove(chip);
+    }
+
+    public static int[] getChipIndexAndPinIndex(ArrayList<Chip> chips, Pin pin){
+        int[] indexes = new int[]{-1, -1};
+
+        for(int j = 0; j < chips.size(); j++){
+            Pin[] pins = chips.get(j).getPins();
+
+            for(int k = 0; k < pins.length; k++){
+                if(pins[k] == pin){
+                    indexes[0] = j;
+                    indexes[1] = k;
+                    return indexes;
+                }
+            }
+        }
+        return indexes;
     }
 
 }

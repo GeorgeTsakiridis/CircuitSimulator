@@ -27,10 +27,6 @@ public class ViewportPanel extends JPanel {
         this.viewMode = viewMode;
     }
 
-    public ViewMode getViewMode() {
-        return viewMode;
-    }
-
     public void addOffset(int offsetX, int offsetY){
         this.offsetX += (int)((float)offsetX/scale);
         this.offsetY += (int)((float)offsetY/scale);
@@ -62,11 +58,11 @@ public class ViewportPanel extends JPanel {
     }
 
     public void increaseScale(){
-        scale += 0.2f;
+        scale += 0.1f;
     }
 
     public void decreaseScale(){
-        scale -= 0.2f;
+        scale -= 0.1f;
     }
 
     @Override

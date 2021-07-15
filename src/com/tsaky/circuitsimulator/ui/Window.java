@@ -9,11 +9,13 @@ import com.tsaky.circuitsimulator.chip.ChipManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
@@ -47,10 +49,30 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
     private final ViewChangeButton normalViewButton = new ViewChangeButton(ViewMode.NORMAL, "normalView.png", "Resume Normal View");
     private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "View/Hide Lines Status");
+    private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
+    private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
+
     //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
+
+    ComponentListener pinoutFrameComponentListener = new ComponentListener() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            updateSchematicImageSize(e.getComponent().getWidth(), e.getComponent().getHeight());
+        }
+        @Override
+        public void componentMoved(ComponentEvent e) {
+        }
+        @Override
+        public void componentShown(ComponentEvent e) {
+        }
+        @Override
+        public void componentHidden(ComponentEvent e) {
+        }
+    };
 
     @SuppressWarnings("unchecked")
     public Window(Handler handler, ViewportPanel viewportPanel){
+
         this.handler = handler;
         this.viewportPanel = viewportPanel;
 
@@ -60,54 +82,65 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         componentsList.setBackground(UIManager.getColor("background"));
         componentsList.addListSelectionListener(e -> handler.setSelectedComponent(((JList<String>) (e.getSource())).getSelectedValue()));
 
-        //UP PANEL START
         simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 20);
         simulationSpeedSlider.setPreferredSize(new Dimension(90, 20));
         simulationSpeedSlider.addChangeListener(e -> handler.setSimulationSpeed(((JSlider)e.getSource()).getValue()));
         simulationSpeedSlider.setToolTipText("Simulation Speed");
 
+
         JPanel upPanel = new JPanel();
-        upPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit"));
-
-        upPanel.add(newButton);
-        upPanel.add(saveButton);
-        upPanel.add(loadButton);
-        upPanel.add(getNewSeperator());
-        addMouseButtonsToPanel(upPanel);
-        upPanel.add(getNewSeperator());
-        addEmulationButtonsToPanel(upPanel);
-        upPanel.add(simulationSpeedSlider);
-        upPanel.add(getNewSeperator());
-        addViewButtonsToPanel(upPanel);
-        //UP PANEL END
-
         JScrollPane leftPanel = new JScrollPane();
-        leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Components"));
-        leftPanel.setFocusable(false);
-        leftPanel.setPreferredSize(new Dimension(140, 0));
-        leftPanel.setViewportView(componentsList);
-
         JPanel rightPanel = new JPanel();
-        rightPanel.add(schematicLabel);
-
         JPanel downPanel = new JPanel();
-        downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
-        downPanel.add(infoLabel);
 
-        mainFrame = new JFrame("Circuit Simulator by George Tsakiridis");
+        JPanel upProjectPanel = new JPanel();
+        JPanel upMouseFunctionPanel = new JPanel();
+        JPanel upSimulationPanel = new JPanel();
+        JPanel upViewPanel = new JPanel();
+
+        upProjectPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Project"));
+        upMouseFunctionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Mouse Function"));
+        upSimulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Simulation"));
+        upViewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "View"));
 
         newButton.setToolTipText("New Project");
         saveButton.setToolTipText("Save Project");
         loadButton.setToolTipText("Open Project");
 
+        upProjectPanel.add(newButton);
+        upProjectPanel.add(saveButton);
+        upProjectPanel.add(loadButton);
+        addMouseButtonsToPanel(upMouseFunctionPanel);
+        addSimulationButtonsToPanel(upSimulationPanel);
+        addViewButtonsToPanel(upViewPanel);
+
+        upPanel.add(upProjectPanel);
+        upPanel.add(upMouseFunctionPanel);
+        upPanel.add(upSimulationPanel);
+        upPanel.add(upViewPanel);
+
+        leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Components"));
+        leftPanel.setFocusable(false);
+        leftPanel.setPreferredSize(new Dimension(140, 0));
+        leftPanel.setViewportView(componentsList);
+
+        rightPanel.add(schematicLabel);
+
+        downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
+        downPanel.add(infoLabel);
+
+        mainFrame = new JFrame("Circuit Simulator by George Tsakiridis");
+
         newButton.addActionListener(e -> {
-            if(!getValidation())return;
-            handler.reset();
+            if(getValidation()){
+                handler.reset();
+            }
         });
 
         saveButton.addActionListener(e -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileNameExtensionFilter("Circuit Simulation Save File (*.cssf)", "cssf"));
                 fileChooser.showSaveDialog(mainFrame);
 
                 if(fileChooser.getSelectedFile() != null) handler.saveToFile(fileChooser.getSelectedFile());
@@ -117,19 +150,24 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         });
 
         loadButton.addActionListener(e -> {
-            try {
-                if(!getValidation())return;
+            if(getValidation()) {
+                try {
 
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(mainFrame);
-                if(fileChooser.getSelectedFile() == null) handler.loadFromFile(fileChooser.getSelectedFile());
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileFilter(new FileNameExtensionFilter("Circuit Simulation Save File (*.cssf)", "cssf"));
+                    fileChooser.showOpenDialog(mainFrame);
+                    if (fileChooser.getSelectedFile() != null)handler.loadFromFile(fileChooser.getSelectedFile());
+                } catch (IOException IOException) {
+                    IOException.printStackTrace();
+                }
             }
         });
 
+        zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
+        zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
+
         mainFrame.setSize(680, 480);
-        mainFrame.setMinimumSize(new Dimension(680, 400));
+        mainFrame.setMinimumSize(new Dimension(760, 400));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);
@@ -150,27 +188,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         pinoutFrame.setSize(380, 400);
         pinoutFrame.setLocation(mainFrame.getLocationOnScreen().x + mainFrame.getSize().width, mainFrame.getLocationOnScreen().y );
         pinoutFrame.setVisible(true);
-        pinoutFrame.addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                updateSchematicImageSize(e.getComponent().getWidth(), e.getComponent().getHeight());
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentShown(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e) {
-
-            }
-        });
+        pinoutFrame.addComponentListener(pinoutFrameComponentListener);
 
         int w1 = mainFrame.getSize().width;
         int w2 = pinoutFrame.getSize().width;
@@ -184,24 +202,6 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
     private boolean getValidation(){
         return JOptionPane.showConfirmDialog(null, "Any unsaved progress will be lost.\nAre you sure you want to continue?") == 0;
-    }
-
-    private JSeparator getNewSeperator(){
-        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
-        separator.setPreferredSize(new Dimension(3, 30));
-
-        return separator;
-    }
-
-    private void addEmulationButtonsToPanel(JPanel panel){
-        emulationChangeButtons.add(startEmulationButton);
-        emulationChangeButtons.add(stepEmulationButton);
-        emulationChangeButtons.add(stopEmulationButton);
-
-        for(EmulationChangeButton button : emulationChangeButtons){
-            panel.add(button);
-        }
-        stopEmulationButton.setEnabled(false);
     }
 
     private void addMouseButtonsToPanel(JPanel panel){
@@ -218,10 +218,24 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         cameraButton.setEnabled(false);
     }
 
+    private void addSimulationButtonsToPanel(JPanel panel){
+        emulationChangeButtons.add(startEmulationButton);
+        emulationChangeButtons.add(stepEmulationButton);
+        emulationChangeButtons.add(stopEmulationButton);
+
+        for(EmulationChangeButton button : emulationChangeButtons){
+            panel.add(button);
+        }
+        panel.add(simulationSpeedSlider);
+        stopEmulationButton.setEnabled(false);
+    }
+
     private void addViewButtonsToPanel(JPanel panel){
         panel.add(normalViewButton);
         panel.add(lineViewButton);
         //panel.add(powerViewButton);
+        panel.add(zoomOutButton);
+        panel.add(zoomInButton);
     }
 
     BufferedImage image = null;
@@ -245,56 +259,6 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         }
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        handler.pressedKey(e.getKeyCode());
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        handler.mouseClicked(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        handler.mousePressed(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        handler.mouseReleased(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        handler.mouseDragged(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        handler.mouseMoved(generateMouseData(e.getX(), e.getY()));
-    }
-
     private MouseData generateMouseData(int mouseX, int mouseY){
         Rectangle mainFrameBounds = mainFrame.getContentPane().getBounds();
         int posX = mouseX - mainFrameBounds.x;
@@ -305,7 +269,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
     private void enableOtherMouseButtons(MouseMode mouseMode){
         for(MouseModeChangeButton mouseModeChangeButton : mouseModeChangeButtons){
-            if(mouseModeChangeButton.mode != mouseMode){
+            if(mouseModeChangeButton.mouseMode != mouseMode){
                 mouseModeChangeButton.setEnabled(true);
             }
         }
@@ -333,7 +297,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     private class EmulationChangeButton extends ImageButton{
-        private EmulationAction emulationAction;
+        private final EmulationAction emulationAction;
 
         public EmulationChangeButton(EmulationAction emulationAction, String assetName, String tooltip){
             super(assetName);
@@ -348,8 +312,53 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        handler.mouseClicked(generateMouseData(e.getX(), e.getY()));
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        handler.mousePressed(generateMouseData(e.getX(), e.getY()));
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        handler.mouseReleased(generateMouseData(e.getX(), e.getY()));
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        handler.mouseDragged(generateMouseData(e.getX(), e.getY()));
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        handler.mouseMoved(generateMouseData(e.getX(), e.getY()));
+    }
+
     private class ViewChangeButton extends ImageButton{
-        private ViewMode viewMode;
+        private final ViewMode viewMode;
 
         public ViewChangeButton(ViewMode viewMode, String assetName, String tooltip){
             super(assetName);
@@ -371,18 +380,18 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     }
 
     private class MouseModeChangeButton extends ImageButton{
-        private MouseMode mode;
+        private final MouseMode mouseMode;
 
-        public MouseModeChangeButton(MouseMode mode, String assetName, String tooltip){
+        public MouseModeChangeButton(MouseMode mouseMode, String assetName, String tooltip){
             super(assetName);
-            this.mode = mode;
+            this.mouseMode = mouseMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
         }
 
         public void actionPerformed(ActionEvent e) {
-            handler.setMouseMode(mode);
-            enableOtherMouseButtons(mode);
+            handler.setMouseMode(mouseMode);
+            enableOtherMouseButtons(mouseMode);
             ((JButton)(e.getSource())).setEnabled(false);
         }
     }
@@ -390,7 +399,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     private class ImageButton extends JButton{
         public ImageButton(String assetName){
             try {
-                this.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("assets/buttons/" + assetName))));
+                this.setIcon(new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("assets/buttons/" + assetName)))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
