@@ -5,7 +5,6 @@ import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
-import com.tsaky.circuitsimulator.mouse.MouseData;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.ui.ViewMode;
 import com.tsaky.circuitsimulator.ui.ViewportPanel;
@@ -28,12 +27,12 @@ public class Handler{
     public static boolean EMULATION_RUNNING = false;
     public static boolean SHORTED = false;
     private EmulationAction emulationMode = EmulationAction.STOP;
-    private int simulationSpeed = 20;
+    private int simulationSpeed = 500;
     private int lastX = 0;
     private int lastY = 0;
 
     public Handler() {
-        viewportPanel = new ViewportPanel();
+        viewportPanel = new ViewportPanel(this);
         window = new Window(this, viewportPanel);
 
         Timer timer = new Timer();
@@ -53,8 +52,9 @@ public class Handler{
         this.mouseMode = mouseMode;
         if(mouseMode != MouseMode.ADD){
             viewportPanel.updateGhostChip(null);
+        }else{
+            viewportPanel.updateGhostChip(selectedComponent);
         }
-
     }
 
     public void setSimulationSpeed(int emulationSpeed){
@@ -79,93 +79,89 @@ public class Handler{
         }
     }
 
-    public void mouseClicked(MouseData mouse) {
-        if (mouse.isInsideViewport) {
-            //ADD
-            if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
-                if(selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)){
-                    Chip chip = selectedComponent.createNewInstance();
-                    chip.setPosition(mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY());
-                    chipsOnScreen.add(chip);
-                    viewportPanel.setChipsToPaint(chipsOnScreen);
-                }
+    public void mouseClicked(int mouseX, int mouseY) {
+        //ADD
+        if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
+            if (selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
+                Chip chip = selectedComponent.createNewInstance();
+                chip.setPosition(mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
+                chipsOnScreen.add(chip);
+                viewportPanel.setChipsToPaint(chipsOnScreen);
             }
-            //MOVE
-            else if (mouseMode == MouseMode.MOVE) {
-                ChipUtils.unselectAllChips(chipsOnScreen);
-                ChipUtils.selectChipIfNotNull(ChipUtils.getChipBellowMouse(chipsOnScreen, mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY()));
-            }
-            //LINK
-            else if (mouseMode == MouseMode.LINK) {
-                Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouse.xViewport, mouse.yViewport);
-                ChipUtils.unselectAllPins(chipsOnScreen);
+        }
+        //MOVE
+        else if (mouseMode == MouseMode.MOVE) {
+            ChipUtils.unselectAllChips(chipsOnScreen);
+            ChipUtils.selectChipIfNotNull(ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY()));
+        }
+        //LINK
+        else if (mouseMode == MouseMode.LINK) {
+            Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouseX, mouseY);
+            ChipUtils.unselectAllPins(chipsOnScreen);
 
-                if (lastSelectedPin != null && pin == null) {
+            if (lastSelectedPin != null && pin == null) {
+                lastSelectedPin = null;
+            }
+            if (pin != null) {
+                if (lastSelectedPin == null) {
+                    lastSelectedPin = pin;
+                    pin.setSelected(true);
+                } else {
+                    if (lastSelectedPin != pin) {
+                        Linker.linkPins(pin, lastSelectedPin);
+                    } else {
+                        Linker.unlinkPin(pin);
+                    }
                     lastSelectedPin = null;
                 }
-                if (pin != null) {
-                    if (lastSelectedPin == null) {
-                        lastSelectedPin = pin;
-                        pin.setSelected(true);
-                    } else {
-                        if (lastSelectedPin != pin) {
-                            Linker.linkPins(pin, lastSelectedPin);
-                        } else {
-                            Linker.unlinkPin(pin);
-                        }
-                        lastSelectedPin = null;
-                    }
-                }
             }
-            //TOGGLE
-            else if (mouseMode == MouseMode.TOGGLE) {
-                Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouse.xViewport, mouse.yViewport);
-                if(pin instanceof PinOutput){
-                    PinOutput pinOutput = (PinOutput)pin;
-                    if(pinOutput.isToggleable())pinOutput.setHigh(!pinOutput.isHigh());
-                }
+        }
+        //TOGGLE
+        else if (mouseMode == MouseMode.TOGGLE) {
+            Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouseX, mouseY);
+            if (pin instanceof PinOutput) {
+                PinOutput pinOutput = (PinOutput) pin;
+                if (pinOutput.isToggleable()) pinOutput.setHigh(!pinOutput.isHigh());
             }
-            //REMOVE
-            else if(mouseMode == MouseMode.REMOVE){
-                Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY());
-                if(chip != null){
-                    ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
-                }
+        }
+        //REMOVE
+        else if (mouseMode == MouseMode.REMOVE) {
+            Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
+            if (chip != null) {
+                ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
             }
-
         }
     }
 
-    public void mousePressed(MouseData mouse){
-        lastX = mouse.x;
-        lastY = mouse.y;
+    public void mousePressed(int mouseX, int mouseY){
+        lastX = mouseX;
+        lastY = mouseY;
     }
 
-    public void mouseReleased(MouseData mouse){
+    public void mouseReleased(int mouseX, int mouseY){
 
     }
 
-    public void mouseMoved(MouseData mouse){
-
+    public void mouseMoved(int mouseX, int mouseY){
         if(selectedComponent != null){
-            selectedComponent.setPosition(mouse.xViewport - viewportPanel.getOffsetX(), mouse.yViewport - viewportPanel.getOffsetY());
+            selectedComponent.setPosition(mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
         }
     }
 
-    public void mouseDragged(MouseData mouse){
+    public void mouseDragged(int mouseX, int mouseY){
 
         if(mouseMode == MouseMode.CAMERA) {
-            viewportPanel.addOffset(mouse.x - lastX, mouse.y - lastY);
+            viewportPanel.addOffset(mouseX - lastX, mouseY - lastY);
         }
         else if(mouseMode == MouseMode.MOVE){
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
-                        chip.setPosition(chip.getPosX() + mouse.x-lastX, chip.getPosY() + mouse.y - lastY);
+                        chip.setPosition(chip.getPosX() + mouseX-lastX, chip.getPosY() + mouseY - lastY);
                     }
                 }
         }
-        lastX = mouse.x;
-        lastY = mouse.y;
+        lastX = mouseX;
+        lastY = mouseY;
 
     }
 

@@ -3,7 +3,6 @@ package com.tsaky.circuitsimulator.ui;
 import com.tsaky.circuitsimulator.EmulationAction;
 import com.tsaky.circuitsimulator.Handler;
 import com.tsaky.circuitsimulator.InfoPage;
-import com.tsaky.circuitsimulator.mouse.MouseData;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.chip.ChipManager;
 
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Window implements KeyListener, MouseListener, MouseMotionListener {
+public class Window implements KeyListener {
 
     private final Handler handler;
     private final ViewportPanel viewportPanel;
@@ -51,6 +50,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
     private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "View/Hide Lines Status");
     private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
     private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
+    private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
 
     //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
 
@@ -82,10 +82,10 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         componentsList.setBackground(UIManager.getColor("background"));
         componentsList.addListSelectionListener(e -> handler.setSelectedComponent(((JList<String>) (e.getSource())).getSelectedValue()));
 
-        simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 20);
-        simulationSpeedSlider.setPreferredSize(new Dimension(90, 20));
+        simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 500);
+        simulationSpeedSlider.setPreferredSize(new Dimension(120, 35));
         simulationSpeedSlider.addChangeListener(e -> handler.setSimulationSpeed(((JSlider)e.getSource()).getValue()));
-        simulationSpeedSlider.setToolTipText("Simulation Speed");
+        simulationSpeedSlider.setToolTipText("Update interval in ms");
 
 
         JPanel upPanel = new JPanel();
@@ -165,9 +165,10 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
+        zoomResetButton.addActionListener(e -> viewportPanel.setScale(1f));
 
         mainFrame.setSize(680, 480);
-        mainFrame.setMinimumSize(new Dimension(760, 400));
+        mainFrame.setMinimumSize(new Dimension(840, 400));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);
@@ -177,8 +178,6 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         mainFrame.add(upPanel, "North");
         mainFrame.add(downPanel, "South");
         mainFrame.addKeyListener(this);
-        mainFrame.addMouseListener(this);
-        mainFrame.addMouseMotionListener(this);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 
@@ -236,6 +235,7 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
         //panel.add(powerViewButton);
         panel.add(zoomOutButton);
         panel.add(zoomInButton);
+        panel.add(zoomResetButton);
     }
 
     BufferedImage image = null;
@@ -257,14 +257,6 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
             schematicLabel.setIcon(null);
             schematicLabel.setText("Pinout not available for selected component");
         }
-    }
-
-    private MouseData generateMouseData(int mouseX, int mouseY){
-        Rectangle mainFrameBounds = mainFrame.getContentPane().getBounds();
-        int posX = mouseX - mainFrameBounds.x;
-        int posY = mouseY - viewportPanel.getY()/2;
-
-        return new MouseData(posX, posY, viewportPanel.getBounds());
     }
 
     private void enableOtherMouseButtons(MouseMode mouseMode){
@@ -322,39 +314,6 @@ public class Window implements KeyListener, MouseListener, MouseMotionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        handler.mouseClicked(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        handler.mousePressed(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        handler.mouseReleased(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        handler.mouseDragged(generateMouseData(e.getX(), e.getY()));
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        handler.mouseMoved(generateMouseData(e.getX(), e.getY()));
     }
 
     private class ViewChangeButton extends ImageButton{

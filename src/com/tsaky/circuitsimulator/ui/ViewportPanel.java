@@ -7,9 +7,12 @@ import com.tsaky.circuitsimulator.chip.ChipUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-public class ViewportPanel extends JPanel {
+public class ViewportPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private final Color backgroundColor = new Color(220, 220, 220);
     private final Color gridColor = new Color(100, 100, 100, 50);
@@ -22,6 +25,13 @@ public class ViewportPanel extends JPanel {
     private Chip ghostChip = null;
 
     private ViewMode viewMode = ViewMode.NORMAL;
+    private final Handler handler;
+
+    public ViewportPanel(Handler handler) {
+        this.handler = handler;
+        addMouseListener(this);
+        addMouseMotionListener(this);
+    }
 
     public void setViewMode(ViewMode viewMode){
         this.viewMode = viewMode;
@@ -72,11 +82,11 @@ public class ViewportPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(gridColor);
 
-        for(int i = -20; i < getWidth() + 20; i += 20){
+        for(int i = -20; i < getWidth() + 20; i += 20*scale){
             g.drawLine(i + offsetX%20, 0, i + offsetX%20, getHeight()-1);
         }
 
-        for (int i = -20; i < getHeight() + 20; i+= 20) {
+        for (int i = -20; i < getHeight() + 20; i+= 20*scale) {
             g.drawLine(0, i + offsetY%20, getWidth()-1, i + offsetY%20);
         }
 
@@ -107,6 +117,49 @@ public class ViewportPanel extends JPanel {
             Handler.SHORTED = false;
         }
 
+        g.setColor(Color.BLACK);
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point mousePos = getMousePosition();
+        if(mousePos != null)
+            handler.mouseClicked(mousePos.x, mousePos.y);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Point mousePos = getMousePosition();
+        if(mousePos != null)
+            handler.mousePressed(mousePos.x, mousePos.y);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        Point mousePos = getMousePosition();
+        if(mousePos != null)
+            handler.mouseReleased(mousePos.x, mousePos.y);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Point mousePos = getMousePosition();
+        if(mousePos != null)
+            handler.mouseDragged(mousePos.x, mousePos.y);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Point mousePos = getMousePosition();
+        if(mousePos != null)
+            handler.mouseMoved(mousePos.x, mousePos.y);
+    }
 }

@@ -18,6 +18,7 @@ public class ChipSimulator {
     public static final long MAGIC_NUMBER = 1073147341387874804L;
 
     public ChipSimulator() {
+        ChipManager.addChip(new ChipNode());
         ChipManager.addChip(new ChipGround());
         ChipManager.addChip(new ChipPower());
         ChipManager.addChip(new ChipSwitch());
