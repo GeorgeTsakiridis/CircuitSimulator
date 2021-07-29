@@ -15,7 +15,7 @@ public class Linker {
 
     private static final ArrayList<Pair> pairs = new ArrayList<>();
 
-    public static void paint(Graphics g, ViewMode viewMode){
+    public static void paint(Graphics g, ViewMode viewMode, int offsetX, int offsetY){
         for(Pair pair : pairs){
             Pin pin1 = pair.getPin1();
             Pin pin2 = pair.getPin2();
@@ -30,8 +30,8 @@ public class Linker {
                 g.setColor(isLineHighForPin(pin1) ? Color.GREEN : Color.RED);
             }
 
-            g.drawLine(bounds1.x + bounds1.width/2, bounds1.y + bounds1.height/2,
-                    bounds2.x + bounds2.width/2, bounds2.y + bounds2.height/2);
+            g.drawLine(bounds1.x + bounds1.width/2 + offsetX, bounds1.y + bounds1.height/2 + offsetY,
+                    bounds2.x + bounds2.width/2 + offsetX, bounds2.y + bounds2.height/2 + offsetY);
 
             g.setColor(c);
         }

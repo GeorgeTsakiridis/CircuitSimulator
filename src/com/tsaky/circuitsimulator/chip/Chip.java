@@ -65,7 +65,7 @@ public abstract class Chip {
         PinPower power = getPowerPin();
         PinGround ground = getGroundPin();
         if(power == null || ground == null)return true;
-        return power.isPowered() && ground.isGrounded() || true;//TODO remove true. Used for quicker testing
+        return power.isPowered() && ground.isGrounded();
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class Chip {
     }
 
     /**
-     * Changes the size of the chip and updates it's borders taking into account the pins.
+     * Changes the size of the chip and updates its borders taking into account the pins.
      * {@code width} and {@code height} should not include the pins
      * @param width The new width of the chip
      * @param height The new height of the chip
@@ -305,11 +305,14 @@ public abstract class Chip {
 
         for (int i = 0; i < getPinNumber()/2; i++) {
             int pinY = posY - height/2 + (spacePerPin + pinSize)*i + pinSize/2;
-            int pinX1 = posX - width/2 - pinSize + offsetX;
-            int pinX2 = posX + width/2 + offsetX;
+            int pinX1 = posX - width/2 - pinSize;
+            int pinX2 = posX + width/2;
 
-            getPin(i).paint(g, pinX1, pinY + offsetY, pinSize);
-            getPin(getPinNumber()- i - 1).paint(g, pinX2, pinY + offsetY, pinSize);
+            getPin(i).setBounds(pinX1, pinY, pinSize, pinSize);
+            getPin(getPinNumber()-i-1).setBounds(pinX2, pinY, pinSize, pinSize);
+
+            getPin(i).paint(g, pinX1 + offsetX, pinY + offsetY, pinSize);
+            getPin(getPinNumber()- i - 1).paint(g, pinX2 + offsetX, pinY + offsetY, pinSize);
         }
     }
 

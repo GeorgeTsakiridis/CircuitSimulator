@@ -55,6 +55,11 @@ public class Handler{
         }else{
             viewportPanel.updateGhostChip(selectedComponent);
         }
+
+        if(mouseMode != MouseMode.CAMERA){
+            ChipUtils.unselectAllChips(chipsOnScreen);
+            ChipUtils.unselectAllPins(chipsOnScreen);
+        }
     }
 
     public void setSimulationSpeed(int emulationSpeed){
@@ -84,7 +89,7 @@ public class Handler{
         if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
             if (selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
                 Chip chip = selectedComponent.createNewInstance();
-                chip.setPosition(mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
+                chip.setPosition(mouseX, mouseY);
                 chipsOnScreen.add(chip);
                 viewportPanel.setChipsToPaint(chipsOnScreen);
             }
@@ -92,7 +97,7 @@ public class Handler{
         //MOVE
         else if (mouseMode == MouseMode.MOVE) {
             ChipUtils.unselectAllChips(chipsOnScreen);
-            ChipUtils.selectChipIfNotNull(ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY()));
+            ChipUtils.selectChipIfNotNull(ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX, mouseY));
         }
         //LINK
         else if (mouseMode == MouseMode.LINK) {
@@ -126,11 +131,12 @@ public class Handler{
         }
         //REMOVE
         else if (mouseMode == MouseMode.REMOVE) {
-            Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
+            Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX, mouseY);
             if (chip != null) {
                 ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
             }
         }
+
     }
 
     public void mousePressed(int mouseX, int mouseY){
@@ -144,24 +150,24 @@ public class Handler{
 
     public void mouseMoved(int mouseX, int mouseY){
         if(selectedComponent != null){
-            selectedComponent.setPosition(mouseX - viewportPanel.getOffsetX(), mouseY - viewportPanel.getOffsetY());
+            selectedComponent.setPosition(mouseX, mouseY);
         }
     }
 
-    public void mouseDragged(int mouseX, int mouseY){
+    public void mouseDragged(int mouseX, int mouseY, int rawMouseX, int rawMouseY){
 
         if(mouseMode == MouseMode.CAMERA) {
-            viewportPanel.addOffset(mouseX - lastX, mouseY - lastY);
+            viewportPanel.addOffset(rawMouseX - lastX, rawMouseY - lastY);
+            lastX = rawMouseX;
+            lastY = rawMouseY;
         }
         else if(mouseMode == MouseMode.MOVE){
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
-                        chip.setPosition(chip.getPosX() + mouseX-lastX, chip.getPosY() + mouseY - lastY);
+                        chip.setPosition(mouseX, mouseY);
                     }
                 }
         }
-        lastX = mouseX;
-        lastY = mouseY;
 
     }
 

@@ -73,18 +73,19 @@ public class ChipLED extends Chip {
 
     @Override
     public void paintComponent(Graphics g, int offsetX, int offsetY) {
-        int x = getPosX() + offsetX - getWidth()/2;
-        int y = getPosY() + offsetY - getHeight()/2;
+        int x = getPosX() - getWidth()/2;
+        int y = getPosY() - getHeight()/2;
 
-        getPin(0).paintWithPinName(g, x, y, getWidth(), "");
+        getPin(0).setBounds(x, y, getWidth(), getHeight());
+        getPin(0).paintWithPinName(g, x + offsetX, y + offsetY, getWidth(), "");
 
         if(((PinInput)getPin(0)).isLinkHigh()) {
             Color c = g.getColor();
             g.setColor(color);
-            g.fillOval(x, y, getWidth(), getHeight());
+            g.fillOval(x + offsetX, y + offsetY, getWidth(), getHeight());
             g.setColor(c);
         }else{
-            g.drawOval(x, y, getWidth(), getHeight());
+            g.drawOval(x + offsetX, y + offsetY, getWidth(), getHeight());
         }
     }
 }

@@ -165,7 +165,7 @@ public class Window implements KeyListener {
 
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
-        zoomResetButton.addActionListener(e -> viewportPanel.setScale(1f));
+        zoomResetButton.addActionListener(e -> viewportPanel.resetOffsetAndScale());
 
         mainFrame.setSize(680, 480);
         mainFrame.setMinimumSize(new Dimension(840, 400));
@@ -283,7 +283,7 @@ public class Window implements KeyListener {
         enableOtherEmulationButtons(EmulationAction.STOP);
         enableOtherMouseButtons(MouseMode.CAMERA);
         cameraButton.setEnabled(false);
-        simulationSpeedSlider.setValue(20);
+        simulationSpeedSlider.setValue(500);
         normalViewButton.setEnabled(false);
         lineViewButton.setEnabled(true);
     }

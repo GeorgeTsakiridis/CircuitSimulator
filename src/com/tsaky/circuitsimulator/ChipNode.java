@@ -27,9 +27,9 @@ public class ChipNode extends Chip {
         int x = getPosX() + offsetX - getWidth() / 2;
         int y = getPosY() + offsetY - getHeight() / 2;
 
-        g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 7, 7);
+        g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 6, 6);
 
-        getPin(0).paintWithPinName(g, x, y, getWidth(), "");
+        getPin(0).paintWithPinName(g, x-1, y-1, 6, "");
     }
 
 }

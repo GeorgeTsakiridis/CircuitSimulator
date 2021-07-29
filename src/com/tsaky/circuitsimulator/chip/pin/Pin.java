@@ -33,7 +33,7 @@ public abstract class Pin {
     }
 
     public void setBounds(int x, int y, int width, int height){
-        bounds = new Rectangle(x, y, width, height);
+        bounds.setBounds(x, y, width, height);
     }
 
     public boolean isToggleable() {
@@ -59,10 +59,10 @@ public abstract class Pin {
     public void paintWithPinName(Graphics g, int posX, int posY, int pinSize, String name){
         Rectangle sb = PaintUtils.getStringBounds(g, name);
 
-        setBounds(posX, posY, pinSize, pinSize);
+        //setBounds(posX, posY, pinSize, pinSize);
         Color old = g.getColor();
         g.setColor(getPinColor());
-        g.drawRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+        g.drawRect(posX, posY, getBounds().width, getBounds().height);
 
         g.setColor(old);
         g.drawString(name, posX + pinSize/2 - sb.width/2, posY + pinSize/2 + sb.height/2 -1); // Pin number

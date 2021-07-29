@@ -53,6 +53,11 @@ public class Chip7SegmentDisplay extends Chip {
     }
 
     @Override
+    public boolean isPowered() {
+        return getGroundPin().isGrounded();
+    }
+
+    @Override
     public void calculateOutputs() {
         if(!isPowered()){
             turnAllOutputsOff();
@@ -79,6 +84,7 @@ public class Chip7SegmentDisplay extends Chip {
 
         int i = 0;
         for(Pin pin : getPins()){
+            pin.setBounds(x - offsetX, y + (pinSize+spacePerPin)*i + 2 - offsetY, pinSize, pinSize);
             pin.paintWithPinName(g, x + 2, y + (pinSize+spacePerPin)*i++ +2, pinSize, pin.getName());
         }
 

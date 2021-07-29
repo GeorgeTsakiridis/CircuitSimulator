@@ -25,13 +25,16 @@ public class ChipPower extends Chip {
 
     @Override
     public void paintComponent(Graphics g, int offsetX, int offsetY) {
-        int x = getPosX() + offsetX - getWidth() / 2;
-        int y = getPosY() + offsetY - getHeight() / 2;
+        int x = getPosX() - getWidth() / 2;
+        int y = getPosY() - getHeight() / 2;
         Color c = g.getColor();
 
-        g.setColor(Color.GREEN.darker());
-        g.fillRect(x, y, getWidth(), getHeight());
+        g.setColor(isSelected() ? Color.RED : Color.GREEN.darker());
+        g.fillRect(x + offsetX, y + offsetY, getWidth(), getHeight());
+        g.setColor(Color.BLACK);
+        getPin(0).setBounds(x, y, getWidth(), getHeight());
+        getPin(0).paintWithPinName(g, x + offsetX, y + offsetY, getWidth(), "+V");
         g.setColor(c);
-        getPin(0).paintWithPinName(g, x, y, getWidth(), "+V");
+
     }
 }

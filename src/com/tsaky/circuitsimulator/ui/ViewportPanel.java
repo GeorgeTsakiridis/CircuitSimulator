@@ -38,8 +38,8 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     }
 
     public void addOffset(int offsetX, int offsetY){
-        this.offsetX += (int)((float)offsetX/scale);
-        this.offsetY += (int)((float)offsetY/scale);
+        this.offsetX += offsetX/scale;
+        this.offsetY += offsetY/scale;
     }
 
     public void resetOffsetAndScale(){
@@ -105,7 +105,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
             ghostChip.paintComponent(g, offsetX, offsetY);
         }
 
-        Linker.paint(g, viewMode);
+        Linker.paint(g, viewMode, offsetX, offsetY);
 
         if(Handler.SHORTED){
             g.setColor(Color.RED);
@@ -120,25 +120,38 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         g.setColor(Color.BLACK);
     }
 
+    private int getMouseX(){
+        Point mousePos = getMousePosition();
+        if(mousePos == null)return -1;
+
+        return (int)((mousePos.x)/getScale()) - getOffsetX();
+    }
+
+    private int getMouseY(){
+        Point mousePos = getMousePosition();
+        if(mousePos == null)return -1;
+
+        return (int)((mousePos.y)/getScale()) - getOffsetY();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        Point mousePos = getMousePosition();
-        if(mousePos != null)
-            handler.mouseClicked(mousePos.x, mousePos.y);
+        int x = getMouseX();
+        int y = getMouseY();
+        if(x != -1 && y != -1) handler.mouseClicked(x, y);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Point mousePos = getMousePosition();
-        if(mousePos != null)
-            handler.mousePressed(mousePos.x, mousePos.y);
+        Point p = getMousePosition();
+        handler.mousePressed(p.x, p.y);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Point mousePos = getMousePosition();
-        if(mousePos != null)
-            handler.mouseReleased(mousePos.x, mousePos.y);
+        int x = getMouseX();
+        int y = getMouseY();
+        if(x != -1 && y != -1) handler.mouseReleased(x, y);
     }
 
     @Override
@@ -151,15 +164,17 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        Point mousePos = getMousePosition();
-        if(mousePos != null)
-            handler.mouseDragged(mousePos.x, mousePos.y);
+        int x = getMouseX();
+        int y = getMouseY();
+        Point p = getMousePosition();
+        if(x != -1 && y != -1) handler.mouseDragged(x, y, p.x, p.y);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Point mousePos = getMousePosition();
-        if(mousePos != null)
-            handler.mouseMoved(mousePos.x, mousePos.y);
+        int x = getMouseX();
+        int y = getMouseY();
+
+        if(x != -1 && y != -1) handler.mouseMoved(x, y);
     }
 }
