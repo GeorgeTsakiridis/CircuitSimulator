@@ -15,7 +15,7 @@ import java.awt.*;
 
 public class ChipSimulator {
 
-    public static final int PROGRAM_VERSION = 290721;
+    public static final int PROGRAM_VERSION = 300721;
     public static final long MAGIC_NUMBER = 1073147341387874804L;
 
     public ChipSimulator() {

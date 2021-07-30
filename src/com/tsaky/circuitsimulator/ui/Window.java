@@ -185,8 +185,8 @@ public class Window implements KeyListener {
             }
         });
 
-        mainFrame.setSize(900, 480);
-        mainFrame.setMinimumSize(new Dimension(900, 400));
+        mainFrame.setSize(940, 480);
+        mainFrame.setMinimumSize(new Dimension(940, 400));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);

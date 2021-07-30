@@ -214,7 +214,7 @@ public class Handler{
         mouseMode = MouseMode.CAMERA;
         setViewMode(ViewMode.NORMAL);
         emulationMode = EmulationAction.STOP;
-        simulationSpeed = 20;
+        simulationSpeed = 500;
 
         Linker.clearPairs();
         ChipUtils.unselectAllChips(chipsOnScreen);

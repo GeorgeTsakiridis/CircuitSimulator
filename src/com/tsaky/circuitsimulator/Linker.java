@@ -26,6 +26,7 @@ public class Linker {
             Color c = g.getColor();
             if(viewMode == ViewMode.NORMAL) {
                 g.setColor(Color.BLACK);
+                isLineHighForPin(pin1);
             }else if(viewMode == ViewMode.LINE_STATUS){
                 g.setColor(isLineHighForPin(pin1) ? Color.GREEN : Color.RED);
             }

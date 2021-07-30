@@ -14,7 +14,7 @@ public class ChipNode extends Chip {
                         new PinInput("input", 0),
                 });
 
-        setSizeWithoutPins(4, 4);
+        setSizeWithoutPins(6, 6);
     }
 
     @Override
@@ -29,7 +29,8 @@ public class ChipNode extends Chip {
 
         g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 6, 6);
 
-        getPin(0).paintWithPinName(g, x-1, y-1, 6, "");
+        getPin(0).setBounds(x, y, getWidth()+1, getHeight()+1);
+        getPin(0).paintWithPinName(g, x-1, y-1, getWidth()+2, "");
     }
 
 }
