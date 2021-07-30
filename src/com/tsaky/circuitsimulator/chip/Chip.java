@@ -179,6 +179,13 @@ public abstract class Chip {
     }
 
     /**
+     * Executes when the component is removed
+     */
+    public void onRemove(){
+
+    }
+
+    /**
      * Returns the border of the chip.
      * @return a Rectangle representing the borders of the chip
      */

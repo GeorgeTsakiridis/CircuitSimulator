@@ -56,6 +56,7 @@ public class ChipUtils {
     }
 
     public static void safelyRemoveChip(ArrayList<Chip> chips, Chip chip) {
+        chip.onRemove();
         if(chip.getPinNumber() > 0) {
             for (Pin pin : chip.getPins()) {
                 Linker.unlinkPin(pin);

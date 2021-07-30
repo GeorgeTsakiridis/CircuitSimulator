@@ -5,7 +5,6 @@ import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipText;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinOutput;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.ui.ViewMode;
 import com.tsaky.circuitsimulator.ui.ViewportPanel;
@@ -31,6 +30,8 @@ public class Handler{
     private int simulationSpeed = 500;
     private int lastX = 0;
     private int lastY = 0;
+
+    public static boolean LOADING = false;
 
     public Handler() {
         viewportPanel = new ViewportPanel(this);
@@ -134,7 +135,7 @@ public class Handler{
                     pin.setSelected(true);
                 } else {
                     if (lastSelectedPin != pin) {
-                        Linker.linkPins(pin, lastSelectedPin);
+                        Linker.linkPins(pin, lastSelectedPin, true);
                     } else {
                         Linker.unlinkPin(pin);
                     }
@@ -216,6 +217,7 @@ public class Handler{
         Linker.clearPairs();
         ChipUtils.unselectAllChips(chipsOnScreen);
         ChipUtils.unselectAllPins(chipsOnScreen);
+        for(Chip chip : chipsOnScreen)chip.onRemove();
         chipsOnScreen.clear();
         viewportPanel.setChipsToPaint(chipsOnScreen);
 
@@ -269,10 +271,12 @@ public class Handler{
             dataOutputStream.writeInt(indexes1[1]);
             dataOutputStream.writeInt(indexes2[0]);
             dataOutputStream.writeInt(indexes2[1]);
+            dataOutputStream.writeBoolean(pair.isRemovable());
         }
     }
 
     public void loadFromFile(File file) throws IOException {
+        LOADING = true;
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
 
         reset();
@@ -317,14 +321,16 @@ public class Handler{
             int pinIndex1 = dataInputStream.readInt();
             int chipIndex2 = dataInputStream.readInt();
             int pinIndex2 = dataInputStream.readInt();
+            boolean removable = dataInputStream.readBoolean();
 
             Pin pin1 = chipsOnScreen.get(chipIndex1).getPin(pinIndex1);
             Pin pin2 = chipsOnScreen.get(chipIndex2).getPin(pinIndex2);
 
-            Linker.linkPins(pin1, pin2);
+            Linker.linkPins(pin1, pin2, removable);
         }
 
         viewportPanel.setChipsToPaint(chipsOnScreen);
+        LOADING = false;
     }
 
 }

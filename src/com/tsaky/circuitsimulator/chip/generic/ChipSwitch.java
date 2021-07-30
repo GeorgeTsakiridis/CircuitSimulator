@@ -1,6 +1,8 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
+import com.tsaky.circuitsimulator.Handler;
 import com.tsaky.circuitsimulator.InfoPage;
+import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinInput;
@@ -16,38 +18,46 @@ public class ChipSwitch extends Chip {
     public ChipSwitch() {
         super("Switch", new InfoPage("A normal 3-pin switch. Can be toggled."),
                 new Pin[]{
-                        new PinInput("C", 0),
-                        new PinOutput("NO", 1),
-                        new PinOutput("NC", 2)
+                        new PinNotUsed("C", 0),
+                        new PinNotUsed("NO", 1),
+                        new PinNotUsed("NC", 2)
         });
         setSizeWithoutPins(75, 45);
+        if(!Handler.LOADING){
+            toggle();
+            toggle();
+        }
     }
 
     @Override
     public void toggle() {
         toggled = !toggled;
+
+        if(toggled){
+            Linker.forceUnlinkPins(getPin(0), getPin(2));
+            Linker.linkPins(getPin(0), getPin(1), false);
+        }else{
+            Linker.forceUnlinkPins(getPin(0), getPin(1));
+            Linker.linkPins(getPin(0), getPin(2), false);
+        }
+
+    }
+
+    @Override
+    public void onRemove() {
+        Linker.forceUnlinkPins(getPin(0), getPin(1));
+        Linker.forceUnlinkPins(getPin(0), getPin(2));
     }
 
     @Override
     public void calculateOutputs() {
-        boolean input = getInputPin(0).isLinkHigh();
 
-        if(toggled){
-            getOutputPin(1).setHigh(false);
-            getOutputPin(1).setHighZMode(true);
-            getOutputPin(2).setHigh(input);
-            getOutputPin(2).setHighZMode(false);
-        }else{
-            getOutputPin(1).setHigh(input);
-            getOutputPin(1).setHighZMode(false);
-            getOutputPin(2).setHigh(false);
-            getOutputPin(2).setHighZMode(true);
-        }
     }
 
     @Override
     public void setExtraData(byte[] bytes) {
-        toggled = bytes[0] == (byte)1;
+        toggled = bytes[0] == (byte)0;
+        toggle();
     }
 
     @Override
@@ -71,10 +81,7 @@ public class ChipSwitch extends Chip {
         getPin(2).setBounds(getPosX()+getWidth()/2 - 12, getPosY()+5, 10, 10);
         getPin(2).paint(g, offsetX, offsetY);
 
-        if(!toggled) {
-            g.drawLine(x+12, getPosY()+offsetY+1, getPosX()+offsetX+getWidth()/2-12, getPosY()+offsetY-9);
-        }else{
-            g.drawLine(x+12, getPosY()+offsetY+1, getPosX()+offsetX+getWidth()/2-12, getPosY()+offsetY+9);
+        if(toggled) {
             g.drawString("Pressed", getPosX()+offsetX-35, getPosY()+offsetY-8);
         }
 

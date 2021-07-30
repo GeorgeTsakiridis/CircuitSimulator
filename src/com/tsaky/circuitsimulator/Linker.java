@@ -38,14 +38,27 @@ public class Linker {
         }
     }
 
-    public static void linkPins(Pin pin1, Pin pin2){
-        Pair newPair = new Pair(pin1, pin2);
+    public static void linkPins(Pin pin1, Pin pin2, boolean removable){
+        Pair newPair = new Pair(pin1, pin2, removable);
 
         for(Pair pair : pairs){
             if(pair.equals(newPair))return;
         }
 
         pairs.add(newPair);
+    }
+
+    public static void forceUnlinkPins(Pin pin1, Pin pin2){
+        Pair pairToRemove = new Pair(pin1, pin2);
+
+        for(Pair pair : pairs){
+            if(pair.equals(pairToRemove)){
+                pairToRemove = pair;
+                break;
+            }
+        }
+
+        pairs.remove(pairToRemove);
     }
 
     public static ArrayList<Pin> getAllConnectedPinsWith(Pin pin, ArrayList<Pin> connectedPins){
@@ -68,7 +81,7 @@ public class Linker {
         ArrayList<Pair> pairsToRemove = new ArrayList<>();
 
         for(Pair pair : pairs){
-            if(pair.contains(pin))pairsToRemove.add(pair);
+            if(pair.contains(pin) && pair.isRemovable())pairsToRemove.add(pair);
         }
 
         for(Pair pair : pairsToRemove)pairs.remove(pair);

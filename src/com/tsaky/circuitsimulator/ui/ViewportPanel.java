@@ -65,6 +65,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     }
 
     public void updateGhostChip(Chip chip){
+        if(ghostChip != null)ghostChip.onRemove();
         ghostChip = chip;
     }
 
