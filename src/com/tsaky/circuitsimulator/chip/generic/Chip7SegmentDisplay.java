@@ -84,8 +84,8 @@ public class Chip7SegmentDisplay extends Chip {
 
         int i = 0;
         for(Pin pin : getPins()){
-            pin.setBounds(x - offsetX, y + (pinSize+spacePerPin)*i + 2 - offsetY, pinSize, pinSize);
-            pin.paintWithPinName(g, x + 2, y + (pinSize+spacePerPin)*i++ +2, pinSize, pin.getName());
+            pin.setBounds(x - offsetX, y + (pinSize+spacePerPin)*i++ + 2 - offsetY, pinSize, pinSize);
+            pin.paintWithPinName(g, offsetX, offsetY, pin.getName());
         }
 
         if(verticalSegment != null && horizontalSegment != null){

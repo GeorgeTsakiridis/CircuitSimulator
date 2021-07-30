@@ -42,20 +42,21 @@ public abstract class Pin {
         return bounds;
     }
 
-    public void paint(Graphics g, int posX, int posY, int pinSize){
-        paintWithPinName(g, posX, posY, pinSize, String.valueOf(getPinID()+1));
+    public void paint(Graphics g, int offsetX, int offsetY){
+        paintWithPinName(g, offsetX, offsetY, String.valueOf(getPinID()+1));
     }
 
-    public void paintWithPinName(Graphics g, int posX, int posY, int pinSize, String name){
+    public void paintWithPinName(Graphics g, int offsetX, int offsetY, String name){
         Rectangle sb = PaintUtils.getStringBounds(g, name);
 
         //setBounds(posX, posY, pinSize, pinSize);
         Color old = g.getColor();
         g.setColor(getPinColor());
-        g.drawRect(posX, posY, getBounds().width, getBounds().height);
+        g.drawRect(bounds.x + offsetX, bounds.y + offsetY, getBounds().width, getBounds().height);
 
         g.setColor(old);
-        g.drawString(name, posX + pinSize/2 - sb.width/2, posY + pinSize/2 + sb.height/2 -1); // Pin number
+        g.drawString(name, bounds.x + bounds.width/2 - sb.width/2 + offsetX,
+                bounds.y + bounds.height/2 + sb.height/2 -1 + offsetY);
     }
 
     public Color getPinColor(){

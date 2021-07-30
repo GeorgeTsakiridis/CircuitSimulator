@@ -86,7 +86,7 @@ public class ChipLED extends Chip {
         int y = getPosY() - getHeight()/2;
 
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paintWithPinName(g, x + offsetX, y + offsetY, getWidth(), "");
+        getPin(0).paintWithPinName(g,offsetX, offsetY, "");
 
         Color c = g.getColor();
 

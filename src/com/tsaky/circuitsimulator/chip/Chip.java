@@ -321,8 +321,8 @@ public abstract class Chip {
             getPin(i).setBounds(pinX1, pinY, pinSize, pinSize);
             getPin(getPinNumber()-i-1).setBounds(pinX2, pinY, pinSize, pinSize);
 
-            getPin(i).paint(g, pinX1 + offsetX, pinY + offsetY, pinSize);
-            getPin(getPinNumber()- i - 1).paint(g, pinX2 + offsetX, pinY + offsetY, pinSize);
+            getPin(i).paint(g, offsetX, offsetY);
+            getPin(getPinNumber()- i - 1).paint(g, offsetX, offsetY);
         }
     }
 
