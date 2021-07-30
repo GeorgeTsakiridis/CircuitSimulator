@@ -2,6 +2,7 @@ package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.chip.ChipText;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinOutput;
@@ -85,8 +86,28 @@ public class Handler{
     }
 
     public void mouseClicked(int mouseX, int mouseY) {
+        //TEXT
+        if(mouseMode == MouseMode.TEXT){
+            ChipUtils.unselectAllChips(chipsOnScreen);
+            Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX, mouseY);
+
+            if(chip instanceof ChipText) {
+                ChipText chipText = (ChipText) chip;
+
+                JTextArea textArea = new JTextArea(chipText.getText(), 5, 1);
+
+                int option = JOptionPane.showConfirmDialog(null, textArea, "Insert Text", JOptionPane.OK_CANCEL_OPTION);
+
+                if(option == 2)return;
+
+                String text = textArea.getText();
+                if (text.length() > 0) {
+                    chipText.setText(text);
+                }
+            }
+        }
         //ADD
-        if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
+        else if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
             if (selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
                 Chip chip = selectedComponent.createNewInstance();
                 chip.setPosition(mouseX, mouseY);

@@ -246,6 +246,7 @@ public abstract class Chip {
      * @return the total pins of the chip
      */
     public int getPinNumber(){
+        if(pins == null)return 0;
         return pins.length;
     }
 
@@ -298,6 +299,8 @@ public abstract class Chip {
      * @param offsetY
      */
     public void paintComponent(Graphics g, int offsetX, int offsetY){
+        if(getPinNumber() == 0)return;
+
         PaintUtils.drawCenteredChip(g, getPosX() + offsetX, getPosY() + offsetY, getWidth(), getHeight(), this);
         pinSize = PaintUtils.getPinSize(getPinNumber(), height);
         int sidePins = getPinNumber()/2;

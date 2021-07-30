@@ -33,6 +33,7 @@ public class PaintUtils {
     }
 
     public static int getPinSize(int pins, int height){
+        if(pins == 0)return 0;
         return height/pins;
     }
 
@@ -46,6 +47,16 @@ public class PaintUtils {
         rectangle.width = (int)(font.getStringBounds(text, fontRenderContext).getWidth());
 
         return rectangle;
+    }
+
+    public static Rectangle getMultilineStringBounds(Graphics g, String[] text){
+        int max = -1;
+        for(String s : text){
+            int i = getStringBounds(g, s).width;
+            if(i > max)max = i;
+        }
+
+        return new Rectangle(0, 0, max, g.getFont().getSize() * text.length);
     }
 
     public static BufferedImage getScaledImage(BufferedImage image, int width, int height) {

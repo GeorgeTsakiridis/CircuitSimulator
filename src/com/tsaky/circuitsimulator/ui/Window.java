@@ -34,6 +34,7 @@ public class Window implements KeyListener {
     private final ImageButton loadButton = new ImageButton("load.png");
 
     private final MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, "cameraMove.png", "Move Camera");
+    private final MouseModeChangeButton textButton = new MouseModeChangeButton(MouseMode.TEXT, "text.png", "Edit Texts");
     private final MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, "toggle.png", "Toggle Component");
     private final MouseModeChangeButton moveButton = new MouseModeChangeButton(MouseMode.MOVE, "move.png", "Move Component");
     private final MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, "add.png", "Add Component");
@@ -223,6 +224,7 @@ public class Window implements KeyListener {
 
     private void addMouseButtonsToPanel(JPanel panel){
         mouseModeChangeButtons.add(cameraButton);
+        mouseModeChangeButtons.add(textButton);
         mouseModeChangeButtons.add(toggleButton);
         mouseModeChangeButtons.add(moveButton);
         mouseModeChangeButtons.add(addButton);

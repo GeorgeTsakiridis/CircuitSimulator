@@ -1,6 +1,7 @@
 package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.chip.ChipText;
 import com.tsaky.circuitsimulator.chip.c74xx.*;
 import com.tsaky.circuitsimulator.chip.c74xxx.Chip74257;
 import com.tsaky.circuitsimulator.chip.c74xxx.Chip74283;
@@ -22,6 +23,7 @@ public class ChipSimulator {
         ChipManager.addChip(new ChipGround());
         ChipManager.addChip(new ChipPower());
         ChipManager.addChip(new ChipSwitch());
+        ChipManager.addChip(new ChipText());
         ChipManager.addChip(new ChipLED("Red", Color.RED));
         ChipManager.addChip(new ChipLED("Green", Color.GREEN));
         ChipManager.addChip(new ChipLED("Yellow", Color.YELLOW));

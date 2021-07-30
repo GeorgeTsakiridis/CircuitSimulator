@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class ChipUtils {
     public static void unselectAllPins(ArrayList<Chip> chips){
         for(Chip chip : chips){
+            if(chip.getPinNumber() == 0)continue;
             for(Pin pin : chip.getPins()){
                 pin.setSelected(false);
             }
@@ -16,6 +17,7 @@ public class ChipUtils {
 
     public static Pin getPinBellowMouse(ArrayList<Chip> chips, int x, int y){
         for(Chip chip : chips){
+            if(chip.getPinNumber() == 0)continue;
             for(Pin pin : chip.getPins()){
                 if(pin.getBounds().contains(x, y))return pin;
             }
@@ -54,10 +56,11 @@ public class ChipUtils {
     }
 
     public static void safelyRemoveChip(ArrayList<Chip> chips, Chip chip) {
-        for (Pin pin : chip.getPins()) {
-            Linker.unlinkPin(pin);
+        if(chip.getPinNumber() > 0) {
+            for (Pin pin : chip.getPins()) {
+                Linker.unlinkPin(pin);
+            }
         }
-
         chips.remove(chip);
     }
 
