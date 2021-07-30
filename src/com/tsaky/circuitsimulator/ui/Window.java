@@ -52,6 +52,7 @@ public class Window implements KeyListener {
     private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
     private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
     private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
+    private final ImageButton showComponentInfoButton = new ImageButton("showComponentInfo.png");
 
     //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
 
@@ -168,11 +169,20 @@ public class Window implements KeyListener {
         zoomInButton.setToolTipText("Zoom In");
         zoomOutButton.setToolTipText("Zoom Out");
         zoomResetButton.setToolTipText("Reset Camera");
+        showComponentInfoButton.setToolTipText("Show the Component Info Window");
 
         gridToggleButton.addActionListener(e -> viewportPanel.toggleGrid());
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
         zoomResetButton.addActionListener(e -> viewportPanel.resetOffsetAndScale());
+        showComponentInfoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!pinoutFrame.isVisible()){
+                    pinoutFrame.setVisible(true);
+                }
+            }
+        });
 
         mainFrame.setSize(900, 480);
         mainFrame.setMinimumSize(new Dimension(900, 400));
@@ -193,6 +203,7 @@ public class Window implements KeyListener {
         pinoutFrame.setAlwaysOnTop(true);
         pinoutFrame.setSize(380, 400);
         pinoutFrame.setLocation(mainFrame.getLocationOnScreen().x + mainFrame.getSize().width, mainFrame.getLocationOnScreen().y );
+        pinoutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         pinoutFrame.setVisible(true);
         pinoutFrame.addComponentListener(pinoutFrameComponentListener);
 
@@ -244,6 +255,7 @@ public class Window implements KeyListener {
         panel.add(zoomOutButton);
         panel.add(zoomInButton);
         panel.add(zoomResetButton);
+        panel.add(showComponentInfoButton);
     }
 
     BufferedImage image = null;
