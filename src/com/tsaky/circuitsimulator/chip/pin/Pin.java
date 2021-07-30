@@ -10,18 +10,12 @@ public abstract class Pin {
     private final int pinID;
     private Rectangle bounds;
     private boolean isSelected = false;
-    private boolean isToggleable = false;
 
     public Pin(String pinName, int pinID){
         this.pinName = pinName;
 
         this.pinID = pinID;
         this.bounds = new Rectangle();
-    }
-
-    public Pin(String pinName, int pinID, boolean isToggleable){
-        this(pinName, pinID);
-        this.isToggleable = isToggleable;
     }
 
     public boolean isSelected() {
@@ -34,10 +28,6 @@ public abstract class Pin {
 
     public void setBounds(int x, int y, int width, int height){
         bounds.setBounds(x, y, width, height);
-    }
-
-    public boolean isToggleable() {
-        return isToggleable;
     }
 
     public String getName(){

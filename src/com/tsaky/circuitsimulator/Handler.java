@@ -144,11 +144,8 @@ public class Handler{
         }
         //TOGGLE
         else if (mouseMode == MouseMode.TOGGLE) {
-            Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouseX, mouseY);
-            if (pin instanceof PinOutput) {
-                PinOutput pinOutput = (PinOutput) pin;
-                if (pinOutput.isToggleable()) pinOutput.setHigh(!pinOutput.isHigh());
-            }
+            Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX, mouseY);
+            if (chip != null)chip.toggle();
         }
         //REMOVE
         else if (mouseMode == MouseMode.REMOVE) {

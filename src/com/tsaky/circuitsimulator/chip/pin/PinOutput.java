@@ -8,10 +8,6 @@ public class PinOutput extends Pin{
         super(pinName, pinID);
     }
 
-    public PinOutput(String pinName, int pinID, boolean isToggleable) {
-        super(pinName, pinID, isToggleable);
-    }
-
     public boolean isHigh() {
         return isOutputHigh;
     }

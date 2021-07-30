@@ -19,7 +19,7 @@ public abstract class Chip {
     private int width = 0; //The width of the chip not containing the pins
     private int height = 0; //The height of the chip not containing the pins
     private final Rectangle border; //The border of the chip containing the pins
-    private boolean isSelected = false; //Whether or not the chip is selected
+    private boolean isSelected = false; //Whether the chip is selected
     private int pinSize; //The width/height of each pin rectangle
     private InfoPage infoPage; //The info page of the chip
 
@@ -156,7 +156,7 @@ public abstract class Chip {
     }
 
     /**
-     * Returns true of false depending on whether or not the chip is selected
+     * Returns true of false depending on whether the chip is selected
      * @return true if the chip is selected, false otherwise
      */
     public boolean isSelected() {
@@ -169,6 +169,13 @@ public abstract class Chip {
      */
     public void setSelected(boolean isSelected){
         this.isSelected = isSelected;
+    }
+
+    /**
+     * Executes when the user toggles the chip
+     */
+    public void toggle(){
+
     }
 
     /**
