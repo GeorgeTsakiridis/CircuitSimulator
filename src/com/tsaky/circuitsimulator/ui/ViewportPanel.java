@@ -7,6 +7,7 @@ import com.tsaky.circuitsimulator.chip.ChipUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,6 +21,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     private int offsetX = 0;
     private int offsetY = 0;
     private float scale = 1f;
+    private boolean paintGrid = true;
 
     private ArrayList<Chip> chips = null;
     private Chip ghostChip = null;
@@ -75,19 +77,26 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(scale > 0.2f)scale -= 0.1f;
     }
 
+    public void toggleGrid() {
+        paintGrid = !paintGrid;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
 
         g.setColor(backgroundColor);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(gridColor);
 
-        for(int i = -20; i < getWidth() + 20; i += 20*scale){
-            g.drawLine(i + offsetX%20, 0, i + offsetX%20, getHeight()-1);
-        }
+        if(paintGrid) {
+            g.setColor(gridColor);
 
-        for (int i = -20; i < getHeight() + 20; i+= 20*scale) {
-            g.drawLine(0, i + offsetY%20, getWidth()-1, i + offsetY%20);
+            for (int i = -20; i < getWidth() + 20; i += 20 * scale) {
+                g.drawLine(i + offsetX % 20, 0, i + offsetX % 20, getHeight() - 1);
+            }
+
+            for (int i = -20; i < getHeight() + 20; i += 20 * scale) {
+                g.drawLine(0, i + offsetY % 20, getWidth() - 1, i + offsetY % 20);
+            }
         }
 
         Graphics2D g2d = (Graphics2D)g;
@@ -177,4 +186,5 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
 
         if(x != -1 && y != -1) handler.mouseMoved(x, y);
     }
+
 }

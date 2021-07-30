@@ -47,7 +47,8 @@ public class Window implements KeyListener {
     private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
 
     private final ViewChangeButton normalViewButton = new ViewChangeButton(ViewMode.NORMAL, "normalView.png", "Resume Normal View");
-    private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "View/Hide Lines Status");
+    private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "Show/Hide Lines Status");
+    private final ImageButton gridToggleButton = new ImageButton("gridToggle.png");
     private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
     private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
     private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
@@ -163,12 +164,18 @@ public class Window implements KeyListener {
             }
         });
 
+        gridToggleButton.setToolTipText("Show/Hide the grid");
+        zoomInButton.setToolTipText("Zoom In");
+        zoomOutButton.setToolTipText("Zoom Out");
+        zoomResetButton.setToolTipText("Reset Camera");
+
+        gridToggleButton.addActionListener(e -> viewportPanel.toggleGrid());
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
         zoomResetButton.addActionListener(e -> viewportPanel.resetOffsetAndScale());
 
-        mainFrame.setSize(680, 480);
-        mainFrame.setMinimumSize(new Dimension(840, 400));
+        mainFrame.setSize(900, 480);
+        mainFrame.setMinimumSize(new Dimension(900, 400));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);
@@ -233,6 +240,7 @@ public class Window implements KeyListener {
         panel.add(normalViewButton);
         panel.add(lineViewButton);
         //panel.add(powerViewButton);
+        panel.add(gridToggleButton);
         panel.add(zoomOutButton);
         panel.add(zoomInButton);
         panel.add(zoomResetButton);
