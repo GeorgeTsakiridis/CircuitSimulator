@@ -9,7 +9,8 @@ import java.awt.*;
 
 public class ChipLED extends Chip {
 
-    private Color color;
+    private Color colorActive;
+    private Color colorInactive;
 
     public ChipLED(){
         this("Red", Color.RED);
@@ -19,25 +20,34 @@ public class ChipLED extends Chip {
         super("LED " + ledColor,
                 new InfoPage("Colored LED"),
                 new Pin[]{new PinInput("IN", 0)});
-        this.color = color;
+        setColor(color);
         setSizeWithoutPins(15, 15);
     }
 
     private void setColor(Color color){
-        this.color = new Color(color.getRGB());
+        this.colorActive = new Color(color.getRGB());
 
+        int r = colorActive.getRed();
+        int g = colorActive.getGreen();
+        int b = colorActive.getBlue();
+
+        r = Math.min(255, r + 150);
+        g = Math.min(255, g + 150);
+        b = Math.min(255, b + 150);
+
+        this.colorInactive = new Color(r, g, b);
     }
 
     @Override
     public byte[] getExtraDataBytes() {
 
-        if (color.equals(Color.RED)) {
+        if (colorActive.equals(Color.RED)) {
             return new byte[]{0};
-        } else if (color.equals(Color.GREEN)) {
+        } else if (colorActive.equals(Color.GREEN)) {
             return new byte[]{1};
-        } else if (color.equals(Color.YELLOW)) {
+        } else if (colorActive.equals(Color.YELLOW)) {
             return new byte[]{2};
-        } else if (color.equals(Color.BLUE)) {
+        } else if (colorActive.equals(Color.BLUE)) {
             return new byte[]{3};
         }
 
@@ -47,7 +57,6 @@ public class ChipLED extends Chip {
 
     @Override
     public void setExtraData(byte[] bytes) {
-
         if(bytes[0] == 0){
             setColor(Color.RED);
         }else if(bytes[0] == 1){
@@ -67,7 +76,7 @@ public class ChipLED extends Chip {
     @Override
     public Chip createNewInstance() {
         ChipLED led = (ChipLED) super.createNewInstance();
-        led.setColor(color);
+        led.setColor(colorActive);
         return led;
     }
 
@@ -79,13 +88,16 @@ public class ChipLED extends Chip {
         getPin(0).setBounds(x, y, getWidth(), getHeight());
         getPin(0).paintWithPinName(g, x + offsetX, y + offsetY, getWidth(), "");
 
+        Color c = g.getColor();
+
         if(((PinInput)getPin(0)).isLinkHigh()) {
-            Color c = g.getColor();
-            g.setColor(color);
-            g.fillOval(x + offsetX, y + offsetY, getWidth(), getHeight());
-            g.setColor(c);
+            g.setColor(colorActive);
         }else{
-            g.drawOval(x + offsetX, y + offsetY, getWidth(), getHeight());
+            g.setColor(colorInactive);
         }
+
+        g.fillOval(x + offsetX, y + offsetY, getWidth(), getHeight());
+
+        g.setColor(c);
     }
 }
