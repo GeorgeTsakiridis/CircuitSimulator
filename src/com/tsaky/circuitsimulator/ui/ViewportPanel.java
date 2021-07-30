@@ -69,7 +69,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     }
 
     public void increaseScale(){
-        if(scale < 2.0f)scale += 0.1f;
+        if(scale < 1.0f)scale += 0.1f;
     }
 
     public void decreaseScale(){
