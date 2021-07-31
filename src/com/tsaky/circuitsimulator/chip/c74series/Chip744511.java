@@ -1,4 +1,4 @@
-package com.tsaky.circuitsimulator.chip.c74xxxx;
+package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
@@ -10,22 +10,22 @@ public class Chip744511 extends Chip {
         super("744511",
                 new InfoPage("BCD to 7-Segment Decode", "ic744511.png"),
                 new Pin[]{
-                new PinInput("B", 0),
-                new PinInput("C", 1),
-                new PinInput("LT", 2),
-                new PinInput("BL", 3),
-                new PinInput("LE", 4),
-                new PinInput("D", 5),
-                new PinInput("A", 6),
-                new PinGround("GND", 7),
-                new PinOutput("e", 8),
-                new PinOutput("d", 9),
-                new PinOutput("c", 10),
-                new PinOutput("b", 11),
-                new PinOutput("a", 12),
-                new PinOutput("g", 13),
-                new PinOutput("f", 14),
-                new PinPower("VCC", 15)
+                new Pin("B", 0, PinType.INPUT),
+                new Pin("C", 1, PinType.INPUT),
+                new Pin("LT", 2, PinType.INPUT),
+                new Pin("BL", 3, PinType.INPUT),
+                new Pin("LE", 4, PinType.INPUT),
+                new Pin("D", 5, PinType.INPUT),
+                new Pin("A", 6, PinType.INPUT),
+                new Pin("GND", 7, PinType.GROUND),
+                new Pin("e", 8, PinType.OUTPUT),
+                new Pin("d", 9, PinType.OUTPUT),
+                new Pin("c", 10, PinType.OUTPUT),
+                new Pin("b", 11, PinType.OUTPUT),
+                new Pin("a", 12, PinType.OUTPUT),
+                new Pin("g", 13, PinType.OUTPUT),
+                new Pin("f", 14, PinType.OUTPUT),
+                new Pin("VCC", 15, PinType.POWER)
         });
         setSize(40, 200);
     }
@@ -33,17 +33,16 @@ public class Chip744511 extends Chip {
     @Override
     public void calculateOutputs() {
         if(!isPowered()){
-            turnAllOutputsOff();
-            turnAllOutputsToHighZ();
+            turnAllPinTypesTo(PinType.OUTPUT, PinType.HIGH_Z);
         }else{
-
-            boolean A = getInputPin(6).isLinkHigh();
-            boolean B = getInputPin(0).isLinkHigh();
-            boolean C = getInputPin(1).isLinkHigh();
-            boolean D = getInputPin(5).isLinkHigh();
-            boolean LE = getInputPin(4).isLinkHigh();
-            boolean LT = getInputPin(2).isLinkHigh();
-            boolean BL = getInputPin(3).isLinkHigh();
+            turnAllPinTypesTo(PinType.HIGH_Z, PinType.OUTPUT);
+            boolean A = getPin(6).isLinkHigh();
+            boolean B = getPin(0).isLinkHigh();
+            boolean C = getPin(1).isLinkHigh();
+            boolean D = getPin(5).isLinkHigh();
+            boolean LE = getPin(4).isLinkHigh();
+            boolean LT = getPin(2).isLinkHigh();
+            boolean BL = getPin(3).isLinkHigh();
             boolean a = false;
             boolean b = false;
             boolean c = false;
@@ -87,13 +86,13 @@ public class Chip744511 extends Chip {
                 a=b=c=d=e=f=g=true;
             }
 
-            getOutputPin(12).setHigh(a);
-            getOutputPin(11).setHigh(b);
-            getOutputPin(10).setHigh(c);
-            getOutputPin(9).setHigh(d);
-            getOutputPin(8).setHigh(e);
-            getOutputPin(14).setHigh(f);
-            getOutputPin(13).setHigh(g);
+            getPin(12).setHigh(a);
+            getPin(11).setHigh(b);
+            getPin(10).setHigh(c);
+            getPin(9).setHigh(d);
+            getPin(8).setHigh(e);
+            getPin(14).setHigh(f);
+            getPin(13).setHigh(g);
 
         }
     }

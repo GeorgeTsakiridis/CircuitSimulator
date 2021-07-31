@@ -1,20 +1,23 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
+import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
 
-public abstract class Pin {
+public class Pin {
 
     private final String pinName;
     private final int pinID;
-    private Rectangle bounds;
+    private PinType pinType;
+    private final Rectangle bounds;
     private boolean isSelected = false;
+    private boolean isOutputHigh = false;
 
-    public Pin(String pinName, int pinID){
+    public Pin(String pinName, int pinID, PinType pinType){
         this.pinName = pinName;
-
         this.pinID = pinID;
+        setPinType(pinType);
         this.bounds = new Rectangle();
     }
 
@@ -38,12 +41,62 @@ public abstract class Pin {
         return pinID;
     }
 
+    public PinType getType() {
+        return pinType;
+    }
+
+    public void setPinType(PinType pinType) {
+        this.pinType = pinType;
+    }
+
     public Rectangle getBounds(){
         return bounds;
     }
 
     public void paint(Graphics g, int offsetX, int offsetY){
         paint(g, offsetX, offsetY, String.valueOf(getPinID()+1));
+    }
+
+    //From old PinInput.java
+    public boolean isLinkHigh(){
+        return Linker.isLineHighForPin(this);
+    }
+
+    //From old PinGround.java
+    public boolean isGrounded() {
+
+        if(pinType == PinType.GROUND_SOURCE)return true;
+
+        for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
+            if(pin.getType() == PinType.GROUND_SOURCE || pin.getType() == PinType.OUTPUT && !pin.isHigh()){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //From old PinPower.java
+    public boolean isPowered() {
+
+        if(pinType == PinType.POWER_SOURCE)return true;
+
+        for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
+            if(pin.getType() == PinType.POWER_SOURCE || pin.getType() == PinType.OUTPUT && pin.isHigh()){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //From old PinOutput.java
+    public boolean isHigh() {
+        return isOutputHigh;
+    }
+
+    public void setHigh(boolean outputHigh) {
+        isOutputHigh = outputHigh;
     }
 
     public void paint(Graphics g, int offsetX, int offsetY, String name){

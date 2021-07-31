@@ -4,7 +4,7 @@ import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinNotUsed;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 
 import java.awt.*;
 
@@ -15,9 +15,9 @@ public class ChipSwitch extends Chip {
     public ChipSwitch() {
         super("Switch", new InfoPage("A normal 3-pin switch. Can be toggled."),
                 new Pin[]{
-                        new PinNotUsed("C", 0),
-                        new PinNotUsed("NO", 1),
-                        new PinNotUsed("NC", 2)
+                        new Pin("C", 0, PinType.NOT_USED),
+                        new Pin("NO", 1, PinType.NOT_USED),
+                        new Pin("NC", 2, PinType.NOT_USED)
         });
         setSizeWithoutPins(75, 45);
     }

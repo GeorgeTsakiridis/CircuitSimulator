@@ -12,14 +12,14 @@ public class ChipRelay extends Chip {
 
     public ChipRelay() {
         super("Relay", new InfoPage("A Dual Relay"), new Pin[]{
-                new PinPower("+", 0),
-                new PinGround("GND", 1),
-                new PinNotUsed("1C", 2),
-                new PinNotUsed("1NC", 3),
-                new PinNotUsed("1NO", 4),
-                new PinNotUsed("2C", 5),
-                new PinNotUsed("2NC", 6),
-                new PinNotUsed("2NO", 7),
+                new Pin("+", 0, PinType.POWER),
+                new Pin("GND", 1, PinType.GROUND),
+                new Pin("1C", 2, PinType.NOT_USED),
+                new Pin("1NC", 3, PinType.NOT_USED),
+                new Pin("1NO", 4, PinType.NOT_USED),
+                new Pin("2C", 5, PinType.NOT_USED),
+                new Pin("2NC", 6, PinType.NOT_USED),
+                new Pin("2NO", 7, PinType.NOT_USED),
         });
 
         setSizeWithoutPins(120, 60);

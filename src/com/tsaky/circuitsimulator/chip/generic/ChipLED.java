@@ -3,7 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinInput;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 
 import java.awt.*;
 
@@ -19,7 +19,7 @@ public class ChipLED extends Chip {
     public ChipLED(String ledColor, Color color) {
         super("LED " + ledColor,
                 new InfoPage("Colored LED"),
-                new Pin[]{new PinInput("IN", 0)});
+                new Pin[]{new Pin("IN", 0, PinType.INPUT)});
         setColor(color);
         setSizeWithoutPins(15, 15);
     }
@@ -90,7 +90,7 @@ public class ChipLED extends Chip {
 
         Color c = g.getColor();
 
-        if(((PinInput)getPin(0)).isLinkHigh()) {
+        if((getPin(0)).isLinkHigh()) {
             g.setColor(colorActive);
         }else{
             g.setColor(colorInactive);

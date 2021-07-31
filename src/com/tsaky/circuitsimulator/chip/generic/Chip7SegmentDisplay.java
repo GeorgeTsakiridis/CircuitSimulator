@@ -3,25 +3,22 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinGround;
-import com.tsaky.circuitsimulator.chip.pin.PinInput;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Chip7SegmentDisplay extends Chip {
-
-    private final int sbd = 39;//segment big dimension
-    private final int ssd = 13;//segment small dimension
 
     private BufferedImage verticalSegment = null, horizontalSegment = null;
     {
         try {
-            verticalSegment = ImageIO.read(getClass().getClassLoader().getResource("assets/components/verticalSegment.png"));
-            horizontalSegment = ImageIO.read(getClass().getClassLoader().getResource("assets/components/horizontalSegment.png"));
+            verticalSegment = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("assets/components/verticalSegment.png")));
+            horizontalSegment = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("assets/components/horizontalSegment.png")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -39,14 +36,14 @@ public class Chip7SegmentDisplay extends Chip {
         super("7 Segment Display",
                 new InfoPage("Common Cathode 7-Segment Display"),
                 new Pin[]{
-                        new PinInput("a", 0),
-                        new PinInput("b", 1),
-                        new PinInput("c", 2),
-                        new PinInput("d", 3),
-                        new PinInput("e", 4),
-                        new PinInput("f", 5),
-                        new PinInput("g", 6),
-                        new PinGround("-", 7)
+                        new Pin("a", 0, PinType.INPUT),
+                        new Pin("b", 1, PinType.INPUT),
+                        new Pin("c", 2, PinType.INPUT),
+                        new Pin("d", 3, PinType.INPUT),
+                        new Pin("e", 4, PinType.INPUT),
+                        new Pin("f", 5, PinType.INPUT),
+                        new Pin("g", 6, PinType.INPUT),
+                        new Pin("-", 7, PinType.GROUND)
         });
         setSizeWithoutPins(80, 121);
     }
@@ -61,13 +58,13 @@ public class Chip7SegmentDisplay extends Chip {
         if(!isPowered()){
             turnAllOutputsOff();
         }else {
-            a = getInputPin(0).isLinkHigh();
-            b = getInputPin(1).isLinkHigh();
-            c = getInputPin(2).isLinkHigh();
-            d = getInputPin(3).isLinkHigh();
-            e = getInputPin(4).isLinkHigh();
-            f = getInputPin(5).isLinkHigh();
-            g = getInputPin(6).isLinkHigh();
+            a = getPin(0).isLinkHigh();
+            b = getPin(1).isLinkHigh();
+            c = getPin(2).isLinkHigh();
+            d = getPin(3).isLinkHigh();
+            e = getPin(4).isLinkHigh();
+            f = getPin(5).isLinkHigh();
+            g = getPin(6).isLinkHigh();
         }
     }
 
@@ -90,15 +87,17 @@ public class Chip7SegmentDisplay extends Chip {
         if(verticalSegment != null && horizontalSegment != null){
 
             if(this.a) g.drawImage(horizontalSegment, sX+11, y+12, null);//a
-            if(this.b) g.drawImage(verticalSegment, sX+6+sbd, y+ssd+7, null);//b
-            if(this.c) g.drawImage(verticalSegment, sX+6+sbd, y+ssd+sbd+10, null);//c
-            if(this.d) g.drawImage(horizontalSegment, sX+11, y+getHeight()-11-ssd, null);//d
-            if(this.f) g.drawImage(verticalSegment, sX+3, y+ssd+7, null);//f
-            if(this.e) g.drawImage(verticalSegment, sX+3, y+ssd+sbd+10, null);//e
-            if(this.g) g.drawImage(horizontalSegment, sX+11, y+getHeight()/2-ssd/2, null);//g
-
+            //segment small dimension
+            int ssd = 13;
+            //segment big dimension
+            int sbd = 39;
+            if(this.b) g.drawImage(verticalSegment, sX+6+ sbd, y+ ssd +7, null);//b
+            if(this.c) g.drawImage(verticalSegment, sX+6+ sbd, y+ ssd + sbd +10, null);//c
+            if(this.d) g.drawImage(horizontalSegment, sX+11, y+getHeight()-11- ssd, null);//d
+            if(this.f) g.drawImage(verticalSegment, sX+3, y+ ssd +7, null);//f
+            if(this.e) g.drawImage(verticalSegment, sX+3, y+ ssd + sbd +10, null);//e
+            if(this.g) g.drawImage(horizontalSegment, sX+11, y+getHeight()/2- ssd /2, null);//g
 
         }
-
     }
 }

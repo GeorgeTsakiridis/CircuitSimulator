@@ -24,7 +24,7 @@ public class PaintUtils {
 
         Rectangle chipNameBounds = getStringBounds(g2d, chip.getChipName());
 
-        g2d.translate(posX-width/2f + chipNameBounds.height, posY-height/2f + chipNameBounds.width*1.2f + 1);
+        g2d.translate(posX-width/2f + chipNameBounds.height, posY-height/2f + chipNameBounds.width*1.2f + 10);
         g2d.rotate(-Math.PI/2);
         g2d.scale(1.2, 1.2);
         g2d.drawString(chip.getChipName(), 0, 0);

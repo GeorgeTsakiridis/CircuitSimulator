@@ -3,8 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinInput;
-import com.tsaky.circuitsimulator.chip.pin.PinOutput;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 
 import java.awt.*;
 
@@ -12,20 +11,19 @@ public class ChipDiode extends Chip {
 
     public ChipDiode() {
         super("Diode", new InfoPage("A simple diode"), new Pin[]{
-                new PinInput("Anode", 0),
-                new PinOutput("Cathode", 1)
+                new Pin("Anode", 0, PinType.INPUT),
+                new Pin("Cathode", 1, PinType.OUTPUT)
         });
         setSizeWithoutPins(50, 20);
     }
 
     @Override
     public void calculateOutputs() {
-        if(getInputPin(0).isLinkHigh()){
-            getOutputPin(1).setHighZMode(false);
-            getOutputPin(1).setHigh(true);
+        if(getPin(0).isLinkHigh()){
+            getPin(1).setPinType(PinType.OUTPUT);
+            getPin(1).setHigh(true);
         }else{
-            getOutputPin(1).setHigh(false);
-            getOutputPin(1).setHighZMode(true);
+            getPin(1).setPinType(PinType.HIGH_Z);
         }
     }
 

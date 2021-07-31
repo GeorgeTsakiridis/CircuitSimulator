@@ -1,14 +1,10 @@
 package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinGround;
-import com.tsaky.circuitsimulator.chip.pin.PinOutput;
-import com.tsaky.circuitsimulator.chip.pin.PinPower;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.ViewMode;
 
 import java.awt.*;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Linker {
@@ -95,15 +91,13 @@ public class Linker {
         boolean hasVoltageSource = false;
 
         for (Pin pin : pins) {
-            if (pin instanceof PinOutput) {
-                PinOutput pinOutput = (PinOutput) pin;
-                if (pinOutput.isHighZMode()) continue;
 
+            if (pin.getType() == PinType.OUTPUT) {
                 if (first) {
                     first = false;
-                    isHigh = pinOutput.isHigh();
+                    isHigh = pin.isHigh();
                 } else {
-                    if (isHigh != pinOutput.isHigh()) {
+                    if (isHigh != pin.isHigh()) {
                         //shortedPins.add(pinOutput);
                         Handler.SHORTED = true;
                         return true;
@@ -113,14 +107,14 @@ public class Linker {
         }
 
         for (Pin pin : pins){
-            if(pin instanceof PinPower && ((PinPower) pin).isPowerSource()){
+            if(pin.getType() == PinType.POWER_SOURCE){
                 hasVoltageSource = true;
                 if(hasGroundSource || (!first && !isHigh)){
                     Handler.SHORTED = true;
                     return true;
                 }
             }
-            else if(pin instanceof PinGround && ((PinGround) pin).isGroundSource()){
+            else if(pin.getType() == PinType.GROUND_SOURCE){
                 hasGroundSource = true;
                 if(hasVoltageSource || (!first && isHigh)){
                     Handler.SHORTED = true;
@@ -139,16 +133,14 @@ public class Linker {
         if(Linker.checkForShorts(pins))return true;
 
         for(Pin pin : pins){
-            if(pin instanceof PinPower && ((PinPower) pin).isPowerSource()){
+            if(pin.getType() == PinType.POWER_SOURCE){
                 return true;
             }
-            else if(pin instanceof PinGround && ((PinGround) pin).isGroundSource()){
+            else if(pin.getType() == PinType.GROUND_SOURCE){
                 return false;
             }
-            else if(pin instanceof PinOutput && !((PinOutput) pin).isHighZMode()){
-                if(((PinOutput) pin).isHigh()){
-                    return true;
-                }
+            else if(pin.getType() == PinType.OUTPUT){
+                return pin.isHigh();
             }
         }
 

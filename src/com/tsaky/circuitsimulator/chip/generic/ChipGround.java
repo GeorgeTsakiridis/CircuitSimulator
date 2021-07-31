@@ -3,7 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinGround;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 
 import java.awt.*;
 
@@ -13,7 +13,7 @@ public class ChipGround extends Chip {
         super("Ground",
                 new InfoPage("Ground."),
                 new Pin[]{
-                new PinGround("GND", 0, true)
+                new Pin("GND", 0, PinType.GROUND_SOURCE)
         });
 
         setSizeWithoutPins(20, 20);

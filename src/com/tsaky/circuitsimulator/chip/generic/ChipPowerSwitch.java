@@ -3,7 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinOutput;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 
 import java.awt.*;
 
@@ -12,14 +12,19 @@ public class ChipPowerSwitch extends Chip {
     public ChipPowerSwitch() {
         super("Power Switch",
                 new InfoPage("A Simple Power Switch. Acts as a voltage source when active. Can be toggled."),
-                new Pin[]{new PinOutput("OUT", 0)});
+                new Pin[]{new Pin("OUT", 0, PinType.GROUND_SOURCE)});
         setSizeWithoutPins(20, 20);
     }
 
     @Override
     public void toggle() {
-        PinOutput pinOutput = (PinOutput)getPin(0);
-        pinOutput.setHigh(!pinOutput.isHigh());
+        Pin pin = getPin(0);
+
+        if(pin.getType() == PinType.GROUND_SOURCE){
+            pin.setPinType(PinType.POWER_SOURCE);
+        }else{
+            pin.setPinType(PinType.GROUND_SOURCE);
+        }
     }
 
     @Override
@@ -31,7 +36,7 @@ public class ChipPowerSwitch extends Chip {
     public byte[] getExtraDataBytes() {
         byte b;
 
-        if(((PinOutput)getPin(0)).isHigh()){
+        if((getPin(0)).getType() == PinType.POWER_SOURCE){
             b = 1;
         }
         else{
@@ -43,7 +48,7 @@ public class ChipPowerSwitch extends Chip {
 
     @Override
     public void setExtraData(byte[] bytes) {
-        ((PinOutput)getPin(0)).setHigh(bytes[0] == (byte)1);
+        (getPin(0)).setPinType(bytes[0] == (byte)1 ? PinType.POWER_SOURCE : PinType.GROUND_SOURCE);
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ChipPowerSwitch extends Chip {
         int y = getPosY() - getHeight() / 2;
         Color c = g.getColor();
         String text = "OFF";
-        if((getOutputPin(0)).isHigh()){
+        if(getPin(0).getType() == PinType.POWER_SOURCE){
             g.setColor(Color.GREEN.darker());
             text= "ON";
         }else{

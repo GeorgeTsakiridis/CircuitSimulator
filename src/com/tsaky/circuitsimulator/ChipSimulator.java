@@ -2,13 +2,14 @@ package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipText;
-import com.tsaky.circuitsimulator.chip.c74xx.*;
-import com.tsaky.circuitsimulator.chip.c74xxx.Chip74257;
-import com.tsaky.circuitsimulator.chip.c74xxx.Chip74283;
-import com.tsaky.circuitsimulator.chip.c74xxx.Chip74573;
-import com.tsaky.circuitsimulator.chip.c74xxx.Chip74574;
-import com.tsaky.circuitsimulator.chip.c74xxxx.Chip744511;
+import com.tsaky.circuitsimulator.chip.c74series.*;
+import com.tsaky.circuitsimulator.chip.c74series.Chip74257;
+import com.tsaky.circuitsimulator.chip.c74series.Chip74283;
+import com.tsaky.circuitsimulator.chip.c74series.Chip74573;
+import com.tsaky.circuitsimulator.chip.c74series.Chip74574;
+import com.tsaky.circuitsimulator.chip.c74series.Chip744511;
 import com.tsaky.circuitsimulator.chip.generic.*;
+import com.tsaky.circuitsimulator.chip.other.ChipPD43256BCZ;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,6 +44,8 @@ public class ChipSimulator {
         ChipManager.addChip(new Chip74573());
         ChipManager.addChip(new Chip74574());
         ChipManager.addChip(new Chip744511());
+
+        ChipManager.addChip(new ChipPD43256BCZ());
 
         new Handler();
 

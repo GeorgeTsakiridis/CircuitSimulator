@@ -62,10 +62,10 @@ public abstract class Chip {
      * @return True if the chip is powered, false otherwise
      */
     public boolean isPowered(){
-        PinPower power = getPowerPin();
-        PinGround ground = getGroundPin();
-        if(power == null || ground == null)return true;
-        return power.isPowered() && ground.isGrounded();
+        Pin powerPin = getPowerPin();
+        Pin groundPin = getGroundPin();
+        if(powerPin == null || groundPin == null)return true;
+        return powerPin.isPowered() && groundPin.isGrounded();
     }
 
     /**
@@ -73,54 +73,28 @@ public abstract class Chip {
      */
     public void turnAllOutputsOff(){
         for(Pin pin : pins){
-            if(pin instanceof PinOutput){
-                ((PinOutput)pin).setHigh(false);
+            if(pin.getType() == PinType.OUTPUT){
+                pin.setHigh(false);
             }
         }
     }
 
     /**
-     * Turns all outputs pins of the chip to High Impedance mode.
+     * Turns all pins of one PinType to another PinType.
      */
-    public void turnAllOutputsToHighZ(){
+    public void turnAllPinTypesTo(PinType from, PinType to){
         for(Pin pin : pins){
-            if(pin instanceof PinOutput){
-                ((PinOutput) pin).setHighZMode(true);
-            }
+            if(pin.getType() == from)pin.setPinType(to);
         }
-    }
-
-    /**
-     * Returns the pin in index {@code pin} of the Pins array if it is a PinInput or PinInputOutput.
-     * @param pin The index of the pin
-     * @return A PinInput if the pin at index {@code pin} is an PinInput or PinInputOutput, null otherwise
-     */
-    public PinInput getInputPin(int pin){
-        if(pins[pin] instanceof PinInput){
-            return (PinInput) pins[pin];
-        }
-        return null;
-    }
-
-    /**
-     * Returns the pin in index {@code pin} of the Pins array if it is a PinOutput or PinInputOutput.
-     * @param pin The index of the pin
-     * @return A PinInput if the pin at index {@code pin} is an PinOutput or PinInputOutput, null otherwise
-     */
-    public PinOutput getOutputPin(int pin){
-        if(pins[pin] instanceof PinOutput){
-            return (PinOutput) pins[pin];
-        }
-        return null;
     }
 
     /**
      * Returns the ground pin of the chip if it has one
      * @return The PinGround of the chip if the has one, null otherwise
      */
-    public PinGround getGroundPin(){
+    public Pin getGroundPin(){
         for(Pin pin : pins){
-            if(pin instanceof PinGround)return (PinGround)pin;
+            if(pin.getType() == PinType.GROUND)return pin;
         }
 
         return null;
@@ -130,9 +104,9 @@ public abstract class Chip {
      * Returns the power pin of the chip if it has one
      * @return The PinPower of the chip if the has one, null otherwise
      */
-    public PinPower getPowerPin(){
+    public Pin getPowerPin(){
         for(Pin pin : pins){
-            if(pin instanceof PinPower)return (PinPower)pin;
+            if(pin.getType() == PinType.POWER)return pin;
         }
 
         return null;
@@ -165,7 +139,6 @@ public abstract class Chip {
 
     /**
      * Sets the isSelected boolean of the Chip to true
-     * @param isSelected
      */
     public void setSelected(boolean isSelected){
         this.isSelected = isSelected;
@@ -295,7 +268,6 @@ public abstract class Chip {
 
     /**
      * If extra data bytes were given when saving the chip, this function will return these bytes when loadings
-     * @param bytes
      */
     public void setExtraData(byte[] bytes){}
 
@@ -305,7 +277,7 @@ public abstract class Chip {
      */
     public Chip createNewInstance() {
         try {
-            return this.getClass().newInstance();
+            return this.getClass().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -315,9 +287,6 @@ public abstract class Chip {
 
     /**
      * Draws the Chip
-     * @param g
-     * @param offsetX
-     * @param offsetY
      */
     public void paintComponent(Graphics g, int offsetX, int offsetY){
         if(getPinNumber() == 0)return;
