@@ -1,6 +1,8 @@
 package com.tsaky.circuitsimulator.chip;
 
 import com.tsaky.circuitsimulator.InfoPage;
+import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
@@ -13,7 +15,7 @@ public class ChipText extends Chip{
     boolean flag = true;
 
     public ChipText() {
-        super("Text", new InfoPage("A simple text box"), null);
+        super("Text", new InfoPage("A simple text box"), new Pin[]{});
         setText(text);
     }
 

@@ -80,6 +80,15 @@ public abstract class Chip {
     }
 
     /**
+     * Turns all pins to another PinType.
+     */
+    public void turnAllPinTypesTo(Pin[] pins, PinType to){
+        for(Pin pin : pins){
+            pin.setPinType(to);
+        }
+    }
+
+    /**
      * Turns all pins of one PinType to another PinType.
      */
     public void turnAllPinTypesTo(PinType from, PinType to){

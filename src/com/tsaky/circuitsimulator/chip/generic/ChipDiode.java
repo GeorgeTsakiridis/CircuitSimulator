@@ -35,8 +35,8 @@ public class ChipDiode extends Chip {
         getPin(1).setBounds(getPosX()+getWidth()/2-5, getPosY()-getHeight()/2+5, 10, 10);
         getPin(1).paint(g, offsetX, offsetY);
 
-        int x = getPosX()-getWidth()/2+7;
-        int y = getPosY();
+        int x = getPosX()-getWidth()/2+7 + offsetX;
+        int y = getPosY() + offsetY;
 
         g.drawLine(x, y, x+14, y);
         g.drawLine(x+14, y-6, x+14, y+6);

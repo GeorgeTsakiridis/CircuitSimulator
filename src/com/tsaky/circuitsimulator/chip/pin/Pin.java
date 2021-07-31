@@ -90,7 +90,6 @@ public class Pin {
         return false;
     }
 
-    //From old PinOutput.java
     public boolean isHigh() {
         return isOutputHigh;
     }

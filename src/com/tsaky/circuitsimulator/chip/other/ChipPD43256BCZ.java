@@ -2,9 +2,19 @@ package com.tsaky.circuitsimulator.chip.other;
 
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
-import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChipPD43256BCZ extends Chip {
+
+    private final Pin[] ioPins;
+    private final Pin[] addressPins;
+
+    HashMap<Integer, Integer> ramData = new HashMap<>();
 
     public ChipPD43256BCZ() {
         super("PD43256BCZ", new InfoPage("A Standard SRAM with a capacity of 32K 8bit words"),
@@ -39,21 +49,104 @@ public class ChipPD43256BCZ extends Chip {
                         new Pin("VCC", 27, PinType.POWER)
                 });
 
+        ioPins = new Pin[]{getPin(10), getPin(11), getPin(12), getPin(14), getPin(15), getPin(16), getPin(17), getPin(18)};
+        addressPins = new Pin[]{getPin(9), getPin(8), getPin(7), getPin(6), getPin(5), getPin(4), getPin(3),
+                getPin(2), getPin(24), getPin(23), getPin(20), getPin(22), getPin(1), getPin(25), getPin(0)};
+
         setSize(70, 350);
     }
 
     @Override
     public byte[] getExtraDataBytes() {
-     return null;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1);
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        try {
+            dataOutputStream.writeInt(ramData.size());
+            for(Map.Entry<Integer, Integer> entry : ramData.entrySet()) {
+                dataOutputStream.writeInt(entry.getKey());
+                dataOutputStream.writeInt(entry.getValue());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override
     public void setExtraData(byte[] bytes) {
+        DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
+
+        try {
+            int entries = dataInputStream.readInt();
+            for(int i = 0; i < entries; i++){
+                ramData.put(dataInputStream.readInt(), dataInputStream.readInt());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private int getRamValue(int address){
+        if(ramData.containsKey(address))return ramData.get(address);
+
+        return 0;
     }
 
     @Override
     public void calculate() {
+        boolean chipSelect = !getPin(19).isLinkHigh();
+        boolean outputEnable = !getPin(21).isLinkHigh();
+        boolean writeEnable = !getPin(26).isLinkHigh();
 
+        if(!isPowered()){
+            turnAllPinTypesTo(ioPins, PinType.HIGH_Z);
+            ramData.clear();
+        }else{
+
+            int address = 0;
+            for(int i = addressPins.length-1; i >= 0; i--){
+                address += addressPins[i].isLinkHigh() ? 1 : 0;
+                address = address << 1;
+            }
+
+            System.out.println(writeEnable);
+
+            if(chipSelect){
+                if(outputEnable && !writeEnable){//Output-Read
+                    turnAllPinTypesTo(ioPins, PinType.OUTPUT);
+
+                    int value = getRamValue(address);
+
+                    for(int i = ioPins.length-1; i >= 0; i--){
+                        int bitValue = (int)Math.pow(2, i);
+                        if(value > bitValue){
+                            ioPins[i].setHigh(true);
+                            value -= bitValue;
+                        }else{
+                            ioPins[i].setHigh(false);
+                        }
+                    }
+
+                }else if(!outputEnable && writeEnable){//Input-Write
+                    turnAllPinTypesTo(ioPins, PinType.INPUT);
+
+                    int value = 0;
+                    for (int i = ioPins.length-1; i >= 0 ; i--) {
+                        value += ioPins[i].isLinkHigh() ? 1 : 0;
+                        value = value << 1;
+                    }
+
+                    ramData.put(address, value);
+
+                }else{
+                    turnAllPinTypesTo(ioPins, PinType.HIGH_Z);
+                }
+            }else{
+                turnAllPinTypesTo(ioPins, PinType.HIGH_Z);
+            }
+        }
     }
 
 }
