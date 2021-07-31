@@ -39,7 +39,7 @@ public abstract class Chip {
     /**
      *  Calculates the outputs of the chip's pins.
      */
-    public abstract void calculateOutputs();
+    public abstract void calculate();
 
     /**
      *  Sets a new InfoPage for the chip. (Not used)

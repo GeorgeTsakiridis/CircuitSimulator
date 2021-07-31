@@ -30,7 +30,7 @@ public class Chip7404 extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
         if(!isPowered()){
             turnAllPinTypesTo(PinType.OUTPUT, PinType.HIGH_Z);
         }else{

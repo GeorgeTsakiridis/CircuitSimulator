@@ -54,7 +54,7 @@ public class Chip7SegmentDisplay extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
         if(!isPowered()){
             turnAllOutputsOff();
         }else {

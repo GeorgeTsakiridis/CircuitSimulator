@@ -18,7 +18,7 @@ public class ChipDiode extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
         if(getPin(0).isLinkHigh()){
             getPin(1).setPinType(PinType.OUTPUT);
             getPin(1).setHigh(true);

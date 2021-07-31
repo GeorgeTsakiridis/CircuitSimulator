@@ -52,7 +52,7 @@ public class ChipPD43256BCZ extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
 
     }
 

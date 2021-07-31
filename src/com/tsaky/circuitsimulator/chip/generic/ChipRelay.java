@@ -40,7 +40,7 @@ public class ChipRelay extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
         if(isPowered()){
             Linker.forceUnlinkPins(getPin(2), getPin(3));
             Linker.linkPins(getPin(2), getPin(4), false);

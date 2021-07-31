@@ -48,7 +48,7 @@ public class ChipSwitch extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
     }
 
     @Override

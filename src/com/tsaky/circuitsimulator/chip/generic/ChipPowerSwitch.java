@@ -28,7 +28,7 @@ public class ChipPowerSwitch extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
 
     }
 

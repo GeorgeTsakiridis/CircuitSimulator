@@ -18,7 +18,7 @@ public class ChipNode extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
 
     }
 
@@ -29,7 +29,7 @@ public class ChipNode extends Chip {
         //TODO fix rendering
         g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 6, 6);
 
-        getPin(0).setBounds(getPosX()-3, getPosY()-3, getWidth()+1, getHeight()+1);
+        getPin(0).setBounds(getPosX()-3, getPosY()-3, getWidth(), getHeight());
         getPin(0).paint(g, offsetX, offsetY, "");
     }
 

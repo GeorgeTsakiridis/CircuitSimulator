@@ -69,7 +69,7 @@ public class ChipLED extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
 
     }
 

@@ -198,7 +198,7 @@ public class Handler{
                 CALCULATING = true;
                 if(!ViewportPanel.PAINTING) {
                     for (Chip chip : chipsOnScreen) {
-                        chip.calculateOutputs();
+                        chip.calculate();
                     }
                 }
                 CALCULATING = false;

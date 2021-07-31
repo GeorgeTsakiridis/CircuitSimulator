@@ -19,7 +19,7 @@ public class ChipPower extends Chip {
     }
 
     @Override
-    public void calculateOutputs() {
+    public void calculate() {
 
     }
 
