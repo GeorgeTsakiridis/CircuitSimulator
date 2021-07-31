@@ -24,9 +24,6 @@ public class ChipNode extends Chip {
 
     @Override
     public void paintComponent(Graphics g, int offsetX, int offsetY) {
-        int x = getPosX() + offsetX - getWidth() / 2;
-        int y = getPosY() + offsetY - getHeight() / 2;
-        //TODO fix rendering
         g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 6, 6);
 
         getPin(0).setBounds(getPosX()-3, getPosY()-3, getWidth(), getHeight());
