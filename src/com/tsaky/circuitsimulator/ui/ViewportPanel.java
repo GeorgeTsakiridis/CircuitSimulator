@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class ViewportPanel extends JPanel implements MouseListener, MouseMotionListener {
 
+    public static boolean PAINTING = false;
+
     private final Color backgroundColor = new Color(220, 220, 220);
     private final Color gridColor = new Color(100, 100, 100, 50);
 
@@ -83,6 +85,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void paintComponent(Graphics g) {
+        PAINTING = true;
 
         g.setColor(backgroundColor);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -128,6 +131,8 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         }
 
         g.setColor(Color.BLACK);
+
+        PAINTING = false;
     }
 
     private int getMouseX(){

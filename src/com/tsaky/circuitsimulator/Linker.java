@@ -12,6 +12,7 @@ public class Linker {
     private static final ArrayList<Pair> pairs = new ArrayList<>();
 
     public static void paint(Graphics g, ViewMode viewMode, int offsetX, int offsetY){
+
         for(Pair pair : pairs){
             Pin pin1 = pair.getPin1();
             Pin pin2 = pair.getPin2();

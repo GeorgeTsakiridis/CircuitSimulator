@@ -31,7 +31,7 @@ public class Handler{
     private int lastX = 0;
     private int lastY = 0;
 
-    public static boolean LOADING = false;
+    public static boolean CALCULATING = false;
 
     public Handler() {
         viewportPanel = new ViewportPanel(this);
@@ -41,6 +41,7 @@ public class Handler{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if(!CALCULATING)
                 viewportPanel.repaint();
             }
         }, 0, 16); //Target for 60 fps
@@ -194,9 +195,13 @@ public class Handler{
     public void run() {
         while(true) {
             if (EMULATION_RUNNING) {
-                for (Chip chip : chipsOnScreen) {
-                    chip.calculateOutputs();
+                CALCULATING = true;
+                if(!ViewportPanel.PAINTING) {
+                    for (Chip chip : chipsOnScreen) {
+                        chip.calculateOutputs();
+                    }
                 }
+                CALCULATING = false;
                 if (emulationMode == EmulationAction.STEP) {
                     setEmulationMode(EmulationAction.STOP);
                 }
@@ -277,7 +282,6 @@ public class Handler{
     }
 
     public void loadFromFile(File file) throws IOException {
-        LOADING = true;
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
 
         reset();
@@ -331,7 +335,6 @@ public class Handler{
         }
 
         viewportPanel.setChipsToPaint(chipsOnScreen);
-        LOADING = false;
     }
 
 }
