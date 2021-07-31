@@ -14,12 +14,17 @@ public class PinGround extends Pin{
         this(pinName, pinID, false);
     }
 
+    public boolean isGroundSource() {
+        return isGroundSource;
+    }
+
     public boolean isGrounded() {
 
         if(isGroundSource)return true;
 
         for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
-            if(pin instanceof PinGround && ((PinGround)pin).isGroundSource)return true;
+            if(pin instanceof PinGround && ((PinGround)pin).isGroundSource ||
+                    pin instanceof PinOutput && !((PinOutput) pin).isHigh() && !((PinOutput) pin).isHighZMode())return true;
         }
 
         return false;

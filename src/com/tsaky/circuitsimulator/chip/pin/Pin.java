@@ -43,10 +43,10 @@ public abstract class Pin {
     }
 
     public void paint(Graphics g, int offsetX, int offsetY){
-        paintWithPinName(g, offsetX, offsetY, String.valueOf(getPinID()+1));
+        paint(g, offsetX, offsetY, String.valueOf(getPinID()+1));
     }
 
-    public void paintWithPinName(Graphics g, int offsetX, int offsetY, String name){
+    public void paint(Graphics g, int offsetX, int offsetY, String name){
         Rectangle sb = PaintUtils.getStringBounds(g, name);
 
         //setBounds(posX, posY, pinSize, pinSize);

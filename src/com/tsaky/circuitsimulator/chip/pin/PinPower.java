@@ -14,12 +14,16 @@ public class PinPower extends Pin{
         this(pinName, pinID, false);
     }
 
+    public boolean isPowerSource() {
+        return isPowerSource;
+    }
+
     public boolean isPowered() {
 
         if(isPowerSource)return true;
 
         for(Pin pin : Linker.getAllConnectedPinsWith(this, null)){
-            if(pin instanceof PinPower && ((PinPower)pin).isPowerSource)return true;
+            if(pin instanceof PinPower && ((PinPower)pin).isPowerSource || pin instanceof PinOutput && ((PinOutput) pin).isHigh())return true;
         }
 
         return false;

@@ -61,6 +61,6 @@ public class ChipPowerSwitch extends Chip {
         g.fillRect(x + offsetX, y + offsetY, getWidth(), getHeight());
         g.setColor(c);
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paintWithPinName(g, offsetX, offsetY, text);
+        getPin(0).paint(g, offsetX, offsetY, text);
     }
 }

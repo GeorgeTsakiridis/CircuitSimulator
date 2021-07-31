@@ -30,7 +30,7 @@ public class ChipNode extends Chip {
         g.fillRect(getPosX()+offsetX-3, getPosY()+offsetY-3, 6, 6);
 
         getPin(0).setBounds(getPosX()-3, getPosY()-3, getWidth()+1, getHeight()+1);
-        getPin(0).paintWithPinName(g, offsetX, offsetY, "");
+        getPin(0).paint(g, offsetX, offsetY, "");
     }
 
 }

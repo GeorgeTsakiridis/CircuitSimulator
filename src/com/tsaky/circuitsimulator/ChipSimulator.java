@@ -24,6 +24,8 @@ public class ChipSimulator {
         ChipManager.addChip(new ChipPower());
         ChipManager.addChip(new ChipPowerSwitch());
         ChipManager.addChip(new ChipSwitch());
+        ChipManager.addChip(new ChipRelay());
+        ChipManager.addChip(new ChipDiode());
         ChipManager.addChip(new ChipText());
         ChipManager.addChip(new ChipLED("Red", Color.RED));
         ChipManager.addChip(new ChipLED("Green", Color.GREEN));

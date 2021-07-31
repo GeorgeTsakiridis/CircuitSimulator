@@ -33,7 +33,7 @@ public class ChipPower extends Chip {
         g.fillRect(x + offsetX, y + offsetY, getWidth(), getHeight());
         g.setColor(Color.BLACK);
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paintWithPinName(g,offsetX, offsetY, "+V");
+        getPin(0).paint(g,offsetX, offsetY, "+V");
         g.setColor(c);
 
     }

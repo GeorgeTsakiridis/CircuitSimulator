@@ -1,13 +1,10 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.Handler;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinInput;
 import com.tsaky.circuitsimulator.chip.pin.PinNotUsed;
-import com.tsaky.circuitsimulator.chip.pin.PinOutput;
 
 import java.awt.*;
 
@@ -23,10 +20,6 @@ public class ChipSwitch extends Chip {
                         new PinNotUsed("NC", 2)
         });
         setSizeWithoutPins(75, 45);
-        if(!Handler.LOADING){
-            toggle();
-            toggle();
-        }
     }
 
     @Override
@@ -44,6 +37,11 @@ public class ChipSwitch extends Chip {
     }
 
     @Override
+    public void onAdded() {
+        Linker.linkPins(getPin(0), getPin(2), false);
+    }
+
+    @Override
     public void onRemove() {
         Linker.forceUnlinkPins(getPin(0), getPin(1));
         Linker.forceUnlinkPins(getPin(0), getPin(2));
@@ -51,7 +49,6 @@ public class ChipSwitch extends Chip {
 
     @Override
     public void calculateOutputs() {
-
     }
 
     @Override

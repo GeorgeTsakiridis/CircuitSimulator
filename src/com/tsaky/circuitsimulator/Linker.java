@@ -113,14 +113,14 @@ public class Linker {
         }
 
         for (Pin pin : pins){
-            if(pin instanceof PinPower){
+            if(pin instanceof PinPower && ((PinPower) pin).isPowerSource()){
                 hasVoltageSource = true;
                 if(hasGroundSource || (!first && !isHigh)){
                     Handler.SHORTED = true;
                     return true;
                 }
             }
-            else if(pin instanceof PinGround){
+            else if(pin instanceof PinGround && ((PinGround) pin).isGroundSource()){
                 hasGroundSource = true;
                 if(hasVoltageSource || (!first && isHigh)){
                     Handler.SHORTED = true;
@@ -139,10 +139,10 @@ public class Linker {
         if(Linker.checkForShorts(pins))return true;
 
         for(Pin pin : pins){
-            if(pin instanceof PinPower){
+            if(pin instanceof PinPower && ((PinPower) pin).isPowerSource()){
                 return true;
             }
-            else if(pin instanceof PinGround){
+            else if(pin instanceof PinGround && ((PinGround) pin).isGroundSource()){
                 return false;
             }
             else if(pin instanceof PinOutput && !((PinOutput) pin).isHighZMode()){

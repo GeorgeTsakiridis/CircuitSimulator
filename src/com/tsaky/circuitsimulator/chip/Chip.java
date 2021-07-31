@@ -179,6 +179,13 @@ public abstract class Chip {
     }
 
     /**
+     * Executes when the component is created via the Add tool.
+     */
+    public void onAdded(){
+
+    }
+
+    /**
      * Executes when the component is removed
      */
     public void onRemove(){

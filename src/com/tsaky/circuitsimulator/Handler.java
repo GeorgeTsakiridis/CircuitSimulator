@@ -114,6 +114,7 @@ public class Handler{
                 chip.setPosition(mouseX, mouseY);
                 chipsOnScreen.add(chip);
                 viewportPanel.setChipsToPaint(chipsOnScreen);
+                chip.onAdded();
             }
         }
         //MOVE
