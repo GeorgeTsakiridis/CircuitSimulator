@@ -18,7 +18,7 @@ public class Chip74574 extends Chip {
     private boolean lastCLK = false;
 
     public Chip74574() {
-        super("74574",
+        super("74574", "Edge-Triggered Flip-Flop",
                 new InfoPage("Octal D-type edge-triggered flip-flop", "ic74574.png"),
                 new Pin[]{
                         new Pin("OE", 0, PinType.INPUT),

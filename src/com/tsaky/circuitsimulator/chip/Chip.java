@@ -12,7 +12,9 @@ import java.util.Arrays;
  */
 public abstract class Chip {
 
-    private final String chipName; //The name of the chip
+    private final String chipCatalogName; //The catalog name of the chip
+    private final String chipSaveName; //The save name of the chip
+    private String chipDisplayName; //The display name of the chip
     private final Pin[] pins; //A Pin array that contains all pins of the chip
     private int posX = 0; //The X position of the chip on the viewport
     private int posY = 0; //The Y position of the chip on the viewport
@@ -25,12 +27,15 @@ public abstract class Chip {
 
     /**
      * Constructor: Creates a Chip instance.
-     * @param chipName The name of the chip
+     * @param chipSaveName The save name of the chip
+     * @param chipCatalogName The display name of the chip
      * @param infoPage The InfoPage of the chip
      * @param pins The pins of the chip
      */
-    public Chip(String chipName, InfoPage infoPage, Pin[] pins) {
-        this.chipName = chipName;
+    public Chip(String chipSaveName, String chipCatalogName, InfoPage infoPage, Pin[] pins) {
+        this.chipSaveName = chipSaveName;
+        this.chipCatalogName = chipCatalogName;
+        this.chipDisplayName = chipCatalogName;
         this.infoPage = infoPage;
         this.pins = pins;
         border = new Rectangle();
@@ -254,10 +259,31 @@ public abstract class Chip {
     }
 
     /**
-     * @return the Chip name
+     * Changes the display name of the chip
      */
-    public String getChipName(){
-        return chipName;
+    public void setDisplayName(String chipDisplayName){
+        this.chipDisplayName = chipDisplayName;
+    }
+
+    /**
+     * @return the Chip save name
+     */
+    public String getSaveName(){
+        return chipSaveName;
+    }
+
+    /**
+     * @return the Chip catalog name
+     */
+    public String getCatalogName(){
+        return chipCatalogName;
+    }
+
+    /**
+     * @return the Chip display name
+     */
+    public String getDisplayName(){
+        return chipDisplayName;
     }
 
     /**
@@ -321,7 +347,8 @@ public abstract class Chip {
     @Override
     public String toString() {
         return "Chip{" +
-                "chipName='" + chipName + '\'' +
+                "chipSaveName='" + chipSaveName + '\'' +
+                ", chipDisplayName='" + chipDisplayName + '\'' +
                 ", pins=" + Arrays.toString(pins) +
                 ", posX=" + posX +
                 ", posY=" + posY +

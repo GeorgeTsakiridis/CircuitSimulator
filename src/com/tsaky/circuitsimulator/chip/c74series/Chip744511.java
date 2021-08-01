@@ -7,8 +7,8 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip744511 extends Chip {
 
     public Chip744511(){
-        super("744511",
-                new InfoPage("BCD to 7-Segment Decode", "ic744511.png"),
+        super("744511", "BCD to 7-Segment Decoder",
+                new InfoPage("BCD to 7-Segment Decoder", "ic744511.png"),
                 new Pin[]{
                 new Pin("B", 0, PinType.INPUT),
                 new Pin("C", 1, PinType.INPUT),

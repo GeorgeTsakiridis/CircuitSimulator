@@ -2,6 +2,7 @@ package com.tsaky.circuitsimulator.ui;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -22,12 +23,17 @@ public class PaintUtils {
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
 
-        Rectangle chipNameBounds = getStringBounds(g2d, chip.getChipName());
+        Rectangle chipNameBounds = getStringBounds(g2d, chip.getDisplayName());
 
-        g2d.translate(posX-width/2f + chipNameBounds.height, posY-height/2f + chipNameBounds.width*1.2f + 10);
+        float sc = (height*0.85f)/(float)chipNameBounds.width;
+
+        if(sc > 1.3f)sc = 1.3f;
+
+        g2d.translate(posX, posY-height/2f + chipNameBounds.width*sc + height/10f);
         g2d.rotate(-Math.PI/2);
-        g2d.scale(1.2, 1.2);
-        g2d.drawString(chip.getChipName(), 0, 0);
+
+        g2d.scale(sc, sc);
+        g2d.drawString(chip.getDisplayName(), 0, 0);
 
         g2d.setTransform(old);
     }

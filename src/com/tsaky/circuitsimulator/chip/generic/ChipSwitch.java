@@ -13,7 +13,7 @@ public class ChipSwitch extends Chip {
     private boolean toggled = false;
 
     public ChipSwitch() {
-        super("Switch", new InfoPage("A normal 3-pin switch. Can be toggled."),
+        super("switch", "Switch", new InfoPage("A normal 3-pin switch. Can be toggled."),
                 new Pin[]{
                         new Pin("C", 0, PinType.NOT_USED),
                         new Pin("NO", 1, PinType.NOT_USED),

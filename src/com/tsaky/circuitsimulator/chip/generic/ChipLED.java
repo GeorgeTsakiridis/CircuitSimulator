@@ -17,7 +17,7 @@ public class ChipLED extends Chip {
     }
 
     public ChipLED(String ledColor, Color color) {
-        super("LED " + ledColor,
+        super("led_" + ledColor, "LED " + ledColor,
                 new InfoPage("Colored LED"),
                 new Pin[]{new Pin("IN", 0, PinType.INPUT)});
         setColor(color);

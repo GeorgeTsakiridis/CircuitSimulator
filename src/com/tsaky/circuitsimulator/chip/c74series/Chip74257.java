@@ -7,7 +7,7 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip74257 extends Chip {
 
     public Chip74257(){
-        super("74283",
+        super("74283", "Data Selector",
                 new InfoPage("Quad 2-Line to 1-Line Data Selectors", "ic74257.png"),
                 new Pin[]{
                 new Pin("A/B", 0, PinType.INPUT),

@@ -251,7 +251,8 @@ public class Handler{
         for(Chip chip : chipsOnScreen){
             byte[] extraDataBytes = chip.getExtraDataBytes();
 
-            dataOutputStream.writeUTF(chip.getChipName());
+            dataOutputStream.writeUTF(chip.getSaveName());
+            dataOutputStream.writeUTF(chip.getDisplayName());
             dataOutputStream.writeInt(chip.getPosX());
             dataOutputStream.writeInt(chip.getPosY());
             dataOutputStream.writeInt(extraDataBytes == null ? 0 : extraDataBytes.length);
@@ -310,11 +311,13 @@ public class Handler{
 
         int totalChips = dataInputStream.readInt();
         for(int i = 0; i < totalChips; i++){
-            String chipName = dataInputStream.readUTF();
+            String chipSaveName = dataInputStream.readUTF();
+            String chipDisplayName = dataInputStream.readUTF();
             int posX = dataInputStream.readInt();
             int posY = dataInputStream.readInt();
 
-            Chip chip = ChipManager.getNewChipInstance(chipName);
+            Chip chip = ChipManager.getNewChipInstance(chipSaveName);
+            chip.setDisplayName(chipDisplayName);
             chip.setPosition(posX, posY);
             chip.setExtraData(dataInputStream.readNBytes(dataInputStream.readInt()));
             chipsOnScreen.add(chip);

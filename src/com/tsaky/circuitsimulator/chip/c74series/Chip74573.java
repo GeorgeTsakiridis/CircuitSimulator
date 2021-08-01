@@ -16,7 +16,7 @@ public class Chip74573 extends Chip {
     private boolean s7 = false;
 
     public Chip74573(){
-        super("74573",
+        super("74573", "Transparent Latch",
                 new InfoPage("Octal D-type transparent latch", "ic74573.png"),
                 new Pin[]{
                 new Pin("OE", 0, PinType.INPUT),

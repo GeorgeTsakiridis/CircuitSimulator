@@ -10,8 +10,8 @@ import java.awt.*;
 public class ChipGround extends Chip {
 
     public ChipGround() {
-        super("Ground",
-                new InfoPage("Ground."),
+        super("ground", "Ground",
+                new InfoPage("Ground"),
                 new Pin[]{
                 new Pin("GND", 0, PinType.GROUND_SOURCE)
         });

@@ -7,8 +7,8 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip7408 extends Chip {
 
     public Chip7408(){
-        super("7408",
-                new InfoPage("Quad 2-Input Positive AND Gates IC", "ic7408.png"),
+        super("7408", "AND Gates IC",
+                new InfoPage("Quad 2-Input Positive AND Gate IC", "ic7408.png"),
                 new Pin[]{
                 new Pin("1A", 0, PinType.INPUT),
                 new Pin("1B", 1, PinType.INPUT),

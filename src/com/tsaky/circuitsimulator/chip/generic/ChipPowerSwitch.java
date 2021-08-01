@@ -10,7 +10,7 @@ import java.awt.*;
 public class ChipPowerSwitch extends Chip {
 
     public ChipPowerSwitch() {
-        super("Power Switch",
+        super("power_switch", "Power Switch",
                 new InfoPage("A Simple Power Switch. Acts as a voltage source when active. Can be toggled."),
                 new Pin[]{new Pin("OUT", 0, PinType.GROUND_SOURCE)});
         setSizeWithoutPins(20, 20);

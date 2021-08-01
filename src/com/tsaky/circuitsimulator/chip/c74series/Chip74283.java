@@ -7,7 +7,7 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip74283 extends Chip {
 
     public Chip74283(){
-        super("74283",
+        super("74283", "4-bit Full Adder",
                 new InfoPage("4-bit Binary Full Adder (has carry in function)", "ic74283.png"),
                 new Pin[]{
                 new Pin("S2", 0, PinType.OUTPUT),

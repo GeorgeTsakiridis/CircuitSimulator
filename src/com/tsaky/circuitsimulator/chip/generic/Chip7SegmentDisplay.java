@@ -33,7 +33,7 @@ public class Chip7SegmentDisplay extends Chip {
     private boolean g = false;
 
     public Chip7SegmentDisplay() {
-        super("7 Segment Display",
+        super("seven_segment_display", "7 Segment Display",
                 new InfoPage("Common Cathode 7-Segment Display"),
                 new Pin[]{
                         new Pin("a", 0, PinType.INPUT),

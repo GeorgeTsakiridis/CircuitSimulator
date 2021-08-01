@@ -11,7 +11,7 @@ import java.awt.*;
 public class ChipRelay extends Chip {
 
     public ChipRelay() {
-        super("Relay", new InfoPage("A Dual Relay"), new Pin[]{
+        super("relay", "Relay", new InfoPage("A Dual Relay"), new Pin[]{
                 new Pin("+", 0, PinType.POWER),
                 new Pin("GND", 1, PinType.GROUND),
                 new Pin("1C", 2, PinType.NOT_USED),

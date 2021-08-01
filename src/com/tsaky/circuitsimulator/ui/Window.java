@@ -124,7 +124,7 @@ public class Window implements KeyListener {
 
         leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Components"));
         leftPanel.setFocusable(false);
-        leftPanel.setPreferredSize(new Dimension(140, 0));
+        leftPanel.setPreferredSize(new Dimension(200, 0));
         leftPanel.setViewportView(componentsList);
 
         rightPanel.add(schematicLabel);

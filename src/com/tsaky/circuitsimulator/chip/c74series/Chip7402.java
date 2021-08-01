@@ -7,7 +7,7 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip7402 extends Chip {
 
     public Chip7402(){
-        super("7402",
+        super("7402", "NOR Gates IC",
                 new InfoPage("Quad 2-Input NOR Gate IC", "ic7402.png"),
                 new Pin[]{
                 new Pin("1Y", 0, PinType.OUTPUT),

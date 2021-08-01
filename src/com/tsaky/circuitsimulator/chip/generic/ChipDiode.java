@@ -10,7 +10,7 @@ import java.awt.*;
 public class ChipDiode extends Chip {
 
     public ChipDiode() {
-        super("Diode", new InfoPage("A simple diode"), new Pin[]{
+        super("diode", "Diode", new InfoPage("A simple diode"), new Pin[]{
                 new Pin("Anode", 0, PinType.INPUT),
                 new Pin("Cathode", 1, PinType.OUTPUT)
         });

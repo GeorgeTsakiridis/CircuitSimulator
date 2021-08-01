@@ -9,7 +9,7 @@ import java.awt.*;
 public class ChipNode extends Chip {
 
     public ChipNode() {
-        super("Node", new InfoPage("A node used to organize the connection wires."),
+        super("node", "Node", new InfoPage("A node used to organize the connection wires."),
                 new Pin[]{
                         new Pin("node", 0, PinType.NOT_USED),
                 });

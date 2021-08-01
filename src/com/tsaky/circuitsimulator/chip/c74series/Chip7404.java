@@ -7,7 +7,7 @@ import com.tsaky.circuitsimulator.chip.pin.*;
 public class Chip7404 extends Chip {
 
     public Chip7404() {
-        super("7404",
+        super("7404", "NOT Gates IC",
                 new InfoPage("Hex Inverter IC", "ic7404.png"),
                 new Pin[]{
         new Pin("1A", 0, PinType.INPUT),

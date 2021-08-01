@@ -15,7 +15,7 @@ public class ChipText extends Chip{
     boolean flag = true;
 
     public ChipText() {
-        super("Text", new InfoPage("A simple text box"), new Pin[]{});
+        super("text", "Text", new InfoPage("A simple text box"), new Pin[]{});
         setText(text);
     }
 
