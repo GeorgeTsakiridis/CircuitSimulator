@@ -27,17 +27,15 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     private ArrayList<Chip> chips = null;
     private Chip ghostChip = null;
 
-    private ViewMode viewMode = ViewMode.NORMAL;
+    public static LineViewMode lineViewMode = LineViewMode.NORMAL;
+    public static PinViewMode pinViewMode = PinViewMode.NORMAL;
+
     private final Handler handler;
 
     public ViewportPanel(Handler handler) {
         this.handler = handler;
         addMouseListener(this);
         addMouseMotionListener(this);
-    }
-
-    public void setViewMode(ViewMode viewMode){
-        this.viewMode = viewMode;
     }
 
     public void addOffset(int offsetX, int offsetY){
@@ -117,7 +115,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
             ghostChip.paintComponent(g, offsetX, offsetY);
         }
 
-        Linker.paint(g, viewMode, offsetX, offsetY);
+        Linker.paint(g, offsetX, offsetY);
 
         if(Handler.SHORTED){
             System.out.println("SHORTED!");

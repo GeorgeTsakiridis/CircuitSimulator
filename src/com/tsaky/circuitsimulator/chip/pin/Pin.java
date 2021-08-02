@@ -2,6 +2,8 @@ package com.tsaky.circuitsimulator.chip.pin;
 
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
+import com.tsaky.circuitsimulator.ui.PinViewMode;
+import com.tsaky.circuitsimulator.ui.ViewportPanel;
 
 import java.awt.*;
 
@@ -103,16 +105,44 @@ public class Pin {
 
         //setBounds(posX, posY, pinSize, pinSize);
         Color old = g.getColor();
-        g.setColor(getPinColor());
+        g.setColor(getColor());
         g.drawRect(bounds.x + offsetX, bounds.y + offsetY, getBounds().width, getBounds().height);
+
+        switch (ViewportPanel.pinViewMode){
+            case STATUS -> g.setColor(getStatusColor());
+            case TYPE -> g.setColor(getTypeColor());
+        }
+
+        if(ViewportPanel.pinViewMode != PinViewMode.NORMAL && g.getColor() != Color.WHITE){
+            g.fillRect(bounds.x + offsetX + 1, bounds.y + offsetY + 1, getBounds().width-1, getBounds().height-1);
+        }
 
         g.setColor(old);
         g.drawString(name, bounds.x + bounds.width/2 - sb.width/2 + offsetX,
                 bounds.y + bounds.height/2 + sb.height/2 -1 + offsetY);
     }
 
-    public Color getPinColor(){
+    public Color getColor(){
         return isSelected() ? Color.RED : Color.BLACK;
+    }
+
+    public Color getStatusColor(){
+        if(getType() == PinType.OUTPUT){
+            return isHigh() ? Color.GREEN : Color.RED;
+        }else{
+            return Color.WHITE;
+        }
+    }
+
+    public Color getTypeColor(){
+        return switch (pinType) {
+            case INPUT -> Color.GREEN;
+            case OUTPUT -> Color.ORANGE;
+            case HIGH_Z -> Color.MAGENTA;
+            case GROUND, GROUND_SOURCE -> Color.BLUE;
+            case POWER, POWER_SOURCE -> Color.RED;
+            case NOT_USED -> Color.WHITE;
+        };
     }
 
 }

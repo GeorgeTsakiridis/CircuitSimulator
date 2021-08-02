@@ -21,6 +21,7 @@ public class Window implements KeyListener {
     private final Handler handler;
     private final ViewportPanel viewportPanel;
 
+    private BufferedImage image = null;
     private final JFrame mainFrame;
 
     private final JLabel infoLabel = new JLabel("Info Label");
@@ -33,6 +34,7 @@ public class Window implements KeyListener {
     private final ImageButton saveButton = new ImageButton("save.png");
     private final ImageButton loadButton = new ImageButton("load.png");
 
+    private final ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
     private final MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, "cameraMove.png", "Move Camera");
     private final MouseModeChangeButton textButton = new MouseModeChangeButton(MouseMode.TEXT, "text.png", "Edit Texts");
     private final MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, "toggle.png", "Toggle Component");
@@ -40,22 +42,28 @@ public class Window implements KeyListener {
     private final MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, "add.png", "Add Component");
     private final MouseModeChangeButton linkButton = new MouseModeChangeButton(MouseMode.LINK, "link.png", "Link Pins");
     private final MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, "remove.png", "Remove Component");
-    private final ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
 
+    private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
     private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "emulationStart.png", "Start Emulation");
     private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "emulationStop.png", "Start Emulation");
     private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "emulationStep.png", "Step Emulation");
-    private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
 
-    private final ViewChangeButton normalViewButton = new ViewChangeButton(ViewMode.NORMAL, "normalView.png", "Resume Normal View");
-    private final ViewChangeButton lineViewButton = new ViewChangeButton(ViewMode.LINE_STATUS, "lineView.png", "Show/Hide Lines Status");
+    private final ArrayList<LineViewChangeButton> lineViewChangeButtons = new ArrayList<>();
+    private final LineViewChangeButton normalLineViewButton = new LineViewChangeButton(LineViewMode.NORMAL, "normalView.png", "Resume Normal Lines View");
+    private final LineViewChangeButton statusLineViewButton = new LineViewChangeButton(LineViewMode.STATUS, "lineView.png", "Show/Hide Lines Status");
+    //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
+
+    private final ArrayList<PinViewChangeButton> pinViewChangeButtons = new ArrayList<>();
+    private final PinViewChangeButton normalPinViewButton = new PinViewChangeButton(PinViewMode.NORMAL, "normalPinView.png", "Resume Normal Pins View");
+    private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, "statusPinView.png", "Show/Hide Pins Status");
+    private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, "typePinView.png", "Show/Hide Pins Type");
+
     private final ImageButton gridToggleButton = new ImageButton("gridToggle.png");
     private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
     private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
     private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
     private final ImageButton showComponentInfoButton = new ImageButton("showComponentInfo.png");
 
-    //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
 
     ComponentListener pinoutFrameComponentListener = new ComponentListener() {
         @Override
@@ -79,7 +87,8 @@ public class Window implements KeyListener {
         this.handler = handler;
         this.viewportPanel = viewportPanel;
 
-        normalViewButton.setEnabled(false);
+        normalLineViewButton.setEnabled(false);
+        normalPinViewButton.setEnabled(false);
 
         JList<String> componentsList = new JList<>(ChipManager.getAllChipNames());
         componentsList.setBackground(UIManager.getColor("background"));
@@ -113,8 +122,15 @@ public class Window implements KeyListener {
         upProjectPanel.add(newButton);
         upProjectPanel.add(saveButton);
         upProjectPanel.add(loadButton);
-        addMouseButtonsToPanel(upMouseFunctionPanel);
-        addSimulationButtonsToPanel(upSimulationPanel);
+        for(MouseModeChangeButton button : mouseModeChangeButtons){
+            upMouseFunctionPanel.add(button);
+        }
+        cameraButton.setEnabled(false);
+        for(EmulationChangeButton button : emulationChangeButtons){
+            upSimulationPanel.add(button);
+        }
+        upSimulationPanel.add(simulationSpeedSlider);
+        stopEmulationButton.setEnabled(false);
         addViewButtonsToPanel(upViewPanel);
 
         upPanel.add(upProjectPanel);
@@ -124,7 +140,7 @@ public class Window implements KeyListener {
 
         leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Components"));
         leftPanel.setFocusable(false);
-        leftPanel.setPreferredSize(new Dimension(200, 0));
+        leftPanel.setPreferredSize(new Dimension(250, 0));
         leftPanel.setViewportView(componentsList);
 
         rightPanel.add(schematicLabel);
@@ -185,8 +201,8 @@ public class Window implements KeyListener {
             }
         });
 
-        mainFrame.setSize(940, 480);
-        mainFrame.setMinimumSize(new Dimension(940, 400));
+        mainFrame.setSize(1100, 480);
+        mainFrame.setMinimumSize(new Dimension(1100, 350));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);
@@ -222,37 +238,12 @@ public class Window implements KeyListener {
         return JOptionPane.showConfirmDialog(null, "Any unsaved progress will be lost.\nAre you sure you want to continue?") == 0;
     }
 
-    private void addMouseButtonsToPanel(JPanel panel){
-        mouseModeChangeButtons.add(cameraButton);
-        mouseModeChangeButtons.add(textButton);
-        mouseModeChangeButtons.add(toggleButton);
-        mouseModeChangeButtons.add(moveButton);
-        mouseModeChangeButtons.add(addButton);
-        mouseModeChangeButtons.add(linkButton);
-        mouseModeChangeButtons.add(removeButton);
-
-        for(MouseModeChangeButton button : mouseModeChangeButtons){
-            panel.add(button);
-        }
-        cameraButton.setEnabled(false);
-    }
-
-    private void addSimulationButtonsToPanel(JPanel panel){
-        emulationChangeButtons.add(startEmulationButton);
-        emulationChangeButtons.add(stepEmulationButton);
-        emulationChangeButtons.add(stopEmulationButton);
-
-        for(EmulationChangeButton button : emulationChangeButtons){
-            panel.add(button);
-        }
-        panel.add(simulationSpeedSlider);
-        stopEmulationButton.setEnabled(false);
-    }
-
     private void addViewButtonsToPanel(JPanel panel){
-        panel.add(normalViewButton);
-        panel.add(lineViewButton);
-        //panel.add(powerViewButton);
+        panel.add(normalLineViewButton);
+        panel.add(statusLineViewButton);
+        panel.add(normalPinViewButton);
+        panel.add(statusPinViewButton);
+        panel.add(typePinViewButton);
         panel.add(gridToggleButton);
         panel.add(zoomOutButton);
         panel.add(zoomInButton);
@@ -260,7 +251,6 @@ public class Window implements KeyListener {
         panel.add(showComponentInfoButton);
     }
 
-    BufferedImage image = null;
     public void setInfoPage(InfoPage infoPage){
         infoLabel.setText(infoPage.getDescription());
         image = infoPage.getSchmematic();
@@ -306,8 +296,13 @@ public class Window implements KeyListener {
         enableOtherMouseButtons(MouseMode.CAMERA);
         cameraButton.setEnabled(false);
         simulationSpeedSlider.setValue(500);
-        normalViewButton.setEnabled(false);
-        lineViewButton.setEnabled(true);
+
+        for(LineViewChangeButton button : lineViewChangeButtons)button.setEnabled(true);
+        for(PinViewChangeButton button : pinViewChangeButtons)button.setEnabled(true);
+
+        normalLineViewButton.setEnabled(false);
+        normalPinViewButton.setEnabled(false);
+
     }
 
     private class EmulationChangeButton extends ImageButton{
@@ -318,6 +313,7 @@ public class Window implements KeyListener {
             this.emulationAction = emulationAction;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
+            emulationChangeButtons.add(this);
         }
 
         public void actionPerformed(ActionEvent e){
@@ -338,23 +334,49 @@ public class Window implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    private class ViewChangeButton extends ImageButton{
-        private final ViewMode viewMode;
+    private class LineViewChangeButton extends ImageButton{
+        private final LineViewMode lineViewMode;
 
-        public ViewChangeButton(ViewMode viewMode, String assetName, String tooltip){
+        public LineViewChangeButton(LineViewMode lineViewMode, String assetName, String tooltip){
             super(assetName);
-            this.viewMode = viewMode;
+            this.lineViewMode = lineViewMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
+            lineViewChangeButtons.add(this);
         }
 
         public void actionPerformed(ActionEvent e){
-            handler.setViewMode(viewMode);
+            ViewportPanel.lineViewMode = lineViewMode;
             this.setEnabled(false);
-            if (this == normalViewButton) {
-                lineViewButton.setEnabled(true);
-            } else {
-                normalViewButton.setEnabled(true);
+
+            for(LineViewChangeButton button : lineViewChangeButtons){
+                if(button != this){
+                    button.setEnabled(true);
+                }
+            }
+        }
+
+    }
+
+    private class PinViewChangeButton extends ImageButton{
+        private final PinViewMode pinViewMode;
+
+        public PinViewChangeButton(PinViewMode pinViewMode, String assetName, String tooltip){
+            super(assetName);
+            this.pinViewMode = pinViewMode;
+            addActionListener(this::actionPerformed);
+            setToolTipText(tooltip);
+            pinViewChangeButtons.add(this);
+        }
+
+        public void actionPerformed(ActionEvent e){
+            ViewportPanel.pinViewMode = pinViewMode;
+            this.setEnabled(false);
+
+            for(PinViewChangeButton button : pinViewChangeButtons){
+                if(button != this){
+                    button.setEnabled(true);
+                }
             }
         }
 
@@ -368,6 +390,7 @@ public class Window implements KeyListener {
             this.mouseMode = mouseMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
+            mouseModeChangeButtons.add(this);
         }
 
         public void actionPerformed(ActionEvent e) {

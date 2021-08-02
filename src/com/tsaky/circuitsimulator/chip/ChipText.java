@@ -2,7 +2,6 @@ package com.tsaky.circuitsimulator.chip;
 
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
@@ -16,7 +15,7 @@ public class ChipText extends Chip{
 
     public ChipText() {
         super("text", "Text", new InfoPage("A simple text box"), new Pin[]{});
-        setText(text);
+        setDisplayName(text);
     }
 
     @Override
@@ -24,19 +23,16 @@ public class ChipText extends Chip{
 
     }
 
-    public void setText(String text) {
+    @Override
+    public void setDisplayName(String text) {
         this.text = text;
         splitText = text.split("\n");
         flag = true;
     }
 
-    public String getText(){
-        return text;
-    }
-
     @Override
     public void setExtraData(byte[] bytes) {
-        setText(new String(bytes));
+        setDisplayName(new String(bytes));
     }
 
     @Override

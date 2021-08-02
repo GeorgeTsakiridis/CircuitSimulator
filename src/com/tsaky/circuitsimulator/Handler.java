@@ -2,11 +2,11 @@ package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
-import com.tsaky.circuitsimulator.chip.ChipText;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
-import com.tsaky.circuitsimulator.ui.ViewMode;
+import com.tsaky.circuitsimulator.ui.LineViewMode;
+import com.tsaky.circuitsimulator.ui.PinViewMode;
 import com.tsaky.circuitsimulator.ui.ViewportPanel;
 import com.tsaky.circuitsimulator.ui.Window;
 
@@ -75,10 +75,6 @@ public class Handler{
         window.enableOtherEmulationButtons(emulationMode);
     }
 
-    public void setViewMode(ViewMode viewMode){
-        viewportPanel.setViewMode(viewMode);
-    }
-
     public void setSelectedComponent(String componentName){
         selectedComponent = ChipManager.getNewChipInstance(componentName);
         window.setInfoPage(selectedComponent.getInfoPage());
@@ -93,18 +89,18 @@ public class Handler{
             ChipUtils.unselectAllChips(chipsOnScreen);
             Chip chip = ChipUtils.getChipBellowMouse(chipsOnScreen, mouseX, mouseY);
 
-            if(chip instanceof ChipText) {
-                ChipText chipText = (ChipText) chip;
+            if(chip != null) {
 
-                JTextArea textArea = new JTextArea(chipText.getText(), 5, 1);
+                JTextArea textArea = new JTextArea(chip.getDisplayName(), 5, 1);
 
-                int option = JOptionPane.showConfirmDialog(null, textArea, "Insert Text", JOptionPane.OK_CANCEL_OPTION);
+                int option = JOptionPane.showConfirmDialog(null, textArea, "Insert New Display Name",
+                        JOptionPane.OK_CANCEL_OPTION);
 
                 if(option == 2)return;
 
                 String text = textArea.getText();
                 if (text.length() > 0) {
-                    chipText.setText(text);
+                    chip.setDisplayName(text);
                 }
             }
         }
@@ -216,7 +212,9 @@ public class Handler{
 
     public void reset(){
         mouseMode = MouseMode.CAMERA;
-        setViewMode(ViewMode.NORMAL);
+        ViewportPanel.lineViewMode = LineViewMode.NORMAL;
+        ViewportPanel.pinViewMode = PinViewMode.NORMAL;
+
         emulationMode = EmulationAction.STOP;
         simulationSpeed = 500;
 

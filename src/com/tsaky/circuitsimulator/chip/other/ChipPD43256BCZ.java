@@ -111,8 +111,6 @@ public class ChipPD43256BCZ extends Chip {
                 address = address << 1;
             }
 
-            System.out.println(writeEnable);
-
             if(chipSelect){
                 if(outputEnable && !writeEnable){//Output-Read
                     turnAllPinTypesTo(ioPins, PinType.OUTPUT);

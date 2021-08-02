@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator.chip;
 import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.PinViewMode;
 
 import java.awt.*;
 import java.util.Arrays;

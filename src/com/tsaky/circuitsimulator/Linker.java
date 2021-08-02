@@ -2,7 +2,8 @@ package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
-import com.tsaky.circuitsimulator.ui.ViewMode;
+import com.tsaky.circuitsimulator.ui.LineViewMode;
+import com.tsaky.circuitsimulator.ui.ViewportPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Linker {
 
     private static final ArrayList<Pair> pairs = new ArrayList<>();
 
-    public static void paint(Graphics g, ViewMode viewMode, int offsetX, int offsetY){
+    public static void paint(Graphics g, int offsetX, int offsetY){
 
         for(Pair pair : pairs){
             Pin pin1 = pair.getPin1();
@@ -21,10 +22,10 @@ public class Linker {
             Rectangle bounds2 = pin2.getBounds();
 
             Color c = g.getColor();
-            if(viewMode == ViewMode.NORMAL) {
+            if(ViewportPanel.lineViewMode == LineViewMode.NORMAL) {
                 g.setColor(Color.BLACK);
                 isLineHighForPin(pin1);
-            }else if(viewMode == ViewMode.LINE_STATUS){
+            }else if(ViewportPanel.lineViewMode == LineViewMode.STATUS){
                 g.setColor(isLineHighForPin(pin1) ? Color.GREEN : Color.RED);
             }
 
