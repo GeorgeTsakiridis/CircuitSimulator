@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 public class PaintUtils {
 
-    public static void drawCenteredChip(Graphics g, int posX, int posY, int width, int height, Chip chip){
+    public static void drawCenteredChip(Graphics g, int posX, int posY, int width, int height, Chip chip, boolean realName){
         g.drawLine(posX-width/2, posY-height/2, posX-width/5, posY-height/2); //top line left half
         g.drawLine(posX+width/5, posY-height/2, posX+width/2, posY-height/2); //top line right half
         g.drawArc(posX-width/5+1, posY-height/2-height/20, (int)(.4f*width)-2, height/10, 180, 180); //top arc
@@ -23,7 +23,9 @@ public class PaintUtils {
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
 
-        Rectangle chipNameBounds = getStringBounds(g2d, chip.getDisplayName());
+        String chipName = realName ? chip.getSaveName() : chip.getDisplayName();
+
+        Rectangle chipNameBounds = getStringBounds(g2d, chipName);
 
         float sc = (height*0.85f)/(float)chipNameBounds.width;
 
@@ -33,7 +35,7 @@ public class PaintUtils {
         g2d.rotate(-Math.PI/2);
 
         g2d.scale(sc, sc);
-        g2d.drawString(chip.getDisplayName(), 0, 0);
+        g2d.drawString(chipName, 0, 0);
 
         g2d.setTransform(old);
     }

@@ -28,7 +28,7 @@ public class ChipDiode extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
 
         getPin(0).setBounds(getPosX()-getWidth()/2-4, getPosY()-getHeight()/2+5, 10, 10);
         getPin(0).paint(g, offsetX, offsetY);

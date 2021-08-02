@@ -41,7 +41,7 @@ public class ChipText extends Chip{
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
 
         Rectangle bounds = PaintUtils.getMultilineStringBounds(g, splitText);
         setSizeWithoutPins(bounds.width, bounds.height);

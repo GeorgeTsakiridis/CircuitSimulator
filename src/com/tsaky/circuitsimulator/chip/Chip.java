@@ -324,10 +324,10 @@ public abstract class Chip {
     /**
      * Draws the Chip
      */
-    public void paintComponent(Graphics g, int offsetX, int offsetY){
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName){
         if(getPinNumber() == 0)return;
 
-        PaintUtils.drawCenteredChip(g, getPosX() + offsetX, getPosY() + offsetY, getWidth(), getHeight(), this);
+        PaintUtils.drawCenteredChip(g, getPosX() + offsetX, getPosY() + offsetY, getWidth(), getHeight(), this, realName);
         pinSize = PaintUtils.getPinSize(getPinNumber(), height);
         int sidePins = getPinNumber()/2;
         int spacePerPin = height/sidePins - pinSize;

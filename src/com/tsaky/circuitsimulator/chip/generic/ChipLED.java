@@ -81,7 +81,7 @@ public class ChipLED extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
         int x = getPosX() - getWidth()/2;
         int y = getPosY() - getHeight()/2;
 

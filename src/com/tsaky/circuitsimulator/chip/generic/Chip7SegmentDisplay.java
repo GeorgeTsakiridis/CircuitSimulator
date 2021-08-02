@@ -69,7 +69,7 @@ public class Chip7SegmentDisplay extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
         int x = getPosX() + offsetX - getWidth() / 2;
         int y = getPosY() + offsetY - getHeight() / 2;
         int sX = x+20;

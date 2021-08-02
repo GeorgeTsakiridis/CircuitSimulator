@@ -22,6 +22,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     private int offsetX = 0;
     private int offsetY = 0;
     private float scale = 1f;
+    private boolean realName = false;
     private boolean paintGrid = true;
 
     private ArrayList<Chip> chips = null;
@@ -77,6 +78,10 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(scale > 0.2f)scale -= 0.1f;
     }
 
+    public void switchChipName(){
+        realName = !realName;
+    }
+
     public void toggleGrid() {
         paintGrid = !paintGrid;
     }
@@ -106,16 +111,39 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(chips != null) {
             for (Chip chip : chips) {
                 g.setColor(chip.isSelected() ? Color.RED : Color.BLACK);
-                chip.paintComponent(g, offsetX, offsetY);
+                chip.paintComponent(g, offsetX, offsetY, realName);
             }
         }
 
         if(ghostChip != null){
             g.setColor(ChipUtils.chipCollidesWithOtherChip(ghostChip, chips) ? Color.RED : Color.GREEN.darker());
-            ghostChip.paintComponent(g, offsetX, offsetY);
+            ghostChip.paintComponent(g, offsetX, offsetY, realName);
         }
 
         Linker.paint(g, offsetX, offsetY);
+
+        if(ViewportPanel.pinViewMode == PinViewMode.TYPE){
+
+            g2d.scale(1d/scale, 1d/scale);
+            Color oldColor = g2d.getColor();
+            int x = getWidth()-180;
+            int y = getHeight() - g2d.getFont().getSize()*6;
+
+            drawLegendLine(g, Color.RED, "Power Source/Input", x, y);
+            y += g2d.getFont().getSize();
+            drawLegendLine(g, Color.BLUE, "Ground Source/Input", x, y);
+            y += g2d.getFont().getSize();
+            drawLegendLine(g, Color.GREEN, "Input", x, y);
+            y += g2d.getFont().getSize();
+            drawLegendLine(g, Color.ORANGE, "Output", x, y);
+            y += g2d.getFont().getSize();
+            drawLegendLine(g, Color.MAGENTA, "High-Z", x, y);
+            y += g2d.getFont().getSize();
+            drawLegendLine(g, Color.WHITE, "Not Used", x, y);
+
+            g2d.setColor(oldColor);
+            g2d.scale(scale*2d, scale*2d);
+        }
 
         if(Handler.SHORTED){
             System.out.println("SHORTED!");
@@ -131,6 +159,18 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         g.setColor(Color.BLACK);
 
         PAINTING = false;
+    }
+
+    private void drawLegendLine(Graphics g, Color color, String text, int x, int y){
+        g.setColor(color);
+        if(color == Color.WHITE){
+            g.setColor(Color.BLACK);
+            g.drawRect(x, y-5, 10, 10);
+        }else {
+            g.fillRect(x, y - 5, 10, 10);
+        }
+        g.setColor(Color.BLACK);
+        g.drawString(text, x+20, y+5);
     }
 
     private int getMouseX(){

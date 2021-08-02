@@ -17,7 +17,7 @@ public class ChipPD43256BCZ extends Chip {
     HashMap<Integer, Integer> ramData = new HashMap<>();
 
     public ChipPD43256BCZ() {
-        super("pd43256bcz", "32K x 8bit SRAM", new InfoPage("A Standard SRAM with a capacity of 32K 8bit words"),
+        super("PD43256BCZ", "32K x 8bit SRAM", new InfoPage("A Standard SRAM with a capacity of 32K 8bit words"),
                 new Pin[]{
                         new Pin("A14", 0, PinType.INPUT),
                         new Pin("A12", 1, PinType.INPUT),

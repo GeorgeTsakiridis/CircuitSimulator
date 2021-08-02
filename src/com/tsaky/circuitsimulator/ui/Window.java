@@ -58,6 +58,7 @@ public class Window implements KeyListener {
     private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, "statusPinView.png", "Show/Hide Pins Status");
     private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, "typePinView.png", "Show/Hide Pins Type");
 
+    private final ImageButton chipNameToggleButton = new ImageButton("chipNameSwitch.png");
     private final ImageButton gridToggleButton = new ImageButton("gridToggle.png");
     private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
     private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
@@ -182,12 +183,14 @@ public class Window implements KeyListener {
             }
         });
 
+        chipNameToggleButton.setToolTipText("Switch between custom and real chip names");
         gridToggleButton.setToolTipText("Show/Hide the grid");
         zoomInButton.setToolTipText("Zoom In");
         zoomOutButton.setToolTipText("Zoom Out");
         zoomResetButton.setToolTipText("Reset Camera");
         showComponentInfoButton.setToolTipText("Show the Component Info Window");
 
+        chipNameToggleButton.addActionListener(e -> viewportPanel.switchChipName());
         gridToggleButton.addActionListener(e -> viewportPanel.toggleGrid());
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
@@ -244,6 +247,7 @@ public class Window implements KeyListener {
         panel.add(normalPinViewButton);
         panel.add(statusPinViewButton);
         panel.add(typePinViewButton);
+        panel.add(chipNameToggleButton);
         panel.add(gridToggleButton);
         panel.add(zoomOutButton);
         panel.add(zoomInButton);

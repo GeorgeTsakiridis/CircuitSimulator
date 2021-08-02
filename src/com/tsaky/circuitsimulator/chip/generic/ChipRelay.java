@@ -55,7 +55,7 @@ public class ChipRelay extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
         g.drawRect(getPosX()-getWidth()/2 + offsetX, getPosY()-getHeight()/2 + offsetY, getWidth(), getHeight());
 
         getPin(0).setBounds(getPosX()-getWidth()/2+3, getPosY()-getHeight()/2+3, 14, 14);
