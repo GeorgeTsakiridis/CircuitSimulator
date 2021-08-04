@@ -9,6 +9,7 @@ import com.tsaky.circuitsimulator.chip.c74series.Chip74573;
 import com.tsaky.circuitsimulator.chip.c74series.Chip74574;
 import com.tsaky.circuitsimulator.chip.c74series.Chip744511;
 import com.tsaky.circuitsimulator.chip.generic.*;
+import com.tsaky.circuitsimulator.chip.other.ChipInLCD;
 import com.tsaky.circuitsimulator.chip.other.ChipPD43256BCZ;
 
 import javax.swing.*;
@@ -46,6 +47,7 @@ public class ChipSimulator {
         ChipManager.addChip(new Chip744511());
 
         ChipManager.addChip(new ChipPD43256BCZ());
+        ChipManager.addChip(new ChipInLCD());
 
         new Handler();
 

@@ -141,7 +141,7 @@ public class Pin {
 
     public Color getStatusColor(){
         if(getType() == PinType.OUTPUT){
-            return isHigh() ? Color.BLUE : Color.RED;
+            return isHigh() ? Color.GREEN : Color.RED;
         } else{
             return Color.WHITE;
         }
