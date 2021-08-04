@@ -146,13 +146,14 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         }
 
         if(Handler.SHORTED){
-            System.out.println("SHORTED!");
+            g2d.scale(1d/scale, 1d/scale);
             g.setColor(Color.RED);
             g.drawRect(0, 0, getWidth()-1, getHeight()-1);
             g.drawString("Short Circuit!", 10, 20);
             g.drawString("Short Circuit!", 10, getHeight()-13);
             g.drawString("Short Circuit!", getWidth()-100, getHeight()-13);
             g.drawString("Short Circuit!", getWidth()-100, 20);
+            g2d.scale(scale, scale);
             Handler.SHORTED = false;
         }
 

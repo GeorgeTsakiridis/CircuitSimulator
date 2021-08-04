@@ -111,8 +111,8 @@ public class ChipPD43256BCZ extends Chip {
 
             int address = 0;
             for(int i = addressPins.length-1; i >= 0; i--){
-                address += addressPins[i].isLinkHigh() ? 1 : 0;
                 address = address << 1;
+                address += addressPins[i].isLinkHigh() ? 1 : 0;
             }
 
             if(chipSelect){
@@ -123,7 +123,7 @@ public class ChipPD43256BCZ extends Chip {
 
                     for(int i = ioPins.length-1; i >= 0; i--){
                         int bitValue = (int)Math.pow(2, i);
-                        if(value > bitValue){
+                        if(value >= bitValue){
                             ioPins[i].setHigh(true);
                             value -= bitValue;
                         }else{
@@ -136,8 +136,8 @@ public class ChipPD43256BCZ extends Chip {
 
                     int value = 0;
                     for (int i = ioPins.length-1; i >= 0 ; i--) {
-                        value += ioPins[i].isLinkHigh() ? 1 : 0;
                         value = value << 1;
+                        value += ioPins[i].isLinkHigh() ? 1 : 0;
                     }
 
                     ramData.put(address, value);

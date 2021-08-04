@@ -67,7 +67,6 @@ public class ChipRelay extends Chip {
 
         getPin(1).setBounds(getPosX()-getWidth()/2+3, getPosY()+getHeight()/2-17, 14, 14);
         getPin(1).paint(g, offsetX, offsetY, "-", pinDescription, true);
-        //TODO add pin descriptions bellow chip
 
         int x = getPosX() + 19;
         int y = getPosY()-getHeight()/2+3;
