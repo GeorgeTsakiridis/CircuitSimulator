@@ -1,7 +1,6 @@
 package com.tsaky.circuitsimulator.chip.other;
 
 import com.tsaky.circuitsimulator.chip.Chip;
-import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
@@ -12,11 +11,11 @@ import java.awt.geom.AffineTransform;
 import java.io.*;
 import java.util.Locale;
 
-public class ChipInLCD extends Chip {
+public class Chip16bitOutputLCD extends Chip {
 
     private int outputNumber = 0;
 
-    public ChipInLCD(){
+    public Chip16bitOutputLCD(){
         super("16-Bit Output", "16-Bit Output",
                 new Pin[]{
                         new Pin("Bit 0  ", 0, PinType.OUTPUT),
