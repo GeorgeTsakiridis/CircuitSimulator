@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
@@ -14,8 +13,13 @@ public class ChipText extends Chip{
     boolean flag = true;
 
     public ChipText() {
-        super("text", "Text", new InfoPage("A simple text box"), new Pin[]{});
+        super("text", "Text", new Pin[]{});
         setDisplayName(text);
+    }
+
+    @Override
+    public String getDescription() {
+        return "A simple text box";
     }
 
     @Override
@@ -31,6 +35,11 @@ public class ChipText extends Chip{
     }
 
     @Override
+    public String getDisplayName() {
+        return text;
+    }
+
+    @Override
     public void setExtraData(byte[] bytes) {
         setDisplayName(new String(bytes));
     }
@@ -41,7 +50,7 @@ public class ChipText extends Chip{
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
 
         Rectangle bounds = PaintUtils.getMultilineStringBounds(g, splitText);
         setSizeWithoutPins(bounds.width, bounds.height);

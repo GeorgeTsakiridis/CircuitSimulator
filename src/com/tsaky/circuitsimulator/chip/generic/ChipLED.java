@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -18,10 +17,14 @@ public class ChipLED extends Chip {
 
     public ChipLED(String ledColor, Color color) {
         super("led_" + ledColor, "LED " + ledColor,
-                new InfoPage("Colored LED"),
                 new Pin[]{new Pin("IN", 0, PinType.INPUT)});
         setColor(color);
         setSizeWithoutPins(15, 15);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Colored LED";
     }
 
     private void setColor(Color color){
@@ -81,14 +84,19 @@ public class ChipLED extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
         int x = getPosX() - getWidth()/2;
         int y = getPosY() - getHeight()/2;
 
-        getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paint(g,offsetX, offsetY, "");
-
         Color c = g.getColor();
+
+        getPin(0).setBounds(x, y, getWidth(), getHeight());
+        getPin(0).paint(g,offsetX, offsetY, "", pinDescription, true);
+
+        if(isSelected()){
+            g.setColor(Color.RED);
+            g.drawRect(x, y, getWidth(), getHeight());
+        }
 
         if((getPin(0)).isLinkHigh()) {
             g.setColor(colorActive);

@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.other;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -17,7 +16,7 @@ public class ChipPD43256BCZ extends Chip {
     HashMap<Integer, Integer> ramData = new HashMap<>();
 
     public ChipPD43256BCZ() {
-        super("PD43256BCZ", "32K x 8bit SRAM", new InfoPage("A Standard SRAM with a capacity of 32K 8bit words"),
+        super("PD43256BCZ", "32K x 8bit SRAM",
                 new Pin[]{
                         new Pin("A14", 0, PinType.INPUT),
                         new Pin("A12", 1, PinType.INPUT),
@@ -54,6 +53,11 @@ public class ChipPD43256BCZ extends Chip {
                 getPin(2), getPin(24), getPin(23), getPin(20), getPin(22), getPin(1), getPin(25), getPin(0)};
 
         setSize(70, 350);
+    }
+
+    @Override
+    public String getDescription() {
+        return "A Standard SRAM with a capacity of 32K 8bit words";
     }
 
     @Override

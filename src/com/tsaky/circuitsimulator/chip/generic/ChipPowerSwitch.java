@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -11,9 +10,13 @@ public class ChipPowerSwitch extends Chip {
 
     public ChipPowerSwitch() {
         super("power_switch", "Power Switch",
-                new InfoPage("A Simple Power Switch. Acts as a voltage source when active. Can be toggled."),
                 new Pin[]{new Pin("OUT", 0, PinType.GROUND_SOURCE)});
-        setSizeWithoutPins(20, 20);
+        setSizeWithoutPins(34, 20);
+    }
+
+    @Override
+    public String getDescription() {
+        return "A Simple Power Switch. Acts as a voltage source when active. Can be toggled.";
     }
 
     @Override
@@ -21,9 +24,9 @@ public class ChipPowerSwitch extends Chip {
         Pin pin = getPin(0);
 
         if(pin.getType() == PinType.GROUND_SOURCE){
-            pin.setPinType(PinType.POWER_SOURCE);
+            pin.setType(PinType.POWER_SOURCE);
         }else{
-            pin.setPinType(PinType.GROUND_SOURCE);
+            pin.setType(PinType.GROUND_SOURCE);
         }
     }
 
@@ -48,11 +51,11 @@ public class ChipPowerSwitch extends Chip {
 
     @Override
     public void setExtraData(byte[] bytes) {
-        (getPin(0)).setPinType(bytes[0] == (byte)1 ? PinType.POWER_SOURCE : PinType.GROUND_SOURCE);
+        (getPin(0)).setType(bytes[0] == (byte)1 ? PinType.POWER_SOURCE : PinType.GROUND_SOURCE);
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
         int x = getPosX() - getWidth() / 2;
         int y = getPosY() - getHeight() / 2;
         Color c = g.getColor();
@@ -66,6 +69,6 @@ public class ChipPowerSwitch extends Chip {
         g.fillRect(x + offsetX, y + offsetY, getWidth(), getHeight());
         g.setColor(c);
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paint(g, offsetX, offsetY, text);
+        getPin(0).paint(g, offsetX, offsetY, text, pinDescription, false);
     }
 }

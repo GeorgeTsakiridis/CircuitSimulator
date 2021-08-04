@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 
@@ -8,12 +7,11 @@ public class Chip744511 extends Chip {
 
     public Chip744511(){
         super("744511", "BCD to 7-Segment Decoder",
-                new InfoPage("BCD to 7-Segment Decoder", "ic744511.png"),
                 new Pin[]{
                 new Pin("B", 0, PinType.INPUT),
                 new Pin("C", 1, PinType.INPUT),
-                new Pin("LT", 2, PinType.INPUT),
-                new Pin("BL", 3, PinType.INPUT),
+                new Pin("-LT", 2, PinType.INPUT),
+                new Pin("-BL", 3, PinType.INPUT),
                 new Pin("LE", 4, PinType.INPUT),
                 new Pin("D", 5, PinType.INPUT),
                 new Pin("A", 6, PinType.INPUT),
@@ -28,6 +26,11 @@ public class Chip744511 extends Chip {
                 new Pin("VCC", 15, PinType.POWER)
         });
         setSize(40, 200);
+    }
+
+    @Override
+    public String getDescription() {
+        return "BCD to 7-Segment Decoder";
     }
 
     @Override

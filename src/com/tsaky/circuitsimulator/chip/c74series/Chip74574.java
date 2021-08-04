@@ -1,8 +1,10 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
-import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.chip.pin.PinType;
+
+import java.io.*;
 
 public class Chip74574 extends Chip {
 
@@ -19,9 +21,8 @@ public class Chip74574 extends Chip {
 
     public Chip74574() {
         super("74574", "Edge-Triggered Flip-Flop",
-                new InfoPage("Octal D-type edge-triggered flip-flop", "ic74574.png"),
                 new Pin[]{
-                        new Pin("OE", 0, PinType.INPUT),
+                        new Pin("-OE", 0, PinType.INPUT),
                         new Pin("1D", 1, PinType.INPUT),
                         new Pin("2D", 2, PinType.INPUT),
                         new Pin("3D", 3, PinType.INPUT),
@@ -43,6 +44,52 @@ public class Chip74574 extends Chip {
                         new Pin("VCC", 19, PinType.POWER)
                 });
         setSize(40, 220);
+    }
+
+    @Override
+    public byte[] getExtraDataBytes() {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(8);
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+
+        try {
+            dataOutputStream.writeBoolean(s0);
+            dataOutputStream.writeBoolean(s1);
+            dataOutputStream.writeBoolean(s2);
+            dataOutputStream.writeBoolean(s3);
+            dataOutputStream.writeBoolean(s4);
+            dataOutputStream.writeBoolean(s5);
+            dataOutputStream.writeBoolean(s6);
+            dataOutputStream.writeBoolean(s7);
+            dataOutputStream.writeBoolean(lastCLK);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    @Override
+    public void setExtraData(byte[] bytes) {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
+
+        try {
+            s0 = dataInputStream.readBoolean();
+            s1 = dataInputStream.readBoolean();
+            s2 = dataInputStream.readBoolean();
+            s3 = dataInputStream.readBoolean();
+            s4 = dataInputStream.readBoolean();
+            s5 = dataInputStream.readBoolean();
+            s6 = dataInputStream.readBoolean();
+            s7 = dataInputStream.readBoolean();
+            lastCLK = dataInputStream.readBoolean();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        return "Octal D-type edge-triggered flip-flop";
     }
 
     @Override

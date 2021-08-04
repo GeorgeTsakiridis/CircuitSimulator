@@ -1,14 +1,12 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 
 public class Chip74257 extends Chip {
 
     public Chip74257(){
-        super("74283", "Data Selector",
-                new InfoPage("Quad 2-Line to 1-Line Data Selectors", "ic74257.png"),
+        super("74257", "Data Selector",
                 new Pin[]{
                 new Pin("A/B", 0, PinType.INPUT),
                 new Pin("1A", 1, PinType.INPUT),
@@ -24,10 +22,15 @@ public class Chip74257 extends Chip {
                 new Pin("4Y", 11, PinType.OUTPUT),
                 new Pin("4B", 12, PinType.INPUT),
                 new Pin("4A", 13, PinType.INPUT),
-                new Pin("G", 14, PinType.INPUT),
+                new Pin("-OE", 14, PinType.INPUT),
                 new Pin("VCC", 15, PinType.POWER)
         });
         setSize(40, 200);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Quad 2-Line to 1-Line Data Selectors";
     }
 
     @Override

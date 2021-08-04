@@ -111,13 +111,13 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(chips != null) {
             for (Chip chip : chips) {
                 g.setColor(chip.isSelected() ? Color.RED : Color.BLACK);
-                chip.paintComponent(g, offsetX, offsetY, realName);
+                chip.paintComponent(g, offsetX, offsetY, realName, false);
             }
         }
 
         if(ghostChip != null){
             g.setColor(ChipUtils.chipCollidesWithOtherChip(ghostChip, chips) ? Color.RED : Color.GREEN.darker());
-            ghostChip.paintComponent(g, offsetX, offsetY, realName);
+            ghostChip.paintComponent(g, offsetX, offsetY, realName, false);
         }
 
         Linker.paint(g, offsetX, offsetY);

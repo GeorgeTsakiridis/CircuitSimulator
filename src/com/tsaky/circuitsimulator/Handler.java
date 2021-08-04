@@ -5,10 +5,7 @@ import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
-import com.tsaky.circuitsimulator.ui.LineViewMode;
-import com.tsaky.circuitsimulator.ui.PinViewMode;
-import com.tsaky.circuitsimulator.ui.ViewportPanel;
-import com.tsaky.circuitsimulator.ui.Window;
+import com.tsaky.circuitsimulator.ui.*;
 
 import javax.swing.*;
 import java.io.*;
@@ -21,6 +18,7 @@ public class Handler{
     private MouseMode mouseMode = MouseMode.CAMERA;
     private final Window window;
     private final ViewportPanel viewportPanel;
+    private final ComponentInfoPanel componentInfoPanel;
     private Chip selectedComponent = null;
     private final ArrayList<Chip> chipsOnScreen = new ArrayList<>();
     private Pin lastSelectedPin = null;
@@ -35,7 +33,9 @@ public class Handler{
 
     public Handler() {
         viewportPanel = new ViewportPanel(this);
-        window = new Window(this, viewportPanel);
+        componentInfoPanel = new ComponentInfoPanel();
+
+        window = new Window(this, viewportPanel, componentInfoPanel);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -77,7 +77,9 @@ public class Handler{
 
     public void setSelectedComponent(String componentName){
         selectedComponent = ChipManager.getNewChipInstance(componentName);
-        window.setInfoPage(selectedComponent.getInfoPage());
+        componentInfoPanel.setChip(selectedComponent);
+
+        window.setChipDescription(selectedComponent);
         if(mouseMode == MouseMode.ADD){
             viewportPanel.updateGhostChip(selectedComponent);
         }

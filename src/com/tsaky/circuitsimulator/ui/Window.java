@@ -2,7 +2,7 @@ package com.tsaky.circuitsimulator.ui;
 
 import com.tsaky.circuitsimulator.EmulationAction;
 import com.tsaky.circuitsimulator.Handler;
-import com.tsaky.circuitsimulator.InfoPage;
+import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.chip.ChipManager;
 
@@ -20,13 +20,12 @@ public class Window implements KeyListener {
 
     private final Handler handler;
     private final ViewportPanel viewportPanel;
+    private final ComponentInfoPanel componentInfoPanel;
 
-    private BufferedImage image = null;
     private final JFrame mainFrame;
+    private final JFrame componentInfoFrame;
 
     private final JLabel infoLabel = new JLabel("Info Label");
-    private final JLabel schematicLabel = new JLabel();
-    private final JFrame pinoutFrame;
 
     private final JSlider simulationSpeedSlider;
 
@@ -44,19 +43,19 @@ public class Window implements KeyListener {
     private final MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, "remove.png", "Remove Component");
 
     private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
-    private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "emulationStart.png", "Start Emulation");
-    private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "emulationStop.png", "Start Emulation");
-    private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "emulationStep.png", "Step Emulation");
+    private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "simulationStart.png", "Start Simulation");
+    private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "simulationStop.png", "Start Simulation");
+    private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "simulationStep.png", "Step Simulation");
 
     private final ArrayList<LineViewChangeButton> lineViewChangeButtons = new ArrayList<>();
-    private final LineViewChangeButton normalLineViewButton = new LineViewChangeButton(LineViewMode.NORMAL, "normalView.png", "Resume Normal Lines View");
-    private final LineViewChangeButton statusLineViewButton = new LineViewChangeButton(LineViewMode.STATUS, "lineView.png", "Show/Hide Lines Status");
+    private final LineViewChangeButton normalLineViewButton = new LineViewChangeButton(LineViewMode.NORMAL, "normalView.png", "Normal Lines View");
+    private final LineViewChangeButton statusLineViewButton = new LineViewChangeButton(LineViewMode.STATUS, "lineView.png", "Lines Status View");
     //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
 
     private final ArrayList<PinViewChangeButton> pinViewChangeButtons = new ArrayList<>();
-    private final PinViewChangeButton normalPinViewButton = new PinViewChangeButton(PinViewMode.NORMAL, "normalPinView.png", "Resume Normal Pins View");
-    private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, "statusPinView.png", "Show/Hide Pins Status");
-    private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, "typePinView.png", "Show/Hide Pins Type");
+    private final PinViewChangeButton normalPinViewButton = new PinViewChangeButton(PinViewMode.NORMAL, "normalPinView.png", "Normal Pins View");
+    private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, "statusPinView.png", "Pins Status View");
+    private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, "typePinView.png", "Pins Type View");
 
     private final ImageButton chipNameToggleButton = new ImageButton("chipNameSwitch.png");
     private final ImageButton gridToggleButton = new ImageButton("gridToggle.png");
@@ -65,28 +64,19 @@ public class Window implements KeyListener {
     private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
     private final ImageButton showComponentInfoButton = new ImageButton("showComponentInfo.png");
 
-
-    ComponentListener pinoutFrameComponentListener = new ComponentListener() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            updateSchematicImageSize(e.getComponent().getWidth(), e.getComponent().getHeight());
-        }
-        @Override
-        public void componentMoved(ComponentEvent e) {
-        }
-        @Override
-        public void componentShown(ComponentEvent e) {
-        }
-        @Override
-        public void componentHidden(ComponentEvent e) {
-        }
-    };
-
     @SuppressWarnings("unchecked")
-    public Window(Handler handler, ViewportPanel viewportPanel){
+    public Window(Handler handler, ViewportPanel viewportPanel, ComponentInfoPanel componentInfoPanel){
 
         this.handler = handler;
         this.viewportPanel = viewportPanel;
+        this.componentInfoPanel = componentInfoPanel;
+
+        componentInfoFrame = new JFrame("Component Pinout");
+        componentInfoFrame.setAlwaysOnTop(true);
+        componentInfoFrame.setSize(380, 400);
+        componentInfoFrame.setMinimumSize(new Dimension(380, 400));
+        componentInfoFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        componentInfoFrame.add(componentInfoPanel);
 
         normalLineViewButton.setEnabled(false);
         normalPinViewButton.setEnabled(false);
@@ -96,10 +86,9 @@ public class Window implements KeyListener {
         componentsList.addListSelectionListener(e -> handler.setSelectedComponent(((JList<String>) (e.getSource())).getSelectedValue()));
 
         simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 500);
-        simulationSpeedSlider.setPreferredSize(new Dimension(120, 35));
+        simulationSpeedSlider.setPreferredSize(new Dimension(160, 50));
         simulationSpeedSlider.addChangeListener(e -> handler.setSimulationSpeed(((JSlider)e.getSource()).getValue()));
         simulationSpeedSlider.setToolTipText("Update interval in ms");
-
 
         JPanel upPanel = new JPanel();
         JScrollPane leftPanel = new JScrollPane();
@@ -130,6 +119,7 @@ public class Window implements KeyListener {
         for(EmulationChangeButton button : emulationChangeButtons){
             upSimulationPanel.add(button);
         }
+
         upSimulationPanel.add(simulationSpeedSlider);
         stopEmulationButton.setEnabled(false);
         addViewButtonsToPanel(upViewPanel);
@@ -144,7 +134,7 @@ public class Window implements KeyListener {
         leftPanel.setPreferredSize(new Dimension(250, 0));
         leftPanel.setViewportView(componentsList);
 
-        rightPanel.add(schematicLabel);
+        //rightPanel.add(componentInfoPanel);
 
         downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
         downPanel.add(infoLabel);
@@ -183,7 +173,7 @@ public class Window implements KeyListener {
             }
         });
 
-        chipNameToggleButton.setToolTipText("Switch between custom and real chip names");
+        chipNameToggleButton.setToolTipText("Switch between custom and real component names");
         gridToggleButton.setToolTipText("Show/Hide the grid");
         zoomInButton.setToolTipText("Zoom In");
         zoomOutButton.setToolTipText("Zoom Out");
@@ -195,12 +185,9 @@ public class Window implements KeyListener {
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
         zoomResetButton.addActionListener(e -> viewportPanel.resetOffsetAndScale());
-        showComponentInfoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!pinoutFrame.isVisible()){
-                    pinoutFrame.setVisible(true);
-                }
+        showComponentInfoButton.addActionListener(e -> {
+            if(!componentInfoFrame.isVisible()){
+                componentInfoFrame.setVisible(true);
             }
         });
 
@@ -218,22 +205,9 @@ public class Window implements KeyListener {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 
-        pinoutFrame = new JFrame("Component Pinout");
-        pinoutFrame.add(rightPanel);
-        pinoutFrame.setAlwaysOnTop(true);
-        pinoutFrame.setSize(380, 400);
-        pinoutFrame.setLocation(mainFrame.getLocationOnScreen().x + mainFrame.getSize().width, mainFrame.getLocationOnScreen().y );
-        pinoutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        pinoutFrame.setVisible(true);
-        pinoutFrame.addComponentListener(pinoutFrameComponentListener);
-
-        int w1 = mainFrame.getSize().width;
-        int w2 = pinoutFrame.getSize().width;
-        int space = 40;
-        int x = Toolkit.getDefaultToolkit().getScreenSize().width/2 - (w1 + w2 + space)/2;
+        int x = Toolkit.getDefaultToolkit().getScreenSize().width/2 - mainFrame.getSize().width/2;
         int y = mainFrame.getLocationOnScreen().y;
         mainFrame.setLocation(x, y);
-        pinoutFrame.setLocation(x + w1 + space, y);
 
     }
 
@@ -255,24 +229,8 @@ public class Window implements KeyListener {
         panel.add(showComponentInfoButton);
     }
 
-    public void setInfoPage(InfoPage infoPage){
-        infoLabel.setText(infoPage.getDescription());
-        image = infoPage.getSchmematic();
-        updateSchematicImageSize(pinoutFrame.getWidth(), pinoutFrame.getHeight());
-    }
-
-    private void updateSchematicImageSize(int width, int height){
-        if(image != null){
-            Dimension dSrc = new Dimension(image.getWidth(), image.getHeight());
-            Dimension dDst = new Dimension(width, height-60);
-            Dimension dimension = PaintUtils.getScaledDimension(dSrc, dDst);
-            BufferedImage bufferedImage = PaintUtils.getScaledImage(image, dimension.width, dimension.height);
-            schematicLabel.setIcon(bufferedImage != null ? new ImageIcon(bufferedImage) : null);
-            schematicLabel.setText("");
-        }else{
-            schematicLabel.setIcon(null);
-            schematicLabel.setText("Pinout not available for selected component");
-        }
+    public void setChipDescription(Chip chip){
+        infoLabel.setText(chip.getDescription());
     }
 
     private void enableOtherMouseButtons(MouseMode mouseMode){
@@ -404,7 +362,7 @@ public class Window implements KeyListener {
         }
     }
 
-    private class ImageButton extends JButton{
+    private static class ImageButton extends JButton{
         public ImageButton(String assetName){
             try {
                 this.setIcon(new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("assets/buttons/" + assetName)))));

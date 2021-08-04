@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 
@@ -17,9 +16,8 @@ public class Chip74573 extends Chip {
 
     public Chip74573(){
         super("74573", "Transparent Latch",
-                new InfoPage("Octal D-type transparent latch", "ic74573.png"),
                 new Pin[]{
-                new Pin("OE", 0, PinType.INPUT),
+                new Pin("-OE", 0, PinType.INPUT),
                 new Pin("D0", 1, PinType.INPUT),
                 new Pin("D1", 2, PinType.INPUT),
                 new Pin("D2", 3, PinType.INPUT),
@@ -41,6 +39,11 @@ public class Chip74573 extends Chip {
                 new Pin("VCC", 19, PinType.POWER)
         });
         setSize(40, 220);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Octal D-type transparent latch";
     }
 
     @Override

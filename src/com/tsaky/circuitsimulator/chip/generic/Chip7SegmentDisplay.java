@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -33,8 +32,7 @@ public class Chip7SegmentDisplay extends Chip {
     private boolean g = false;
 
     public Chip7SegmentDisplay() {
-        super("seven_segment_display", "7 Segment Display",
-                new InfoPage("Common Cathode 7-Segment Display"),
+        super("Seven Segment Display", "7 Segment Display",
                 new Pin[]{
                         new Pin("a", 0, PinType.INPUT),
                         new Pin("b", 1, PinType.INPUT),
@@ -46,6 +44,11 @@ public class Chip7SegmentDisplay extends Chip {
                         new Pin("-", 7, PinType.GROUND)
         });
         setSizeWithoutPins(80, 121);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Common Cathode 7-Segment Display";
     }
 
     @Override
@@ -69,7 +72,7 @@ public class Chip7SegmentDisplay extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
         int x = getPosX() + offsetX - getWidth() / 2;
         int y = getPosY() + offsetY - getHeight() / 2;
         int sX = x+20;
@@ -81,16 +84,17 @@ public class Chip7SegmentDisplay extends Chip {
         int i = 0;
         for(Pin pin : getPins()){
             pin.setBounds(x - offsetX, y + (pinSize+spacePerPin)*i++ + 2 - offsetY, pinSize, pinSize);
-            pin.paint(g, offsetX, offsetY, pin.getName());
+            pin.paint(g, offsetX, offsetY, pin.getName(), pinDescription, false);
         }
 
         if(verticalSegment != null && horizontalSegment != null){
 
-            if(this.a) g.drawImage(horizontalSegment, sX+11, y+12, null);//a
             //segment small dimension
             int ssd = 13;
             //segment big dimension
             int sbd = 39;
+
+            if(this.a) g.drawImage(horizontalSegment, sX+11, y+12, null);//a
             if(this.b) g.drawImage(verticalSegment, sX+6+ sbd, y+ ssd +7, null);//b
             if(this.c) g.drawImage(verticalSegment, sX+6+ sbd, y+ ssd + sbd +10, null);//c
             if(this.d) g.drawImage(horizontalSegment, sX+11, y+getHeight()-11- ssd, null);//d

@@ -80,12 +80,12 @@ public class PaintUtils {
         return bilinearScaleOp.filter(image, new BufferedImage(width, height, image.getType()));
     }
 
-    public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
+    public static Dimension getScaledDimension(Dimension original, Dimension target) {
 
-        int original_width = imgSize.width;
-        int original_height = imgSize.height;
-        int bound_width = boundary.width;
-        int bound_height = boundary.height;
+        int original_width = original.width;
+        int original_height = original.height;
+        int bound_width = target.width;
+        int bound_height = target.height;
         int new_width = original_width;
         int new_height = original_height;
 

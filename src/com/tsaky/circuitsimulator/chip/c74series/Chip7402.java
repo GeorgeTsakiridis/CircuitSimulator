@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 
@@ -8,7 +7,6 @@ public class Chip7402 extends Chip {
 
     public Chip7402(){
         super("7402", "NOR Gates IC",
-                new InfoPage("Quad 2-Input NOR Gate IC", "ic7402.png"),
                 new Pin[]{
                 new Pin("1Y", 0, PinType.OUTPUT),
                 new Pin("1A", 1, PinType.INPUT),
@@ -26,6 +24,11 @@ public class Chip7402 extends Chip {
                 new Pin("VCC", 13, PinType.POWER)
         });
         setSize(40, 180);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Quad 2-Input NOR Gate IC";
     }
 
     @Override

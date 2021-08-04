@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -10,7 +9,7 @@ import java.awt.*;
 public class ChipDiode extends Chip {
 
     public ChipDiode() {
-        super("diode", "Diode", new InfoPage("A simple diode"), new Pin[]{
+        super("diode", "Diode", new Pin[]{
                 new Pin("Anode", 0, PinType.INPUT),
                 new Pin("Cathode", 1, PinType.OUTPUT)
         });
@@ -18,22 +17,27 @@ public class ChipDiode extends Chip {
     }
 
     @Override
+    public String getDescription() {
+        return "A simple diode";
+    }
+
+    @Override
     public void calculate() {
         if(getPin(0).isLinkHigh()){
-            getPin(1).setPinType(PinType.OUTPUT);
+            getPin(1).setType(PinType.OUTPUT);
             getPin(1).setHigh(true);
         }else{
-            getPin(1).setPinType(PinType.HIGH_Z);
+            getPin(1).setType(PinType.HIGH_Z);
         }
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
 
         getPin(0).setBounds(getPosX()-getWidth()/2-4, getPosY()-getHeight()/2+5, 10, 10);
-        getPin(0).paint(g, offsetX, offsetY);
+        getPin(0).paint(g, offsetX, offsetY, pinDescription, true);
         getPin(1).setBounds(getPosX()+getWidth()/2-5, getPosY()-getHeight()/2+5, 10, 10);
-        getPin(1).paint(g, offsetX, offsetY);
+        getPin(1).paint(g, offsetX, offsetY, pinDescription, false);
 
         int x = getPosX()-getWidth()/2+7 + offsetX;
         int y = getPosY() + offsetY;

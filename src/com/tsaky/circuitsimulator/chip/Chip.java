@@ -1,9 +1,7 @@
 package com.tsaky.circuitsimulator.chip;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 import com.tsaky.circuitsimulator.chip.pin.*;
-import com.tsaky.circuitsimulator.ui.PinViewMode;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -24,20 +22,17 @@ public abstract class Chip {
     private final Rectangle border; //The border of the chip containing the pins
     private boolean isSelected = false; //Whether the chip is selected
     private int pinSize; //The width/height of each pin rectangle
-    private InfoPage infoPage; //The info page of the chip
 
     /**
      * Constructor: Creates a Chip instance.
      * @param chipSaveName The save name of the chip
      * @param chipCatalogName The display name of the chip
-     * @param infoPage The InfoPage of the chip
      * @param pins The pins of the chip
      */
-    public Chip(String chipSaveName, String chipCatalogName, InfoPage infoPage, Pin[] pins) {
+    public Chip(String chipSaveName, String chipCatalogName, Pin[] pins) {
         this.chipSaveName = chipSaveName;
         this.chipCatalogName = chipCatalogName;
         this.chipDisplayName = chipCatalogName;
-        this.infoPage = infoPage;
         this.pins = pins;
         border = new Rectangle();
     }
@@ -48,23 +43,12 @@ public abstract class Chip {
     public abstract void calculate();
 
     /**
-     *  Sets a new InfoPage for the chip. (Not used)
-     * @param infoPage The new InfoPage
+     * Returns the Description of the Chip.
      */
-    public void setInfoPage(InfoPage infoPage){
-        this.infoPage = infoPage;
-    }
+    public abstract String getDescription();
 
     /**
-     * Returns the InfoPage of the chip
-     * @return The InfoPage of the chip
-     */
-    public InfoPage getInfoPage(){
-        return infoPage;
-    }
-
-    /**
-     * Returns true or false depending on whether or not the chip is powered.
+     * Returns true or false depending on whether the chip is powered.
      * @return True if the chip is powered, false otherwise
      */
     public boolean isPowered(){
@@ -90,7 +74,7 @@ public abstract class Chip {
      */
     public void turnAllPinTypesTo(Pin[] pins, PinType to){
         for(Pin pin : pins){
-            pin.setPinType(to);
+            pin.setType(to);
         }
     }
 
@@ -99,7 +83,7 @@ public abstract class Chip {
      */
     public void turnAllPinTypesTo(PinType from, PinType to){
         for(Pin pin : pins){
-            if(pin.getType() == from)pin.setPinType(to);
+            if(pin.getType() == from)pin.setType(to);
         }
     }
 
@@ -288,14 +272,6 @@ public abstract class Chip {
     }
 
     /**
-     * @param pin index of the pin
-     * @return the name of the pin
-     */
-    public String getPinName(int pin){
-        return pins[pin].getName();
-    }
-
-    /**
      * @return the bytes of the extra data; this data can be used for example store a state of a switch
      */
     public byte[] getExtraDataBytes(){
@@ -324,7 +300,7 @@ public abstract class Chip {
     /**
      * Draws the Chip
      */
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName){
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription){
         if(getPinNumber() == 0)return;
 
         PaintUtils.drawCenteredChip(g, getPosX() + offsetX, getPosY() + offsetY, getWidth(), getHeight(), this, realName);
@@ -340,8 +316,8 @@ public abstract class Chip {
             getPin(i).setBounds(pinX1, pinY, pinSize, pinSize);
             getPin(getPinNumber()-i-1).setBounds(pinX2, pinY, pinSize, pinSize);
 
-            getPin(i).paint(g, offsetX, offsetY);
-            getPin(getPinNumber()- i - 1).paint(g, offsetX, offsetY);
+            getPin(i).paint(g, offsetX, offsetY, pinDescription, true);
+            getPin(getPinNumber()- i - 1).paint(g, offsetX, offsetY, pinDescription, false);
         }
     }
 

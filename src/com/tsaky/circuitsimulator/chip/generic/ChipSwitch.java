@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
@@ -13,13 +12,18 @@ public class ChipSwitch extends Chip {
     private boolean toggled = false;
 
     public ChipSwitch() {
-        super("switch", "Switch", new InfoPage("A normal 3-pin switch. Can be toggled."),
+        super("switch", "Switch",
                 new Pin[]{
                         new Pin("C", 0, PinType.NOT_USED),
                         new Pin("NO", 1, PinType.NOT_USED),
                         new Pin("NC", 2, PinType.NOT_USED)
         });
         setSizeWithoutPins(75, 45);
+    }
+
+    @Override
+    public String getDescription() {
+        return "A normal 3-pin switch. Can be toggled.";
     }
 
     @Override
@@ -63,20 +67,20 @@ public class ChipSwitch extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
         int x = getPosX() + offsetX - getWidth()/2;
         int y = getPosY() + offsetY - getHeight()/2;
 
         g.drawRect(x, y, getWidth(), getHeight());
 
         getPin(0).setBounds(getPosX()-getWidth()/2 + 2, getPosY()-4, 10, 10);
-        getPin(0).paint(g, offsetX, offsetY);
+        getPin(0).paint(g, offsetX, offsetY, pinDescription, true);
 
         getPin(1).setBounds(getPosX()+getWidth()/2 - 12 , getPosY()-14, 10, 10);
-        getPin(1).paint(g, offsetX, offsetY);
+        getPin(1).paint(g, offsetX, offsetY, pinDescription, false);
 
         getPin(2).setBounds(getPosX()+getWidth()/2 - 12, getPosY()+5, 10, 10);
-        getPin(2).paint(g, offsetX, offsetY);
+        getPin(2).paint(g, offsetX, offsetY, pinDescription, false);
 
         if(toggled) {
             g.drawString("Pressed", getPosX()+offsetX-35, getPosY()+offsetY-8);

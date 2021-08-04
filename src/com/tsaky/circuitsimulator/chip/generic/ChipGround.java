@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
@@ -11,12 +10,16 @@ public class ChipGround extends Chip {
 
     public ChipGround() {
         super("ground", "Ground",
-                new InfoPage("Ground"),
                 new Pin[]{
                 new Pin("GND", 0, PinType.GROUND_SOURCE)
         });
 
-        setSizeWithoutPins(20, 20);
+        setSizeWithoutPins(34, 20);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Ground";
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ChipGround extends Chip {
     }
 
     @Override
-    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName) {
+    public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
         int x = getPosX() - getWidth() / 2;
         int y = getPosY() - getHeight() / 2;
         Color c = g.getColor();
@@ -34,7 +37,7 @@ public class ChipGround extends Chip {
         g.fillRect(x + offsetX, y + offsetY, getWidth(), getHeight());
         g.setColor(Color.BLACK);
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paint(g, offsetX, offsetY, "0V");
+        getPin(0).paint(g, offsetX, offsetY, "GND", pinDescription, false);
         g.setColor(c);
     }
 }

@@ -1,6 +1,5 @@
 package com.tsaky.circuitsimulator.chip.c74series;
 
-import com.tsaky.circuitsimulator.InfoPage;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 
@@ -8,7 +7,6 @@ public class Chip7432 extends Chip {
 
     public Chip7432() {
         super("7432", "OR Gates IC",
-                new InfoPage("Quad 2-Input Positive OR Gate IC", "ic7432.png"),
                 new Pin[]{
                         new Pin("1A", 0, PinType.INPUT),
                         new Pin("1B", 1, PinType.INPUT),
@@ -25,6 +23,11 @@ public class Chip7432 extends Chip {
                         new Pin("4B", 12, PinType.INPUT),
                         new Pin("VCC", 13, PinType.POWER)});
         setSize(40, 180);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Quad 2-Input Positive OR Gate IC";
     }
 
     @Override

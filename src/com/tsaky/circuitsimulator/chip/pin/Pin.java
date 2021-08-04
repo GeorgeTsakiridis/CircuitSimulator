@@ -19,7 +19,7 @@ public class Pin {
     public Pin(String pinName, int pinID, PinType pinType){
         this.pinName = pinName;
         this.pinID = pinID;
-        setPinType(pinType);
+        setType(pinType);
         this.bounds = new Rectangle();
     }
 
@@ -47,7 +47,7 @@ public class Pin {
         return pinType;
     }
 
-    public void setPinType(PinType pinType) {
+    public void setType(PinType pinType) {
         this.pinType = pinType;
     }
 
@@ -55,8 +55,12 @@ public class Pin {
         return bounds;
     }
 
-    public void paint(Graphics g, int offsetX, int offsetY){
-        paint(g, offsetX, offsetY, String.valueOf(getPinID()+1));
+    public void paint(Graphics g, int offsetX, int offsetY, String pinName){
+        paint(g, offsetX, offsetY, pinName, false, true);
+    }
+
+    public void paint(Graphics g, int offsetX, int offsetY, boolean description, boolean leftSide){
+        paint(g, offsetX, offsetY, String.valueOf(getPinID()+1), description, leftSide);
     }
 
     //From old PinInput.java
@@ -100,8 +104,9 @@ public class Pin {
         isOutputHigh = outputHigh;
     }
 
-    public void paint(Graphics g, int offsetX, int offsetY, String name){
-        Rectangle sb = PaintUtils.getStringBounds(g, name);
+    public void paint(Graphics g, int offsetX, int offsetY, String name, boolean description, boolean leftSide){
+        Rectangle inNameBounds = PaintUtils.getStringBounds(g, name);
+        Rectangle outNameBounds = PaintUtils.getStringBounds(g, getName());
 
         //setBounds(posX, posY, pinSize, pinSize);
         Color old = g.getColor();
@@ -118,8 +123,16 @@ public class Pin {
         }
 
         g.setColor(old);
-        g.drawString(name, bounds.x + bounds.width/2 - sb.width/2 + offsetX,
-                bounds.y + bounds.height/2 + sb.height/2 -1 + offsetY);
+        g.drawString(name, bounds.x + bounds.width/2 - inNameBounds.width/2 + offsetX,
+                bounds.y + bounds.height/2 + inNameBounds.height/2 -1 + offsetY);
+
+        if(description){
+            int x = leftSide ? bounds.x - outNameBounds.width + offsetX - 10 :
+                    bounds.x + bounds.width + offsetX + 10;
+            g.drawString(getName(), x,
+                    bounds.y + bounds.height/2 + outNameBounds.height/2 -1 + offsetY);
+        }
+
     }
 
     public Color getColor(){
