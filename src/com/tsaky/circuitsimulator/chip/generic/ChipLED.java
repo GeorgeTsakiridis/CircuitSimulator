@@ -91,11 +91,11 @@ public class ChipLED extends Chip {
         Color c = g.getColor();
 
         getPin(0).setBounds(x, y, getWidth(), getHeight());
-        getPin(0).paint(g,offsetX, offsetY, "", pinDescription, true);
+        getPin(0).paint(g, offsetX, offsetY, "", pinDescription, true);
 
         if(isSelected()){
             g.setColor(Color.RED);
-            g.drawRect(x, y, getWidth(), getHeight());
+            g.drawRect(x + offsetX, y + offsetY, getWidth(), getHeight());
         }
 
         if((getPin(0)).isLinkHigh()) {

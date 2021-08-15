@@ -1,26 +1,28 @@
-package com.tsaky.circuitsimulator.ui;
+package com.tsaky.circuitsimulator.ui.window;
 
 import com.tsaky.circuitsimulator.EmulationAction;
 import com.tsaky.circuitsimulator.Handler;
 import com.tsaky.circuitsimulator.chip.Chip;
-import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.mouse.MouseMode;
+import com.tsaky.circuitsimulator.ui.LineViewMode;
+import com.tsaky.circuitsimulator.ui.PinViewMode;
+import com.tsaky.circuitsimulator.ui.ResourceManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Window implements KeyListener {
 
-    private final Handler handler;
     private final ViewportPanel viewportPanel;
-    private final ComponentInfoPanel componentInfoPanel;
+
+    private final Handler handler;
 
     private final JFrame mainFrame;
     private final JFrame componentInfoFrame;
@@ -29,47 +31,47 @@ public class Window implements KeyListener {
 
     private final JSlider simulationSpeedSlider;
 
-    private final ImageButton newButton = new ImageButton("new.png");
-    private final ImageButton saveButton = new ImageButton("save.png");
-    private final ImageButton loadButton = new ImageButton("load.png");
-
     private final ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
-    private final MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, "cameraMove.png", "Move Camera");
-    private final MouseModeChangeButton textButton = new MouseModeChangeButton(MouseMode.TEXT, "text.png", "Edit Texts");
-    private final MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, "toggle.png", "Toggle Component");
-    private final MouseModeChangeButton moveButton = new MouseModeChangeButton(MouseMode.MOVE, "move.png", "Move Component");
-    private final MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, "add.png", "Add Component");
-    private final MouseModeChangeButton linkButton = new MouseModeChangeButton(MouseMode.LINK, "link.png", "Link Pins");
-    private final MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, "remove.png", "Remove Component");
+    private final MouseModeChangeButton cameraButton = new MouseModeChangeButton(MouseMode.CAMERA, ResourceManager.getResource("mf_viewport_move"), "Move Camera");
+    private final MouseModeChangeButton textButton = new MouseModeChangeButton(MouseMode.TEXT, ResourceManager.getResource("mf_text"), "Edit Texts");
+    private final MouseModeChangeButton toggleButton = new MouseModeChangeButton(MouseMode.TOGGLE, ResourceManager.getResource("mf_toggle"), "Toggle Component");
+    private final MouseModeChangeButton moveButton = new MouseModeChangeButton(MouseMode.MOVE, ResourceManager.getResource("mf_move"), "Move Component");
+    private final MouseModeChangeButton addButton = new MouseModeChangeButton(MouseMode.ADD, ResourceManager.getResource("mf_add"), "Add Component");
+    private final MouseModeChangeButton linkButton = new MouseModeChangeButton(MouseMode.LINK, ResourceManager.getResource("mf_link"), "Link Pins");
+    private final MouseModeChangeButton removeButton = new MouseModeChangeButton(MouseMode.REMOVE, ResourceManager.getResource("mf_remove"), "Remove Component");
+
+    private final ImageButton gridSnapButton = new ImageButton(ResourceManager.getResource("mf_snap_unlocked"));
 
     private final ArrayList<EmulationChangeButton> emulationChangeButtons = new ArrayList<>();
-    private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, "simulationStart.png", "Start Simulation");
-    private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, "simulationStop.png", "Start Simulation");
-    private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, "simulationStep.png", "Step Simulation");
+    private final EmulationChangeButton startEmulationButton = new EmulationChangeButton(EmulationAction.START, ResourceManager.getResource("sim_start"), "Start Simulation");
+    private final EmulationChangeButton stopEmulationButton = new EmulationChangeButton(EmulationAction.STOP, ResourceManager.getResource("sim_stop"), "Stop Simulation");
+    private final EmulationChangeButton stepEmulationButton = new EmulationChangeButton(EmulationAction.STEP, ResourceManager.getResource("sim_step"), "Step Simulation");
 
     private final ArrayList<LineViewChangeButton> lineViewChangeButtons = new ArrayList<>();
-    private final LineViewChangeButton normalLineViewButton = new LineViewChangeButton(LineViewMode.NORMAL, "normalView.png", "Normal Lines View");
-    private final LineViewChangeButton statusLineViewButton = new LineViewChangeButton(LineViewMode.STATUS, "lineView.png", "Lines Status View");
-    //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, "powerView.png", "View/Hide Power Status");
+    private final LineViewChangeButton normalLineViewButton = new LineViewChangeButton(LineViewMode.NORMAL, ResourceManager.getResource("view_line_normal"), "Normal Lines View");
+    private final LineViewChangeButton statusLineViewButton = new LineViewChangeButton(LineViewMode.STATUS, ResourceManager.getResource("view_line_status"), "Lines Status View");
+    //private ViewChangeButton powerViewButton = new ViewChangeButton(ViewMode.POWER_STATUS, ResourceManager.getResource("view_line_power"), "View/Hide Power Status");
 
     private final ArrayList<PinViewChangeButton> pinViewChangeButtons = new ArrayList<>();
-    private final PinViewChangeButton normalPinViewButton = new PinViewChangeButton(PinViewMode.NORMAL, "normalPinView.png", "Normal Pins View");
-    private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, "statusPinView.png", "Pins Status View");
-    private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, "typePinView.png", "Pins Type View");
+    private final PinViewChangeButton normalPinViewButton = new PinViewChangeButton(PinViewMode.NORMAL, ResourceManager.getResource("view_pin_normal"), "Normal Pins View");
+    private final PinViewChangeButton statusPinViewButton = new PinViewChangeButton(PinViewMode.STATUS, ResourceManager.getResource("view_pin_status"), "Pins Status View");
+    private final PinViewChangeButton typePinViewButton = new PinViewChangeButton(PinViewMode.TYPE, ResourceManager.getResource("view_pin_type"), "Pins Type View");
 
-    private final ImageButton chipNameToggleButton = new ImageButton("chipNameSwitch.png");
-    private final ImageButton gridToggleButton = new ImageButton("gridToggle.png");
-    private final ImageButton zoomInButton = new ImageButton("zoomIn.png");
-    private final ImageButton zoomOutButton = new ImageButton("zoomOut.png");
-    private final ImageButton zoomResetButton = new ImageButton("zoomReset.png");
-    private final ImageButton showComponentInfoButton = new ImageButton("showComponentInfo.png");
+    private final ImageButton chipNameToggleButton = new ImageButton(ResourceManager.getResource("view_chip_custom_name"));
+    private final ImageButton gridToggleButton = new ImageButton(ResourceManager.getResource("view_grid_toggle"));
+    private final ImageButton zoomInButton = new ImageButton(ResourceManager.getResource("view_zoom_in"));
+    private final ImageButton zoomOutButton = new ImageButton(ResourceManager.getResource("view_zoom_out"));
+    private final ImageButton zoomResetButton = new ImageButton(ResourceManager.getResource("view_zoom_reset"));
+    private final ImageButton showComponentInfoButton = new ImageButton(ResourceManager.getResource("view_show_component_info"));
+
+    private boolean renderRealName = false;
+    private boolean mouseGridSnap = false;
 
     @SuppressWarnings("unchecked")
     public Window(Handler handler, ViewportPanel viewportPanel, ComponentInfoPanel componentInfoPanel){
 
         this.handler = handler;
         this.viewportPanel = viewportPanel;
-        this.componentInfoPanel = componentInfoPanel;
 
         componentInfoFrame = new JFrame("Component Pinout");
         componentInfoFrame.setAlwaysOnTop(true);
@@ -105,8 +107,11 @@ public class Window implements KeyListener {
         upSimulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Simulation"));
         upViewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "View"));
 
+        ImageButton newButton = new ImageButton(ResourceManager.getResource("proj_new"));
         newButton.setToolTipText("New Project");
+        ImageButton saveButton = new ImageButton(ResourceManager.getResource("proj_save"));
         saveButton.setToolTipText("Save Project");
+        ImageButton loadButton = new ImageButton(ResourceManager.getResource("proj_load"));
         loadButton.setToolTipText("Open Project");
 
         upProjectPanel.add(newButton);
@@ -116,6 +121,28 @@ public class Window implements KeyListener {
             upMouseFunctionPanel.add(button);
         }
         cameraButton.setEnabled(false);
+
+        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+
+        upMouseFunctionPanel.add(separator);
+
+        Dimension dimension = separator.getPreferredSize();
+        dimension.height = 30;
+        separator.setPreferredSize(dimension);
+
+        gridSnapButton.addActionListener(e -> {
+                mouseGridSnap = !mouseGridSnap;
+                viewportPanel.setMouseSnapEnabled(mouseGridSnap);
+                if(mouseGridSnap){
+                    gridSnapButton.setIcon(ResourceManager.getResource("mf_snap_locked"));
+                }else{
+                    gridSnapButton.setIcon(ResourceManager.getResource("mf_snap_unlocked"));
+                }
+            });
+
+        //upMouseFunctionPanel.add(Box.createHorizontalStrut(5));
+        upMouseFunctionPanel.add(gridSnapButton);
+
         for(EmulationChangeButton button : emulationChangeButtons){
             upSimulationPanel.add(button);
         }
@@ -180,7 +207,16 @@ public class Window implements KeyListener {
         zoomResetButton.setToolTipText("Reset Camera");
         showComponentInfoButton.setToolTipText("Show the Component Info Window");
 
-        chipNameToggleButton.addActionListener(e -> viewportPanel.switchChipName());
+        chipNameToggleButton.addActionListener(e -> {
+            renderRealName = !renderRealName;
+            viewportPanel.setRenderChipRealName(renderRealName);
+            if(renderRealName){
+                chipNameToggleButton.setIcon(ResourceManager.getResource("view_chip_real_name"));
+            }else{
+                chipNameToggleButton.setIcon(ResourceManager.getResource("view_chip_custom_name"));
+            }
+        });
+
         gridToggleButton.addActionListener(e -> viewportPanel.toggleGrid());
         zoomInButton.addActionListener(e -> viewportPanel.increaseScale());
         zoomOutButton.addActionListener(e -> viewportPanel.decreaseScale());
@@ -191,8 +227,8 @@ public class Window implements KeyListener {
             }
         });
 
-        mainFrame.setSize(1100, 480);
-        mainFrame.setMinimumSize(new Dimension(1100, 350));
+        mainFrame.setSize(1200, 480);
+        mainFrame.setMinimumSize(new Dimension(1200, 350));
         mainFrame.setLayout(new BorderLayout(10, 10));
         mainFrame.setFocusable(true);
         mainFrame.setFocusTraversalKeysEnabled(false);
@@ -242,14 +278,10 @@ public class Window implements KeyListener {
     }
 
     public void enableOtherEmulationButtons(EmulationAction emulationAction){
-        if(emulationAction == EmulationAction.STOP){
-            stopEmulationButton.setEnabled(false);
-            startEmulationButton.setEnabled(true);
-            stepEmulationButton.setEnabled(true);
-        }else{
-            stopEmulationButton.setEnabled(true);
-            startEmulationButton.setEnabled(false);
-            stepEmulationButton.setEnabled(false);
+        for(EmulationChangeButton button : emulationChangeButtons){
+            if(button.emulationAction != emulationAction){
+                button.setEnabled(true);
+            }
         }
     }
 
@@ -265,13 +297,20 @@ public class Window implements KeyListener {
         normalLineViewButton.setEnabled(false);
         normalPinViewButton.setEnabled(false);
 
+        chipNameToggleButton.setIcon(ResourceManager.getResource("view_chip_custom_name"));
+        renderRealName = false;
+        viewportPanel.setRenderChipRealName(false);
+
+        gridSnapButton.setIcon(ResourceManager.getResource("mf_snap_unlocked"));
+        mouseGridSnap = false;
+        viewportPanel.setMouseSnapEnabled(false);
     }
 
     private class EmulationChangeButton extends ImageButton{
         private final EmulationAction emulationAction;
 
-        public EmulationChangeButton(EmulationAction emulationAction, String assetName, String tooltip){
-            super(assetName);
+        public EmulationChangeButton(EmulationAction emulationAction, ImageIcon icon, String tooltip){
+            super(icon);
             this.emulationAction = emulationAction;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
@@ -299,8 +338,8 @@ public class Window implements KeyListener {
     private class LineViewChangeButton extends ImageButton{
         private final LineViewMode lineViewMode;
 
-        public LineViewChangeButton(LineViewMode lineViewMode, String assetName, String tooltip){
-            super(assetName);
+        public LineViewChangeButton(LineViewMode lineViewMode, ImageIcon icon, String tooltip){
+            super(icon);
             this.lineViewMode = lineViewMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
@@ -323,8 +362,8 @@ public class Window implements KeyListener {
     private class PinViewChangeButton extends ImageButton{
         private final PinViewMode pinViewMode;
 
-        public PinViewChangeButton(PinViewMode pinViewMode, String assetName, String tooltip){
-            super(assetName);
+        public PinViewChangeButton(PinViewMode pinViewMode, ImageIcon icon, String tooltip){
+            super(icon);
             this.pinViewMode = pinViewMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
@@ -347,8 +386,8 @@ public class Window implements KeyListener {
     private class MouseModeChangeButton extends ImageButton{
         private final MouseMode mouseMode;
 
-        public MouseModeChangeButton(MouseMode mouseMode, String assetName, String tooltip){
-            super(assetName);
+        public MouseModeChangeButton(MouseMode mouseMode, ImageIcon icon, String tooltip){
+            super(icon);
             this.mouseMode = mouseMode;
             addActionListener(this::actionPerformed);
             setToolTipText(tooltip);
@@ -363,12 +402,8 @@ public class Window implements KeyListener {
     }
 
     private static class ImageButton extends JButton{
-        public ImageButton(String assetName){
-            try {
-                this.setIcon(new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("assets/buttons/" + assetName)))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        public ImageButton(ImageIcon icon){
+            setIcon(icon);
             setPreferredSize(new Dimension(30, 30));
         }
     }

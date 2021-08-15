@@ -6,6 +6,9 @@ import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.ui.*;
+import com.tsaky.circuitsimulator.ui.window.ComponentInfoPanel;
+import com.tsaky.circuitsimulator.ui.window.ViewportPanel;
+import com.tsaky.circuitsimulator.ui.window.Window;
 
 import javax.swing.*;
 import java.io.*;
@@ -22,14 +25,14 @@ public class Handler{
     private Chip selectedComponent = null;
     private final ArrayList<Chip> chipsOnScreen = new ArrayList<>();
     private Pin lastSelectedPin = null;
-    public static boolean EMULATION_RUNNING = false;
-    public static boolean SHORTED = false;
     private EmulationAction emulationMode = EmulationAction.STOP;
     private int simulationSpeed = 500;
     private int lastX = 0;
     private int lastY = 0;
 
     public static boolean CALCULATING = false;
+    public static boolean EMULATION_RUNNING = false;
+    public static boolean SHORTED = false;
 
     public Handler() {
         viewportPanel = new ViewportPanel(this);
@@ -111,6 +114,13 @@ public class Handler{
             if (selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
                 Chip chip = selectedComponent.createNewInstance();
                 chip.setPosition(mouseX, mouseY);
+
+                if(viewportPanel.isMouseSnapEnabled()){
+                    int x = ((chip.getPosX()+10)/20)*20;
+                    int y = ((chip.getPosY()+10)/20)*20;
+                    chip.setPosition(x, y);
+                }
+
                 chipsOnScreen.add(chip);
                 viewportPanel.setChipsToPaint(chipsOnScreen);
                 chip.onAdded();
@@ -183,6 +193,9 @@ public class Handler{
         else if(mouseMode == MouseMode.MOVE){
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
+                        //mouseX = ((mouseX+10)/20)*20;
+                        //mouseY = ((mouseY+10)/20)*20;
+
                         chip.setPosition(mouseX, mouseY);
                     }
                 }

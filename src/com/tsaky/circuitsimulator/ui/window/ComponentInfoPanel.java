@@ -1,4 +1,4 @@
-package com.tsaky.circuitsimulator.ui;
+package com.tsaky.circuitsimulator.ui.window;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 

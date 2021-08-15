@@ -3,7 +3,7 @@ package com.tsaky.circuitsimulator;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.LineViewMode;
-import com.tsaky.circuitsimulator.ui.ViewportPanel;
+import com.tsaky.circuitsimulator.ui.window.ViewportPanel;
 
 import java.awt.*;
 import java.util.ArrayList;

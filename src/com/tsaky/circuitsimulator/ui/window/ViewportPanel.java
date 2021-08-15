@@ -1,9 +1,11 @@
-package com.tsaky.circuitsimulator.ui;
+package com.tsaky.circuitsimulator.ui.window;
 
 import com.tsaky.circuitsimulator.Handler;
 import com.tsaky.circuitsimulator.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
+import com.tsaky.circuitsimulator.ui.LineViewMode;
+import com.tsaky.circuitsimulator.ui.PinViewMode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +24,8 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
     private int offsetX = 0;
     private int offsetY = 0;
     private float scale = 1f;
-    private boolean realName = false;
+    private boolean renderChipRealName = false;
+    private boolean mouseSnapEnabled = false;
     private boolean paintGrid = true;
 
     private ArrayList<Chip> chips = null;
@@ -78,8 +81,16 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(scale > 0.2f)scale -= 0.1f;
     }
 
-    public void switchChipName(){
-        realName = !realName;
+    public void setRenderChipRealName(boolean renderChipRealName){
+        this.renderChipRealName = renderChipRealName;
+    }
+
+    public void setMouseSnapEnabled(boolean mouseSnapEnabled){
+        this.mouseSnapEnabled = mouseSnapEnabled;
+    }
+
+    public boolean isMouseSnapEnabled() {
+        return mouseSnapEnabled;
     }
 
     public void toggleGrid() {
@@ -111,13 +122,19 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(chips != null) {
             for (Chip chip : chips) {
                 g.setColor(chip.isSelected() ? Color.RED : Color.BLACK);
-                chip.paintComponent(g, offsetX, offsetY, realName, false);
+                chip.paintComponent(g, offsetX, offsetY, renderChipRealName, false);
             }
         }
 
         if(ghostChip != null){
             g.setColor(ChipUtils.chipCollidesWithOtherChip(ghostChip, chips) ? Color.RED : Color.GREEN.darker());
-            ghostChip.paintComponent(g, offsetX, offsetY, realName, false);
+            if(isMouseSnapEnabled()){
+                int x = ((ghostChip.getPosX()+10)/20)*20;
+                int y = ((ghostChip.getPosY()+10)/20)*20;
+                ghostChip.setPosition(x, y);
+            }
+
+            ghostChip.paintComponent(g, offsetX, offsetY, renderChipRealName, false);
         }
 
         Linker.paint(g, offsetX, offsetY);
