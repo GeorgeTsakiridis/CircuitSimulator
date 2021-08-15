@@ -102,7 +102,7 @@ public class Chip16bitOutputLCD extends Chip {
 
     @Override
     public void paintComponent(Graphics g, int offsetX, int offsetY, boolean realName, boolean pinDescription) {
-        g.drawRect(getBorder().x + offsetX, getBorder().y + offsetY, getBorder().width, getBorder().height);
+        g.drawRect(getPosX() + offsetX - getBorder().width/2, getPosY() + offsetY - getBorder().height/2, getBorder().width, getBorder().height);
 
         for (int i = 0; i < getPinNumber(); i++) {
             getPin(i).setBounds(getPosX() + getWidth()/2 + 5, getPosY()-getHeight()/2 + i*16 + 40, 18, 14);
