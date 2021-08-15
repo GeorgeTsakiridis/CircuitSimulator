@@ -107,11 +107,11 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(paintGrid) {
             g.setColor(gridColor);
 
-            for (int i = -20; i < getWidth() + 20; i += 20 * scale) {
+            for (int i = 0; i < getWidth() + 20; i += 20 * scale) {
                 g.drawLine(i + offsetX % 20, 0, i + offsetX % 20, getHeight() - 1);
             }
 
-            for (int i = -20; i < getHeight() + 20; i += 20 * scale) {
+            for (int i = 0; i < getHeight() + 20; i += 20 * scale) {
                 g.drawLine(0, i + offsetY % 20, getWidth() - 1, i + offsetY % 20);
             }
         }
@@ -129,9 +129,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         if(ghostChip != null){
             g.setColor(ChipUtils.chipCollidesWithOtherChip(ghostChip, chips) ? Color.RED : Color.GREEN.darker());
             if(isMouseSnapEnabled()){
-                int x = ((ghostChip.getPosX()+10)/20)*20;
-                int y = ((ghostChip.getPosY()+10)/20)*20;
-                ghostChip.setPosition(x, y);
+                ghostChip.roundPosition();
             }
 
             ghostChip.paintComponent(g, offsetX, offsetY, renderChipRealName, false);

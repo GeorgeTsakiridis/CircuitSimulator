@@ -113,13 +113,7 @@ public class Handler{
         else if (mouseMode == MouseMode.ADD && selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
             if (selectedComponent != null && !ChipUtils.chipCollidesWithOtherChip(selectedComponent, chipsOnScreen)) {
                 Chip chip = selectedComponent.createNewInstance();
-                chip.setPosition(mouseX, mouseY);
-
-                if(viewportPanel.isMouseSnapEnabled()){
-                    int x = ((chip.getPosX()+10)/20)*20;
-                    int y = ((chip.getPosY()+10)/20)*20;
-                    chip.setPosition(x, y);
-                }
+                chip.setPosition(selectedComponent.getPosX(), selectedComponent.getPosY());
 
                 chipsOnScreen.add(chip);
                 viewportPanel.setChipsToPaint(chipsOnScreen);
@@ -180,6 +174,9 @@ public class Handler{
     public void mouseMoved(int mouseX, int mouseY){
         if(selectedComponent != null){
             selectedComponent.setPosition(mouseX, mouseY);
+            if(viewportPanel.isMouseSnapEnabled()){
+                selectedComponent.roundPosition();
+            }
         }
     }
 
@@ -193,10 +190,10 @@ public class Handler{
         else if(mouseMode == MouseMode.MOVE){
                 for (Chip chip : chipsOnScreen) {
                     if (chip.isSelected()) {
-                        //mouseX = ((mouseX+10)/20)*20;
-                        //mouseY = ((mouseY+10)/20)*20;
-
                         chip.setPosition(mouseX, mouseY);
+                        if(viewportPanel.isMouseSnapEnabled()){
+                            chip.roundPosition();
+                        }
                     }
                 }
         }

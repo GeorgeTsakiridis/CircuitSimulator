@@ -184,6 +184,25 @@ public abstract class Chip {
     }
 
     /**
+     * Rounds the posX and posY of the chip
+     */
+    public void roundPosition(){
+
+        if(posX >= 0){
+            posX = ((posX+10)/20)*20;
+        }else{
+            posX = ((posX-10)/20)*20;
+        }
+
+        if(posY >= 0){
+            posY = ((posY+10)/20)*20;
+        }else{
+            posY = ((posY-10)/20)*20;
+        }
+
+    }
+
+    /**
      * Changes the size of the chip and updates its borders taking into account the pins.
      * {@code width} and {@code height} should not include the pins
      * @param width The new width of the chip
