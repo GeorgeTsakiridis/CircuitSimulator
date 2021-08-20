@@ -188,16 +188,16 @@ public abstract class Chip {
      */
     public void roundPosition(){
 
-        if(posX >= 0){
-            posX = ((posX+10)/20)*20;
+        if(getPosX() >= 0){
+            posX = ((getPosX()+10)/20)*20;
         }else{
-            posX = ((posX-10)/20)*20;
+            posX = ((getPosX()-10)/20)*20;
         }
 
-        if(posY >= 0){
-            posY = ((posY+10)/20)*20;
+        if(getPosY() >= 0){
+            posY = ((getPosY()+10)/20)*20;
         }else{
-            posY = ((posY-10)/20)*20;
+            posY = ((getPosY()-10)/20)*20;
         }
 
     }
@@ -328,9 +328,9 @@ public abstract class Chip {
         int spacePerPin = height/sidePins - pinSize;
 
         for (int i = 0; i < getPinNumber()/2; i++) {
-            int pinY = posY - height/2 + (spacePerPin + pinSize)*i + pinSize/2;
-            int pinX1 = posX - width/2 - pinSize;
-            int pinX2 = posX + width/2;
+            int pinY = getPosY() - height/2 + (spacePerPin + pinSize)*i + pinSize/2;
+            int pinX1 = getPosX() - width/2 - pinSize;
+            int pinX2 = getPosX() + width/2;
 
             getPin(i).setBounds(pinX1, pinY, pinSize, pinSize);
             getPin(getPinNumber()-i-1).setBounds(pinX2, pinY, pinSize, pinSize);
@@ -346,8 +346,8 @@ public abstract class Chip {
                 "chipSaveName='" + chipSaveName + '\'' +
                 ", chipDisplayName='" + chipDisplayName + '\'' +
                 ", pins=" + Arrays.toString(pins) +
-                ", posX=" + posX +
-                ", posY=" + posY +
+                ", posX=" + getPosX() +
+                ", posY=" + getPosY() +
                 ", width=" + width +
                 ", height=" + height +
                 ", border=" + border +

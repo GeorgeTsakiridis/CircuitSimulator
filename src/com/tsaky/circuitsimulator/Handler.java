@@ -27,8 +27,8 @@ public class Handler{
     private Pin lastSelectedPin = null;
     private EmulationAction emulationMode = EmulationAction.STOP;
     private int simulationSpeed = 500;
-    private int lastX = 0;
-    private int lastY = 0;
+    private int lastRawX = 0;
+    private int lastRawY = 0;
 
     public static boolean CALCULATING = false;
     public static boolean EMULATION_RUNNING = false;
@@ -88,7 +88,7 @@ public class Handler{
         }
     }
 
-    public void mouseClicked(int mouseX, int mouseY) {
+    public void mouseClicked(int mouseX, int mouseY, boolean leftClick) {
         //TEXT
         if(mouseMode == MouseMode.TEXT){
             ChipUtils.unselectAllChips(chipsOnScreen);
@@ -129,9 +129,23 @@ public class Handler{
         else if (mouseMode == MouseMode.LINK) {
             Pin pin = ChipUtils.getPinBellowMouse(chipsOnScreen, mouseX, mouseY);
             ChipUtils.unselectAllPins(chipsOnScreen);
-
-            if (lastSelectedPin != null && pin == null) {
+            if(!leftClick){
+                pin = null;
                 lastSelectedPin = null;
+            }
+            if (lastSelectedPin != null && pin == null) {
+                Chip chip = new ChipNode();
+                chip.setPosition(mouseX, mouseY);
+
+                Linker.linkPins(lastSelectedPin, chip.getPin(0), true);
+
+                chipsOnScreen.add(chip);
+                viewportPanel.setChipsToPaint(chipsOnScreen);
+
+                chip.onAdded();
+
+                lastSelectedPin = chip.getPin(0);
+                lastSelectedPin.setSelected(true);
             }
             if (pin != null) {
                 if (lastSelectedPin == null) {
@@ -159,19 +173,21 @@ public class Handler{
                 ChipUtils.safelyRemoveChip(chipsOnScreen, chip);
             }
         }
-
     }
 
-    public void mousePressed(int mouseX, int mouseY){
-        lastX = mouseX;
-        lastY = mouseY;
+    int fx = 0;
+    int fy = 0;
+
+    public void mousePressed(int mouseX, int mouseY, int rawMouseX, int rawMouseY){
+        lastRawX = rawMouseX;
+        lastRawY = rawMouseY;
     }
 
     public void mouseReleased(int mouseX, int mouseY){
-
     }
 
     public void mouseMoved(int mouseX, int mouseY){
+
         if(selectedComponent != null){
             selectedComponent.setPosition(mouseX, mouseY);
             if(viewportPanel.isMouseSnapEnabled()){
@@ -182,10 +198,11 @@ public class Handler{
 
     public void mouseDragged(int mouseX, int mouseY, int rawMouseX, int rawMouseY){
 
+        int difRawX = rawMouseX - lastRawX;
+        int difRawY = rawMouseY - lastRawY;
+
         if(mouseMode == MouseMode.CAMERA) {
-            viewportPanel.addOffset(rawMouseX - lastX, rawMouseY - lastY);
-            lastX = rawMouseX;
-            lastY = rawMouseY;
+            viewportPanel.addOffset(difRawX, difRawY);
         }
         else if(mouseMode == MouseMode.MOVE){
                 for (Chip chip : chipsOnScreen) {
@@ -198,6 +215,8 @@ public class Handler{
                 }
         }
 
+        lastRawX = rawMouseX;
+        lastRawY = rawMouseY;
     }
 
     public void run() {
@@ -241,8 +260,8 @@ public class Handler{
         lastSelectedPin = null;
         EMULATION_RUNNING = false;
         SHORTED = false;
-        lastX = 0;
-        lastY = 0;
+        lastRawX = 0;
+        lastRawY = 0;
         window.reset();
     }
 

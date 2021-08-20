@@ -205,15 +205,27 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
         int x = getMouseX();
         int y = getMouseY();
-        if(x != -1 && y != -1) handler.mouseClicked(x, y);
+
+        if (x != -1 && y != -1) {
+            if(SwingUtilities.isLeftMouseButton(e)) {
+                handler.mouseClicked(x, y, true);
+            }
+            else{
+                handler.mouseClicked(x, y, false);
+            }
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        int x = getMouseX();
+        int y = getMouseY();
+
         Point p = getMousePosition();
-        handler.mousePressed(p.x, p.y);
+        if(x != -1 && y != -1) handler.mousePressed(x, y, p.x, p.y);
     }
 
     @Override
