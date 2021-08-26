@@ -206,7 +206,8 @@ public class Window {
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "Start Simulation", getChangeSimulationAction(EmulationAction.START));
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), "Stop Simulation", getChangeSimulationAction(EmulationAction.STOP));
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "Step Simulation", getChangeSimulationAction(EmulationAction.STEP));
-        //TODO add sim speed inc/dec keybinds
+        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "Decrease Speed Simulation", getSimulationSpeedSliderChangeAction(false));
+        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "Increase Speed Simulation", getSimulationSpeedSliderChangeAction(true));
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK), "Normal Lines View", getChangeLineViewAction(LineViewMode.NORMAL));
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_DOWN_MASK), "Status Lines View", getChangeLineViewAction(LineViewMode.STATUS));
         bind(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.ALT_DOWN_MASK), "Normal Pins View", getChangePinViewAction(PinViewMode.NORMAL));
@@ -350,6 +351,29 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handler.setEmulationMode(emulationAction);
+            }
+        };
+    }
+
+    private AbstractAction getSimulationSpeedSliderChangeAction(boolean increase) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int simulationSpeed = simulationSpeedSlider.getValue();
+                if(increase) {
+                    simulationSpeed += 50;
+                    if(simulationSpeed > simulationSpeedSlider.getMaximum()){
+                        simulationSpeed = simulationSpeedSlider.getMaximum();
+                    }
+                }else{
+                    simulationSpeed -= 50;
+                    if(simulationSpeed < simulationSpeedSlider.getMinimum()){
+                        simulationSpeed = simulationSpeedSlider.getMinimum();
+                    }
+                }
+
+                handler.setSimulationSpeed(simulationSpeed);
+                simulationSpeedSlider.setValue(simulationSpeed);
             }
         };
     }
