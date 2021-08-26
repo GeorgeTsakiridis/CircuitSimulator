@@ -175,9 +175,6 @@ public class Handler{
         }
     }
 
-    int fx = 0;
-    int fy = 0;
-
     public void mousePressed(int mouseX, int mouseY, int rawMouseX, int rawMouseY){
         lastRawX = rawMouseX;
         lastRawY = rawMouseY;
