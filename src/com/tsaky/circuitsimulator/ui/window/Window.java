@@ -64,8 +64,8 @@ public class Window {
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TOGGLE, ResourceManager.getResource("mf_toggle"), "Toggle Component"));
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.MOVE, ResourceManager.getResource("mf_move"), "Move Component"));
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.ADD, ResourceManager.getResource("mf_add"), "Add Component"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.LINK, ResourceManager.getResource("mf_link"), "Move Camera"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.REMOVE, ResourceManager.getResource("mf_remove"), "Move Camera"));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.LINK, ResourceManager.getResource("mf_link"), "Link Pins"));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.REMOVE, ResourceManager.getResource("mf_remove"), "Remove Component"));
         mouseModeChangeButtons.get(0).setEnabled(false);
 
         emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.START, ResourceManager.getResource("sim_start"), "Start Simulation"));
