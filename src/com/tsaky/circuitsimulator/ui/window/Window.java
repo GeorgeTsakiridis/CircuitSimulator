@@ -1,10 +1,8 @@
 package com.tsaky.circuitsimulator.ui.window;
 
-import com.tsaky.circuitsimulator.EmulationAction;
-import com.tsaky.circuitsimulator.Handler;
+import com.tsaky.circuitsimulator.*;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
-import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.ui.LineViewMode;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
@@ -40,6 +38,14 @@ public class Window {
     private boolean renderRealName = false;
     private boolean mouseGridSnap = false;
 
+    private JMenu projectMenu = new JMenu("Project");
+    private JMenu viewMenu = new JMenu("View");
+    private JMenu linesViewSubMenu = new JMenu("Lines View Mode");
+    private JMenu pinsViewSubMenu = new JMenu("Pins View Mode");
+    private JMenu simulationMenu = new JMenu("Simulation");
+    private JMenu helpMenu = new JMenu("Help");
+
+
     @SuppressWarnings("unchecked")
     public Window(Handler handler, ViewportPanel viewportPanel, ComponentInfoPanel componentInfoPanel){
 
@@ -53,8 +59,8 @@ public class Window {
         componentInfoFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         componentInfoFrame.add(componentInfoPanel);
 
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.CAMERA, ResourceManager.getResource("mf_viewport_move"), "Move Camera"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TEXT, ResourceManager.getResource("mf_text"), "Edit Texts"));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.CAMERA, ResourceManager.getResource("mf_viewport_move"), "Move Viewport"));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TEXT, ResourceManager.getResource("mf_text"), "Edit Text"));
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TOGGLE, ResourceManager.getResource("mf_toggle"), "Toggle Component"));
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.MOVE, ResourceManager.getResource("mf_move"), "Move Component"));
         mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.ADD, ResourceManager.getResource("mf_add"), "Add Component"));
@@ -68,7 +74,7 @@ public class Window {
         emulationChangeButtons.get(1).setEnabled(false);
 
         lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.NORMAL, ResourceManager.getResource("view_line_normal"), "Normal Lines View"));
-        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.STATUS, ResourceManager.getResource("view_line_normal"), "Lines Status View"));
+        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.STATUS, ResourceManager.getResource("view_line_status"), "Lines Status View"));
         //lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.POWER_STATUS, ResourceManager.getResource("view_line_power"), "Lines Power View"));
         lineViewChangeButtons.get(0).setEnabled(false);
 
@@ -181,6 +187,7 @@ public class Window {
         mainFrame.add(upPanel, "North");
         mainFrame.add(downPanel, "South");
         mainFrame.setLocationRelativeTo(null);
+        mainFrame.setJMenuBar(getJMenuBar());
         mainFrame.setVisible(true);
 
         int x = Toolkit.getDefaultToolkit().getScreenSize().width/2 - mainFrame.getSize().width/2;
@@ -198,48 +205,68 @@ public class Window {
         zoomResetButton.addActionListener(getZoomAction(2));
         showComponentInfoButton.addActionListener(showComponentInfoWindowAction);
 
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK), "New Project", newProjectAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "Save Project", saveProjectAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "Open Project", loadProjectAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "Move Viewport", getMouseFunctionChangeAction(MouseMode.CAMERA));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "Edit Display Text", getMouseFunctionChangeAction(MouseMode.TEXT));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), "Toggle", getMouseFunctionChangeAction(MouseMode.TOGGLE));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK), "Move", getMouseFunctionChangeAction(MouseMode.MOVE));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "Add", getMouseFunctionChangeAction(MouseMode.ADD));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK), "Link", getMouseFunctionChangeAction(MouseMode.LINK));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Remove", getMouseFunctionChangeAction(MouseMode.REMOVE));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), "Toggle Mouse Grid Snap Mode", mouseGridSnapModeAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "Start Simulation", getChangeSimulationAction(EmulationAction.START));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), "Stop Simulation", getChangeSimulationAction(EmulationAction.STOP));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "Step Simulation", getChangeSimulationAction(EmulationAction.STEP));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "Decrease Speed Simulation", getSimulationSpeedSliderChangeAction(false));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "Increase Speed Simulation", getSimulationSpeedSliderChangeAction(true));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK), "Normal Lines View", getChangeLineViewAction(LineViewMode.NORMAL));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_DOWN_MASK), "Status Lines View", getChangeLineViewAction(LineViewMode.STATUS));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.ALT_DOWN_MASK), "Normal Pins View", getChangePinViewAction(PinViewMode.NORMAL));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK), "Status Pins View", getChangePinViewAction(PinViewMode.STATUS));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK), "Type Pins View", getChangePinViewAction(PinViewMode.TYPE));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_DOWN_MASK), "Toggle Chip Name", chipNameToggleAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.ALT_DOWN_MASK), "Show Hide Grid", gridToggleAction);
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_DOWN_MASK), "Zoom In 1", getZoomAction(1));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), "Zoom In 2", getZoomAction(1));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "Zoom Out 1", getZoomAction(0));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), "Zoom Out 2", getZoomAction(0));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), "Reset", getZoomAction(2));
-        bind(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), "Show Component Info Window", showComponentInfoWindowAction);
+        CSActionsManager.addAction("New Project", "proj_new", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK), 'n', newProjectAction, projectMenu);
+        CSActionsManager.addAction("Save Project", "proj_save", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), 's', saveProjectAction, projectMenu);
+        CSActionsManager.addAction("Open Project", "proj_load", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), 'o', loadProjectAction, projectMenu);
+        CSActionsManager.addAction("Move Viewport", "mf_viewport_move", KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), 0, getMouseFunctionChangeAction(MouseMode.CAMERA), null);
+        CSActionsManager.addAction("Edit Display Text", "mf_text", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), 0, getMouseFunctionChangeAction(MouseMode.TEXT), null);
+        CSActionsManager.addAction("Toggle", "mf_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), 0, getMouseFunctionChangeAction(MouseMode.TOGGLE), null);
+        CSActionsManager.addAction("Move", "mf_move", KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), 0, getMouseFunctionChangeAction(MouseMode.MOVE), null);
+        CSActionsManager.addAction("Add", "mf_add", KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), 0, getMouseFunctionChangeAction(MouseMode.ADD), null);
+        CSActionsManager.addAction("Link", "mf_link", KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), 0, getMouseFunctionChangeAction(MouseMode.LINK), null);
+        CSActionsManager.addAction("Remove", "mf_remove", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), 0, getMouseFunctionChangeAction(MouseMode.REMOVE), null);
+        CSActionsManager.addAction("Toggle Mouse Grid Snap Mode", null, KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), 'G', mouseGridSnapModeAction, null);
+        CSActionsManager.addAction("Start Simulation", "sim_start", KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), 'S', getChangeSimulationAction(EmulationAction.START), simulationMenu);
+        CSActionsManager.addAction("Stop Simulation", "sim_stop", KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), 't', getChangeSimulationAction(EmulationAction.STOP), simulationMenu);
+        CSActionsManager.addAction("Step Simulation", "sim_step", KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), 'e', getChangeSimulationAction(EmulationAction.STEP), simulationMenu);
+        CSActionsManager.addAction("Decrease Simulation Speed", null, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), 'D', getSimulationSpeedSliderChangeAction(false), simulationMenu);
+        CSActionsManager.addAction("Increase Simulation Speed", null, KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), 'I', getSimulationSpeedSliderChangeAction(true), simulationMenu);
+        CSActionsManager.addAction("Lines Normal View", "view_line_normal", null, 'N', getChangeLineViewAction(LineViewMode.NORMAL), linesViewSubMenu);
+        CSActionsManager.addAction("Lines Status View", "view_line_status", null, 'S', getChangeLineViewAction(LineViewMode.STATUS), linesViewSubMenu);
+        CSActionsManager.addAction("Pins Normal View", "view_pin_normal", null, 'N', getChangePinViewAction(PinViewMode.NORMAL), pinsViewSubMenu);
+        CSActionsManager.addAction("Pins Status View", "view_pin_status", null, 'S', getChangePinViewAction(PinViewMode.STATUS), pinsViewSubMenu);
+        CSActionsManager.addAction("Pins Type View", "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
+        CSActionsManager.addAction("Show Custom/Real Chip Name", "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu);
+        CSActionsManager.addAction("Show/Hide Viewport Grid", "view_grid_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), 'G', gridToggleAction, viewMenu);
+        CSActionsManager.addAction("Zoom In", "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu);
+        CSActionsManager.addAction("Zoom In 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(1), null);
+        CSActionsManager.addAction("Zoom Out", "view_zoom_out", KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), 'O', getZoomAction(0), viewMenu);
+        CSActionsManager.addAction("Zoom Out 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(0), null);
+        CSActionsManager.addAction("Reset Viewport", "view_zoom_reset", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), 'R', getZoomAction(2), viewMenu);
+        CSActionsManager.addAction("Show Component Info Window", "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu);
 
+        CSActionsManager.bindAllTo(viewportPanel);
     }
 
-    private void bind(KeyStroke key, String string, Action action) {
-        viewportPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(key, string);
-        viewportPanel.getActionMap().put(string, action);
+    private JMenuBar getJMenuBar(){
+        JMenuBar menubar = new JMenuBar();
+
+        projectMenu.setMnemonic('p');
+        viewMenu.setMnemonic('v');
+        simulationMenu.setMnemonic('s');
+        helpMenu.setMnemonic('h');
+
+        viewMenu.add(linesViewSubMenu);
+        linesViewSubMenu.setMnemonic('l');
+        viewMenu.add(pinsViewSubMenu);
+        pinsViewSubMenu.setMnemonic('p');
+
+        JMenu[] jMenus = new JMenu[]{projectMenu, viewMenu, simulationMenu, helpMenu};
+
+        for(JMenu jMenu : jMenus){
+            JMenu emptyMenu = new JMenu();
+            emptyMenu.setFocusable(false);
+            emptyMenu.setEnabled(false);
+
+            menubar.add(jMenu);
+            menubar.add(emptyMenu);
+        }
+
+        return menubar;
     }
 
     private boolean getValidation(){
         return JOptionPane.showConfirmDialog(null, "Any unsaved progress will be lost.\nAre you sure you want to continue?") == 0;
-    }
-
-    private void addViewButtonsToPanel(JPanel panel){
     }
 
     public void setChipDescription(Chip chip){
@@ -320,7 +347,7 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handler.setMouseMode(mouseMode);
-                for (MouseModeChangeButton button : mouseModeChangeButtons) {
+                for (Window.MouseModeChangeButton button : mouseModeChangeButtons) {
                     button.setEnabled(button.mouseMode != mouseMode);
                 }
             }
@@ -378,7 +405,7 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 ViewportPanel.lineViewMode = lineViewMode;
 
-                for (LineViewChangeButton button: lineViewChangeButtons) {
+                for (Window.LineViewChangeButton button: lineViewChangeButtons) {
                     button.setEnabled(button.lineViewMode != lineViewMode);
                 }
             }
@@ -391,7 +418,7 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 ViewportPanel.pinViewMode = pinViewMode;
 
-                for (PinViewChangeButton button: pinViewChangeButtons) {
+                for (Window.PinViewChangeButton button: pinViewChangeButtons) {
                     button.setEnabled(button.pinViewMode != pinViewMode);
                 }
             }
@@ -437,6 +464,7 @@ public class Window {
             componentInfoFrame.setVisible(true);
         }
     };
+
 
     private class EmulationChangeButton extends ImageButton{
         private final EmulationAction emulationAction;

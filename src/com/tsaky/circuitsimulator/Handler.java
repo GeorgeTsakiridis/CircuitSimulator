@@ -4,7 +4,6 @@ import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
-import com.tsaky.circuitsimulator.mouse.MouseMode;
 import com.tsaky.circuitsimulator.ui.*;
 import com.tsaky.circuitsimulator.ui.window.ComponentInfoPanel;
 import com.tsaky.circuitsimulator.ui.window.ViewportPanel;
