@@ -1,9 +1,10 @@
 package com.tsaky.circuitsimulator.ui.window;
 
-import com.tsaky.circuitsimulator.Handler;
-import com.tsaky.circuitsimulator.Linker;
+import com.tsaky.circuitsimulator.logic.Handler;
+import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.LineViewMode;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 
@@ -144,30 +145,31 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
             int x = getWidth()-180;
             int y = getHeight() - g2d.getFont().getSize()*6;
 
-            drawLegendLine(g, Color.RED, "Power Source/Input", x, y);
+            drawLegendLine(g, Color.RED, Localization.getString("power_source_input"), x, y);
             y += g2d.getFont().getSize();
-            drawLegendLine(g, Color.BLUE, "Ground Source/Input", x, y);
+            drawLegendLine(g, Color.BLUE, Localization.getString("ground_source_input"), x, y);
             y += g2d.getFont().getSize();
-            drawLegendLine(g, Color.GREEN, "Input", x, y);
+            drawLegendLine(g, Color.GREEN, Localization.getString("input"), x, y);
             y += g2d.getFont().getSize();
-            drawLegendLine(g, Color.ORANGE, "Output", x, y);
+            drawLegendLine(g, Color.ORANGE, Localization.getString("output"), x, y);
             y += g2d.getFont().getSize();
-            drawLegendLine(g, Color.MAGENTA, "High-Z", x, y);
+            drawLegendLine(g, Color.MAGENTA, Localization.getString("high_z"), x, y);
             y += g2d.getFont().getSize();
-            drawLegendLine(g, Color.WHITE, "Not Used", x, y);
+            drawLegendLine(g, Color.WHITE, Localization.getString("not_used"), x, y);
 
             g2d.setColor(oldColor);
             g2d.scale(scale*2d, scale*2d);
         }
 
         if(Handler.SHORTED){
+            String shortCircuitString = Localization.getString("short_circuit");
             g2d.scale(1d/scale, 1d/scale);
             g.setColor(Color.RED);
             g.drawRect(0, 0, getWidth()-1, getHeight()-1);
-            g.drawString("Short Circuit!", 10, 20);
-            g.drawString("Short Circuit!", 10, getHeight()-13);
-            g.drawString("Short Circuit!", getWidth()-100, getHeight()-13);
-            g.drawString("Short Circuit!", getWidth()-100, 20);
+            g.drawString(shortCircuitString, 10, 20);
+            g.drawString(shortCircuitString, 10, getHeight()-13);
+            g.drawString(shortCircuitString, getWidth()-100, getHeight()-13);
+            g.drawString(shortCircuitString, getWidth()-100, 20);
             g2d.scale(scale, scale);
             Handler.SHORTED = false;
         }
@@ -210,12 +212,7 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
         int y = getMouseY();
 
         if (x != -1 && y != -1) {
-            if(SwingUtilities.isLeftMouseButton(e)) {
-                handler.mouseClicked(x, y, true);
-            }
-            else{
-                handler.mouseClicked(x, y, false);
-            }
+            handler.mouseClicked(x, y, SwingUtilities.isLeftMouseButton(e));
         }
     }
 

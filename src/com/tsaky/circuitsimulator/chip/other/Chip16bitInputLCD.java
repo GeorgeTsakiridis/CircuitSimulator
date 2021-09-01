@@ -3,12 +3,11 @@ package com.tsaky.circuitsimulator.chip.other;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.*;
 import java.util.Locale;
 
 public class Chip16bitInputLCD extends Chip {
@@ -16,7 +15,7 @@ public class Chip16bitInputLCD extends Chip {
     private int number = 0;
 
     public Chip16bitInputLCD(){
-        super("16-Bit Input", "16-Bit Input",
+        super("16-Bit Input", Localization.getString("chip16bit_input_name"),
                 new Pin[]{
                         new Pin("Bit 0  ", 0, PinType.INPUT),
                         new Pin("Bit 1  ", 1, PinType.INPUT),
@@ -41,7 +40,7 @@ public class Chip16bitInputLCD extends Chip {
 
     @Override
     public String getDescription() {
-        return "Displays the 16-bit input number into a hexadecimal number";
+        return Localization.getString("chip16bit_input_description");
     }
 
     @Override
@@ -80,7 +79,7 @@ public class Chip16bitInputLCD extends Chip {
         AffineTransform old = g2d.getTransform();
 
         g2d.translate(getPosX() + offsetX + string2Bounds.height + 20, getPosY() + offsetY - string2Bounds.width/2);
-        g2d.rotate(+Math.PI/2);
+        g2d.rotate(Math.PI/2);
         g2d.drawString(nameString, 0, 0);
 
         g2d.setTransform(old);

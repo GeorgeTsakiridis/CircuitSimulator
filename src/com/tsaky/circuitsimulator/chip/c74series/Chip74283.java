@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip74283 extends Chip {
 
     public Chip74283(){
-        super("74283", "4-bit Full Adder",
+        super("74283", Localization.getString("chip74283_name"),
                 new Pin[]{
                 new Pin("S2", 0, PinType.OUTPUT),
                 new Pin("B2", 1, PinType.INPUT),
@@ -30,7 +31,7 @@ public class Chip74283 extends Chip {
 
     @Override
     public String getDescription() {
-        return "4-bit Binary Full Adder (has carry in function)";
+        return Localization.getString("chip74283_description");
     }
 
     @Override

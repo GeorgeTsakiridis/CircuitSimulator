@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip7486 extends Chip {
 
     public Chip7486() {
-        super("7486", "XOR Gates IC",
+        super("7486", Localization.getString("chip7486_name"),
                 new Pin[]{
                         new Pin("1A", 0, PinType.INPUT),
                         new Pin("1B", 1, PinType.INPUT),
@@ -28,7 +29,7 @@ public class Chip7486 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Quad 2-input XOR gate IC";
+        return Localization.getString("chip7486_description");
     }
 
     @Override

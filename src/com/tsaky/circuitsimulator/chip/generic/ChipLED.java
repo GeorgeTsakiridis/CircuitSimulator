@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
@@ -12,11 +13,11 @@ public class ChipLED extends Chip {
     private Color colorInactive;
 
     public ChipLED(){
-        this("Red", Color.RED);
+        this("Red", "Red", Color.RED);
     }
 
-    public ChipLED(String ledColor, Color color) {
-        super("led_" + ledColor, "LED " + ledColor,
+    public ChipLED(String saveColor, String ledColor, Color color) {
+        super("led_" + saveColor, Localization.getString("led_name") + " " + ledColor,
                 new Pin[]{new Pin("IN", 0, PinType.INPUT)});
         setColor(color);
         setSizeWithoutPins(15, 15);
@@ -24,7 +25,7 @@ public class ChipLED extends Chip {
 
     @Override
     public String getDescription() {
-        return "Colored LED";
+        return Localization.getString("led_description");
     }
 
     private void setColor(Color color){

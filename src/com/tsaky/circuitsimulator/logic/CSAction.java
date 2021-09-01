@@ -1,4 +1,4 @@
-package com.tsaky.circuitsimulator;
+package com.tsaky.circuitsimulator.logic;
 
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 

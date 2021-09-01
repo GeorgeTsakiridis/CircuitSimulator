@@ -3,20 +3,21 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipPowerSwitch extends Chip {
 
     public ChipPowerSwitch() {
-        super("power_switch", "Power Switch",
+        super("power_switch", Localization.getString("power_switch_name"),
                 new Pin[]{new Pin("OUT", 0, PinType.GROUND_SOURCE)});
         setSizeWithoutPins(34, 20);
     }
 
     @Override
     public String getDescription() {
-        return "A Simple Power Switch. Acts as a voltage source when active. Can be toggled.";
+        return Localization.getString("power_switch_description");
     }
 
     @Override
@@ -59,10 +60,10 @@ public class ChipPowerSwitch extends Chip {
         int x = getPosX() - getWidth() / 2;
         int y = getPosY() - getHeight() / 2;
         Color c = g.getColor();
-        String text = "OFF";
+        String text = Localization.getString("off");
         if(getPin(0).getType() == PinType.POWER_SOURCE){
             g.setColor(Color.GREEN.darker());
-            text= "ON";
+            text= Localization.getString("on");
         }else{
             g.setColor(Color.RED.darker());
         }

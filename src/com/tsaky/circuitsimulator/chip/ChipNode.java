@@ -1,15 +1,15 @@
-package com.tsaky.circuitsimulator;
+package com.tsaky.circuitsimulator.chip;
 
-import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipNode extends Chip {
 
     public ChipNode() {
-        super("node", "Node",
+        super("node", Localization.getString("node_name"),
                 new Pin[]{
                         new Pin("Node", 0, PinType.NOT_USED),
                 });
@@ -19,7 +19,7 @@ public class ChipNode extends Chip {
 
     @Override
     public String getDescription() {
-        return "A node used to organize the connection wires";
+        return Localization.getString("node_description");
     }
 
     @Override

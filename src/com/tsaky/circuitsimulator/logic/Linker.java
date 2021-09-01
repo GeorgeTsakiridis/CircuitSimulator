@@ -1,5 +1,6 @@
-package com.tsaky.circuitsimulator;
+package com.tsaky.circuitsimulator.logic;
 
+import com.tsaky.circuitsimulator.Pair;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.LineViewMode;

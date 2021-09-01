@@ -3,11 +3,13 @@ package com.tsaky.circuitsimulator.ui.window;
 import com.tsaky.circuitsimulator.*;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.logic.CSActionsManager;
+import com.tsaky.circuitsimulator.logic.Handler;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.LineViewMode;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 
-import javax.sql.rowset.WebRowSet;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -16,7 +18,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Window {
@@ -27,7 +28,7 @@ public class Window {
     private final JFrame mainFrame;
     private final JFrame componentInfoFrame;
 
-    private final JLabel infoLabel = new JLabel("Info Label");
+    private final JLabel infoLabel = new JLabel(" ");
     private final JSlider simulationSpeedSlider;
 
     private final ArrayList<MouseModeChangeButton> mouseModeChangeButtons = new ArrayList<>();
@@ -41,12 +42,12 @@ public class Window {
     private boolean renderRealName = false;
     private boolean mouseGridSnap = false;
 
-    private JMenu projectMenu = new JMenu("Project");
-    private JMenu viewMenu = new JMenu("View");
-    private JMenu linesViewSubMenu = new JMenu("Lines View Mode");
-    private JMenu pinsViewSubMenu = new JMenu("Pins View Mode");
-    private JMenu simulationMenu = new JMenu("Simulation");
-    private JMenu helpMenu = new JMenu("Help");
+    private JMenu projectMenu = new JMenu(Localization.getString("project"));
+    private JMenu viewMenu = new JMenu(Localization.getString("view"));
+    private JMenu linesViewSubMenu = new JMenu(Localization.getString("lines"));
+    private JMenu pinsViewSubMenu = new JMenu(Localization.getString("pins"));
+    private JMenu simulationMenu = new JMenu(Localization.getString("simulation"));
+    private JMenu helpMenu = new JMenu(Localization.getString("help"));
 
 
     @SuppressWarnings("unchecked")
@@ -55,35 +56,35 @@ public class Window {
         this.handler = handler;
         this.viewportPanel = viewportPanel;
 
-        componentInfoFrame = new JFrame("Component Pinout");
+        componentInfoFrame = new JFrame(Localization.getString("component_pinout"));
         componentInfoFrame.setAlwaysOnTop(true);
         componentInfoFrame.setSize(380, 400);
         componentInfoFrame.setMinimumSize(new Dimension(380, 400));
         componentInfoFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         componentInfoFrame.add(componentInfoPanel);
 
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.CAMERA, ResourceManager.getResource("mf_viewport_move"), "Move Viewport"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TEXT, ResourceManager.getResource("mf_text"), "Edit Text"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TOGGLE, ResourceManager.getResource("mf_toggle"), "Toggle Component"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.MOVE, ResourceManager.getResource("mf_move"), "Move Component"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.ADD, ResourceManager.getResource("mf_add"), "Add Component"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.LINK, ResourceManager.getResource("mf_link"), "Link Pins"));
-        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.REMOVE, ResourceManager.getResource("mf_remove"), "Remove Component"));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.CAMERA, ResourceManager.getResource("mf_viewport_move"), Localization.getString("move_viewport")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TEXT, ResourceManager.getResource("mf_text"), Localization.getString("edit_text")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.TOGGLE, ResourceManager.getResource("mf_toggle"), Localization.getString("toggle_component")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.MOVE, ResourceManager.getResource("mf_move"), Localization.getString("move_component")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.ADD, ResourceManager.getResource("mf_add"), Localization.getString("add_component")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.LINK, ResourceManager.getResource("mf_link"), Localization.getString("link_pins")));
+        mouseModeChangeButtons.add(new MouseModeChangeButton(MouseMode.REMOVE, ResourceManager.getResource("mf_remove"), Localization.getString("remove_component")));
         mouseModeChangeButtons.get(0).setEnabled(false);
 
-        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.START, ResourceManager.getResource("sim_start"), "Start Simulation"));
-        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.STOP, ResourceManager.getResource("sim_stop"), "Stop Simulation"));
-        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.STEP, ResourceManager.getResource("sim_step"), "Step Simulation"));
+        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.START, ResourceManager.getResource("sim_start"), Localization.getString("start_simulation")));
+        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.STOP, ResourceManager.getResource("sim_stop"), Localization.getString("stop_simulation")));
+        emulationChangeButtons.add(new EmulationChangeButton(EmulationAction.STEP, ResourceManager.getResource("sim_step"), Localization.getString("step_simulation")));
         emulationChangeButtons.get(1).setEnabled(false);
 
-        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.NORMAL, ResourceManager.getResource("view_line_normal"), "Normal Lines View"));
-        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.STATUS, ResourceManager.getResource("view_line_status"), "Lines Status View"));
+        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.NORMAL, ResourceManager.getResource("view_line_normal"), Localization.getString("lines_view_normal")));
+        lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.STATUS, ResourceManager.getResource("view_line_status"), Localization.getString("lines_view_status")));
         //lineViewChangeButtons.add(new LineViewChangeButton(LineViewMode.POWER_STATUS, ResourceManager.getResource("view_line_power"), "Lines Power View"));
         lineViewChangeButtons.get(0).setEnabled(false);
 
-        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.NORMAL, ResourceManager.getResource("view_pin_normal"), "Normal Pins View"));
-        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.STATUS, ResourceManager.getResource("view_pin_status"), "Pins Status View"));
-        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.TYPE, ResourceManager.getResource("view_pin_type"), "Pins Type View"));
+        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.NORMAL, ResourceManager.getResource("view_pin_normal"), Localization.getString("pins_view_normal")));
+        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.STATUS, ResourceManager.getResource("view_pin_status"), Localization.getString("pins_view_status")));
+        pinViewChangeButtons.add(new PinViewChangeButton(PinViewMode.TYPE, ResourceManager.getResource("view_pin_type"), Localization.getString("pins_view_type")));
         pinViewChangeButtons.get(0).setEnabled(false);
 
         JPanel upPanel = new JPanel();
@@ -96,10 +97,10 @@ public class Window {
         JPanel upSimulationPanel = new JPanel();
         JPanel upViewPanel = new JPanel();
 
-        upProjectPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Project"));
-        upMouseFunctionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Mouse Function"));
-        upSimulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Simulation"));
-        upViewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "View"));
+        upProjectPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("project")));
+        upMouseFunctionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("mouse_function")));
+        upSimulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("simulation")));
+        upViewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("view")));
 
         JList<String> componentsList = new JList<>(ChipManager.getAllChipNames());
         componentsList.setBackground(UIManager.getColor("background"));
@@ -108,14 +109,14 @@ public class Window {
         simulationSpeedSlider = new JSlider(JSlider.HORIZONTAL, 20, 1000, 500);
         simulationSpeedSlider.setPreferredSize(new Dimension(160, 50));
         simulationSpeedSlider.addChangeListener(e -> handler.setSimulationSpeed(((JSlider)e.getSource()).getValue()));
-        simulationSpeedSlider.setToolTipText("Update interval in ms");
+        simulationSpeedSlider.setToolTipText(Localization.getString("update_interval_in_ms"));
 
         ImageButton newButton = new ImageButton(ResourceManager.getResource("proj_new"));
-        newButton.setToolTipText("New Project");
+        newButton.setToolTipText(Localization.getString("new_project"));
         ImageButton saveButton = new ImageButton(ResourceManager.getResource("proj_save"));
-        saveButton.setToolTipText("Save Project");
+        saveButton.setToolTipText(Localization.getString("save_project"));
         ImageButton loadButton = new ImageButton(ResourceManager.getResource("proj_load"));
-        loadButton.setToolTipText("Open Project");
+        loadButton.setToolTipText(Localization.getString("open_project"));
 
         upProjectPanel.add(newButton);
         upProjectPanel.add(saveButton);
@@ -161,22 +162,23 @@ public class Window {
         upPanel.add(upSimulationPanel);
         upPanel.add(upViewPanel);
 
-        leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Components"));
+        leftPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("components")));
         leftPanel.setFocusable(false);
         leftPanel.setPreferredSize(new Dimension(250, 0));
         leftPanel.setViewportView(componentsList);
 
         //rightPanel.add(componentInfoPanel);
 
-        downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Component Info"));
+        downPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Localization.getString("components_info")));
         downPanel.add(infoLabel);
 
-        chipNameToggleButton.setToolTipText("Switch between custom and real component names");
-        gridToggleButton.setToolTipText("Show/Hide the grid");
-        zoomInButton.setToolTipText("Zoom In");
-        zoomOutButton.setToolTipText("Zoom Out");
-        zoomResetButton.setToolTipText("Reset Camera");
-        showComponentInfoButton.setToolTipText("Show the Component Info Window");
+        gridSnapButton.setToolTipText(Localization.getString("toggle_mouse_grid_snap_mode"));
+        chipNameToggleButton.setToolTipText(Localization.getString("show_custom_real_chip_name"));
+        gridToggleButton.setToolTipText(Localization.getString("show_hide_grid"));
+        zoomInButton.setToolTipText(Localization.getString("zoom_in"));
+        zoomOutButton.setToolTipText(Localization.getString("zoom_out"));
+        zoomResetButton.setToolTipText(Localization.getString("reset_viewport_position"));
+        showComponentInfoButton.setToolTipText(Localization.getString("show_component_info_window"));
 
         mainFrame = new JFrame("Circuit Simulator by George Tsakiridis");
         mainFrame.setSize(1200, 480);
@@ -208,43 +210,43 @@ public class Window {
         zoomResetButton.addActionListener(getZoomAction(2));
         showComponentInfoButton.addActionListener(showComponentInfoWindowAction);
 
-        CSActionsManager.addAction("New Project", "proj_new", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK), 'n', newProjectAction, projectMenu);
-        CSActionsManager.addAction("Save Project", "proj_save", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), 's', saveProjectAction, projectMenu);
-        CSActionsManager.addAction("Open Project", "proj_load", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), 'o', loadProjectAction, projectMenu);
-        CSActionsManager.addAction("Move Viewport", "mf_viewport_move", KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), 0, getMouseFunctionChangeAction(MouseMode.CAMERA), null);
-        CSActionsManager.addAction("Edit Display Text", "mf_text", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), 0, getMouseFunctionChangeAction(MouseMode.TEXT), null);
-        CSActionsManager.addAction("Toggle", "mf_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), 0, getMouseFunctionChangeAction(MouseMode.TOGGLE), null);
-        CSActionsManager.addAction("Move", "mf_move", KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), 0, getMouseFunctionChangeAction(MouseMode.MOVE), null);
-        CSActionsManager.addAction("Add", "mf_add", KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), 0, getMouseFunctionChangeAction(MouseMode.ADD), null);
-        CSActionsManager.addAction("Link", "mf_link", KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), 0, getMouseFunctionChangeAction(MouseMode.LINK), null);
-        CSActionsManager.addAction("Remove", "mf_remove", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), 0, getMouseFunctionChangeAction(MouseMode.REMOVE), null);
-        CSActionsManager.addAction("Toggle Mouse Grid Snap Mode", null, KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), 'G', mouseGridSnapModeAction, null);
-        CSActionsManager.addAction("Start Simulation", "sim_start", KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), 'S', getChangeSimulationAction(EmulationAction.START), simulationMenu);
-        CSActionsManager.addAction("Stop Simulation", "sim_stop", KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), 't', getChangeSimulationAction(EmulationAction.STOP), simulationMenu);
-        CSActionsManager.addAction("Step Simulation", "sim_step", KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), 'e', getChangeSimulationAction(EmulationAction.STEP), simulationMenu);
-        CSActionsManager.addAction("Decrease Simulation Speed", "sim_decrease_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), 'D', getSimulationSpeedSliderChangeAction(false), simulationMenu, true);
-        CSActionsManager.addAction("Increase Simulation Speed", "sim_increase_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), 'I', getSimulationSpeedSliderChangeAction(true), simulationMenu);
-        CSActionsManager.addAction("Lines Normal View", "view_line_normal", null, 'N', getChangeLineViewAction(LineViewMode.NORMAL), linesViewSubMenu);
-        CSActionsManager.addAction("Lines Status View", "view_line_status", null, 'S', getChangeLineViewAction(LineViewMode.STATUS), linesViewSubMenu);
-        CSActionsManager.addAction("Pins Normal View", "view_pin_normal", null, 'N', getChangePinViewAction(PinViewMode.NORMAL), pinsViewSubMenu);
-        CSActionsManager.addAction("Pins Status View", "view_pin_status", null, 'S', getChangePinViewAction(PinViewMode.STATUS), pinsViewSubMenu);
-        CSActionsManager.addAction("Pins Type View", "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
-        CSActionsManager.addAction("Show Custom/Real Chip Name", "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu, true);
-        CSActionsManager.addAction("Show/Hide Viewport Grid", "view_grid_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), 'G', gridToggleAction, viewMenu);
-        CSActionsManager.addAction("Zoom In", "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu, true);
-        CSActionsManager.addAction("Zoom In 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(1), null);
-        CSActionsManager.addAction("Zoom Out", "view_zoom_out", KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), 'O', getZoomAction(0), viewMenu);
-        CSActionsManager.addAction("Zoom Out 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(0), null);
-        CSActionsManager.addAction("Reset Viewport", "view_zoom_reset", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), 'R', getZoomAction(2), viewMenu);
-        CSActionsManager.addAction("Show Component Info Window", "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu, true);
-        CSActionsManager.addAction("Settings", "settings", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), 'e', null, projectMenu, true);
-        CSActionsManager.addAction("Help", "help", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), 'H', helpAction, helpMenu);
-        CSActionsManager.addAction("About", "about", null, 'A', null, helpMenu, true);
+        CSActionsManager.addAction(Localization.getString("new_project"), "proj_new", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK), 'n', newProjectAction, projectMenu);
+        CSActionsManager.addAction(Localization.getString("save_project"), "proj_save", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), 's', saveProjectAction, projectMenu);
+        CSActionsManager.addAction(Localization.getString("open_project"), "proj_load", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), 'o', loadProjectAction, projectMenu);
+        CSActionsManager.addAction(Localization.getString("move_viewport"), "mf_viewport_move", KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), 0, getMouseFunctionChangeAction(MouseMode.CAMERA), null);
+        CSActionsManager.addAction(Localization.getString("edit_text"), "mf_text", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), 0, getMouseFunctionChangeAction(MouseMode.TEXT), null);
+        CSActionsManager.addAction(Localization.getString("toggle_component"), "mf_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), 0, getMouseFunctionChangeAction(MouseMode.TOGGLE), null);
+        CSActionsManager.addAction(Localization.getString("move_component"), "mf_move", KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), 0, getMouseFunctionChangeAction(MouseMode.MOVE), null);
+        CSActionsManager.addAction(Localization.getString("add_component"), "mf_add", KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), 0, getMouseFunctionChangeAction(MouseMode.ADD), null);
+        CSActionsManager.addAction(Localization.getString("link_pins"), "mf_link", KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), 0, getMouseFunctionChangeAction(MouseMode.LINK), null);
+        CSActionsManager.addAction(Localization.getString("remove_component"), "mf_remove", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), 0, getMouseFunctionChangeAction(MouseMode.REMOVE), null);
+        CSActionsManager.addAction(Localization.getString("toggle_mouse_grid_snap_mode"), null, KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), 'G', mouseGridSnapModeAction, null);
+        CSActionsManager.addAction(Localization.getString("start_simulation"), "sim_start", KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), 'S', getChangeSimulationAction(EmulationAction.START), simulationMenu);
+        CSActionsManager.addAction(Localization.getString("stop_simulation"), "sim_stop", KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), 't', getChangeSimulationAction(EmulationAction.STOP), simulationMenu);
+        CSActionsManager.addAction(Localization.getString("step_simulation"), "sim_step", KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), 'e', getChangeSimulationAction(EmulationAction.STEP), simulationMenu);
+        CSActionsManager.addAction(Localization.getString("decrease_simulation_speed"), "sim_decrease_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), 'D', getSimulationSpeedSliderChangeAction(false), simulationMenu, true);
+        CSActionsManager.addAction(Localization.getString("increase_simulation_speed"), "sim_increase_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), 'I', getSimulationSpeedSliderChangeAction(true), simulationMenu);
+        CSActionsManager.addAction(Localization.getString("lines_view_normal"), "view_line_normal", null, 'N', getChangeLineViewAction(LineViewMode.NORMAL), linesViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("lines_view_status"), "view_line_status", null, 'S', getChangeLineViewAction(LineViewMode.STATUS), linesViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("pins_view_normal"), "view_pin_normal", null, 'N', getChangePinViewAction(PinViewMode.NORMAL), pinsViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("pins_view_status"), "view_pin_status", null, 'S', getChangePinViewAction(PinViewMode.STATUS), pinsViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("pins_view_status"), "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("show_custom_real_chip_name"), "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu, true);
+        CSActionsManager.addAction(Localization.getString("show_hide_grid"), "view_grid_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), 'G', gridToggleAction, viewMenu);
+        CSActionsManager.addAction(Localization.getString("zoom_in"), "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu, true);
+        CSActionsManager.addAction(Localization.getString("zoom_in")+2, null, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(1), null);
+        CSActionsManager.addAction(Localization.getString("zoom_out"), "view_zoom_out", KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), 'O', getZoomAction(0), viewMenu);
+        CSActionsManager.addAction(Localization.getString("zoom_out")+2, null, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(0), null);
+        CSActionsManager.addAction(Localization.getString("reset_viewport_position"), "view_zoom_reset", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), 'R', getZoomAction(2), viewMenu);
+        CSActionsManager.addAction(Localization.getString("show_component_info_window"), "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu, true);
+        CSActionsManager.addAction(Localization.getString("settings"), "settings", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), 'e', null, null, true);
+        CSActionsManager.addAction(Localization.getString("help"), "help", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), 'H', helpAction, helpMenu);
+        CSActionsManager.addAction(Localization.getString("about"), "about", null, 'A', aboutAction, helpMenu, true);
 
         CSActionsManager.bindAllTo(viewportPanel);
 
         helpMenu.addSeparator();
-        JMenuItem versionMenuItem = new JMenuItem("Build 010921");
+        JMenuItem versionMenuItem = new JMenuItem(Localization.getString("version") + ": " + ChipSimulator.PROGRAM_VERSION_STRING + " (" + Localization.getString("build") + " " + ChipSimulator.PROGRAM_VERSION + ")");
         versionMenuItem.setEnabled(false);
         versionMenuItem.setFocusable(false);
         versionMenuItem.setIcon(ResourceManager.getResource("build"));
@@ -281,7 +283,8 @@ public class Window {
     }
 
     private boolean getValidation(){
-        return JOptionPane.showConfirmDialog(null, "Any unsaved progress will be lost.\nAre you sure you want to continue?") == 0;
+        return JOptionPane.showConfirmDialog(null, Localization.getString("any_unsaved_progress_will_be_lost") +
+                "\n" + Localization.getString("are_you_sure_you_want_to_continue")) == 0;
     }
 
     public void setChipDescription(Chip chip){
@@ -485,11 +488,18 @@ public class Window {
         public void actionPerformed(ActionEvent e) {
             if(Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)){
                 try {
-                    Desktop.getDesktop().browse(URI.create("https://www.tsaky.com"));
+                    Desktop.getDesktop().browse(URI.create("https://www.tsaky.com"));//TODO set correct link
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
+        }
+    };
+
+    private AbstractAction aboutAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new AboutWindow(mainFrame);
         }
     };
 

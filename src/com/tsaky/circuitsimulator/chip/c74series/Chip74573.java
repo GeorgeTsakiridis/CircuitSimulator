@@ -2,6 +2,7 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip74573 extends Chip {
 
@@ -15,7 +16,7 @@ public class Chip74573 extends Chip {
     private boolean s7 = false;
 
     public Chip74573(){
-        super("74573", "Transparent Latch",
+        super("74573", Localization.getString("chip74573_name"),
                 new Pin[]{
                 new Pin("-OE", 0, PinType.INPUT),
                 new Pin("D0", 1, PinType.INPUT),
@@ -43,7 +44,7 @@ public class Chip74573 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Octal D-type transparent latch";
+        return Localization.getString("chip74573_description");
     }
 
     @Override

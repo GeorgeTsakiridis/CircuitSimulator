@@ -3,13 +3,14 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipGround extends Chip {
 
     public ChipGround() {
-        super("ground", "Ground",
+        super("ground", Localization.getString("ground_name"),
                 new Pin[]{
                 new Pin("GND", 0, PinType.GROUND_SOURCE)
         });
@@ -19,7 +20,7 @@ public class ChipGround extends Chip {
 
     @Override
     public String getDescription() {
-        return "Ground";
+        return Localization.getString("ground_description");
     }
 
     @Override

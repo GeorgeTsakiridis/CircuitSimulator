@@ -1,25 +1,26 @@
 package com.tsaky.circuitsimulator.chip;
 
 import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
 
 public class ChipText extends Chip{
 
-    String text = "Text";
+    String text = Localization.getString("text_name");
     String[] splitText = new String[]{};
 
     boolean flag = true;
 
     public ChipText() {
-        super("text", "Text", new Pin[]{});
+        super("text", Localization.getString("text_name"), new Pin[]{});
         setDisplayName(text);
     }
 
     @Override
     public String getDescription() {
-        return "A simple text box";
+        return Localization.getString("text_description");
     }
 
     @Override

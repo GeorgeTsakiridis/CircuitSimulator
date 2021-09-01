@@ -1,28 +1,29 @@
 package com.tsaky.circuitsimulator;
 
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.chip.ChipNode;
 import com.tsaky.circuitsimulator.chip.ChipText;
 import com.tsaky.circuitsimulator.chip.c74series.*;
-import com.tsaky.circuitsimulator.chip.c74series.Chip74257;
-import com.tsaky.circuitsimulator.chip.c74series.Chip74283;
-import com.tsaky.circuitsimulator.chip.c74series.Chip74573;
-import com.tsaky.circuitsimulator.chip.c74series.Chip74574;
-import com.tsaky.circuitsimulator.chip.c74series.Chip744511;
 import com.tsaky.circuitsimulator.chip.generic.*;
-import com.tsaky.circuitsimulator.chip.other.Chip16bitOutputLCD;
 import com.tsaky.circuitsimulator.chip.other.Chip16bitInputLCD;
+import com.tsaky.circuitsimulator.chip.other.Chip16bitOutputLCD;
 import com.tsaky.circuitsimulator.chip.other.ChipPD43256BCZ;
+import com.tsaky.circuitsimulator.logic.Handler;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 public class ChipSimulator {
 
     public static final int PROGRAM_VERSION = 40821;
+    public static final String PROGRAM_VERSION_STRING = "1.0.0";
     public static final long MAGIC_NUMBER = 1073147341387874804L;
 
     public ChipSimulator() {
+        Localization.setLocale(new Locale("el", "GR"));
 
         ResourceManager.addResource("mf_add", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "add.png");
         ResourceManager.addResource("mf_link", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "link.png");
@@ -74,10 +75,10 @@ public class ChipSimulator {
         ChipManager.addChip(new ChipRelay());
         ChipManager.addChip(new ChipDiode());
         ChipManager.addChip(new ChipText());
-        ChipManager.addChip(new ChipLED("Red", Color.RED));
-        ChipManager.addChip(new ChipLED("Green", Color.GREEN));
-        ChipManager.addChip(new ChipLED("Yellow", Color.YELLOW));
-        ChipManager.addChip(new ChipLED("Blue", Color.BLUE));
+        ChipManager.addChip(new ChipLED("Red", Localization.getString("red"), Color.RED));
+        ChipManager.addChip(new ChipLED("Green", Localization.getString("green"), Color.GREEN));
+        ChipManager.addChip(new ChipLED("Yellow", Localization.getString("yellow"), Color.YELLOW));
+        ChipManager.addChip(new ChipLED("Blue", Localization.getString("blue"), Color.BLUE));
         ChipManager.addChip(new Chip7SegmentDisplay());
 
         ChipManager.addChip(new Chip7402());

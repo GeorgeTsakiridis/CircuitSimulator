@@ -1,9 +1,10 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.Linker;
+import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
@@ -12,7 +13,7 @@ public class ChipSwitch extends Chip {
     private boolean toggled = false;
 
     public ChipSwitch() {
-        super("switch", "Switch",
+        super("switch", Localization.getString("switch_name"),
                 new Pin[]{
                         new Pin("C", 0, PinType.NOT_USED),
                         new Pin("NO", 1, PinType.NOT_USED),
@@ -23,7 +24,7 @@ public class ChipSwitch extends Chip {
 
     @Override
     public String getDescription() {
-        return "A normal 3-pin switch. Can be toggled.";
+        return Localization.getString("switch_description");
     }
 
     @Override
@@ -83,10 +84,10 @@ public class ChipSwitch extends Chip {
         getPin(2).paint(g, offsetX, offsetY, pinDescription, false);
 
         if(toggled) {
-            g.drawString("Pressed", getPosX()+offsetX-35, getPosY()+offsetY-8);
+            g.drawString(Localization.getString("pressed"), getPosX()+offsetX-35, getPosY()+offsetY-8);
         }
 
-        g.drawString("Switch", getPosX()-35 + offsetX, getPosY()+20 + offsetY);
+        g.drawString(Localization.getString("switch_name"), getPosX()-35 + offsetX, getPosY()+20 + offsetY);
 
     }
 }

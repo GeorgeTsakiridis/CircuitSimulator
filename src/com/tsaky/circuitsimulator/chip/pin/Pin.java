@@ -1,6 +1,6 @@
 package com.tsaky.circuitsimulator.chip.pin;
 
-import com.tsaky.circuitsimulator.Linker;
+import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 import com.tsaky.circuitsimulator.ui.window.ViewportPanel;

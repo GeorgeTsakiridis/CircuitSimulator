@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 
@@ -22,7 +23,7 @@ public class Chip7SegmentDisplay extends Chip {
     private boolean g = false;
 
     public Chip7SegmentDisplay() {
-        super("Seven Segment Display", "7 Segment Display",
+        super("Seven Segment Display", Localization.getString("seven_segment_display_name"),
                 new Pin[]{
                         new Pin("a", 0, PinType.INPUT),
                         new Pin("b", 1, PinType.INPUT),
@@ -41,7 +42,7 @@ public class Chip7SegmentDisplay extends Chip {
 
     @Override
     public String getDescription() {
-        return "Common Cathode 7-Segment Display";
+        return Localization.getString("seven_segment_display_description");
     }
 
     @Override

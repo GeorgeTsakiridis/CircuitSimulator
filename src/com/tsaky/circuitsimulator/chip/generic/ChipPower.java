@@ -3,13 +3,14 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipPower extends Chip {
 
     public ChipPower() {
-        super("power", "Power",
+        super("power", Localization.getString("power_name"),
                 new Pin[]{
                         new Pin("Vcc", 0, PinType.POWER_SOURCE)
         });
@@ -19,7 +20,7 @@ public class ChipPower extends Chip {
 
     @Override
     public String getDescription() {
-        return "Positive voltage source";
+        return Localization.getString("power_description");
     }
 
     @Override

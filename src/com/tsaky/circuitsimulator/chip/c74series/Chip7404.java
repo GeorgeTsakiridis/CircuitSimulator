@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip7404 extends Chip {
 
     public Chip7404() {
-        super("7404", "NOT Gates IC",
+        super("7404", Localization.getString("chip7404_name"),
                 new Pin[]{
         new Pin("1A", 0, PinType.INPUT),
         new Pin("1Y", 1, PinType.OUTPUT),
@@ -29,7 +30,7 @@ public class Chip7404 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Hex Inverter IC";
+        return Localization.getString("chip7404_description");
     }
 
     @Override

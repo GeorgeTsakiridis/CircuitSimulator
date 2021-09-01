@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator.chip.c74series;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.io.*;
 
@@ -20,7 +21,7 @@ public class Chip74574 extends Chip {
     private boolean lastCLK = false;
 
     public Chip74574() {
-        super("74574", "Edge-Triggered Flip-Flop",
+        super("74574", Localization.getString("chip74574_name"),
                 new Pin[]{
                         new Pin("-OE", 0, PinType.INPUT),
                         new Pin("D1", 1, PinType.INPUT),
@@ -89,7 +90,7 @@ public class Chip74574 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Octal D-type edge-triggered flip-flop";
+        return Localization.getString("chip74574_description");
     }
 
     @Override

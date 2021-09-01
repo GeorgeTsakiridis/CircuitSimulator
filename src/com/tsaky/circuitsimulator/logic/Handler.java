@@ -1,9 +1,12 @@
-package com.tsaky.circuitsimulator;
+package com.tsaky.circuitsimulator.logic;
 
+import com.tsaky.circuitsimulator.*;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipManager;
+import com.tsaky.circuitsimulator.chip.ChipNode;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.*;
 import com.tsaky.circuitsimulator.ui.window.ComponentInfoPanel;
 import com.tsaky.circuitsimulator.ui.window.ViewportPanel;
@@ -97,7 +100,7 @@ public class Handler{
 
                 JTextArea textArea = new JTextArea(chip.getDisplayName(), 5, 1);
 
-                int option = JOptionPane.showConfirmDialog(null, textArea, "Insert New Display Name",
+                int option = JOptionPane.showConfirmDialog(null, textArea, Localization.getString("insert_new_display_name"),
                         JOptionPane.OK_CANCEL_OPTION);
 
                 if(option == 2)return;
@@ -316,15 +319,14 @@ public class Handler{
         Long fileMagicNumber = dataInputStream.readLong();
 
         if(!fileMagicNumber.equals(ChipSimulator.MAGIC_NUMBER)){
-            JOptionPane.showMessageDialog(null, "This is not a valid project.",
-                    "Failed to open project", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Localization.getString("invalid_project"),
+                    Localization.getString("failed_to_open_project"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if(dataInputStream.readInt() != ChipSimulator.PROGRAM_VERSION){
             JOptionPane.showMessageDialog(null,
-                    "This save file has been created with a different program version.\n" +
-                            "Project may not be loaded successfully.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    Localization.getString("file_created_with_different_version"), Localization.getString("warning"), JOptionPane.WARNING_MESSAGE);
         }
 
         int offsetX = dataInputStream.readInt();

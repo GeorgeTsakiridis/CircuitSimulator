@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip74257 extends Chip {
 
     public Chip74257(){
-        super("74257", "Data Selector",
+        super("74257", Localization.getString("chip74257_name"),
                 new Pin[]{
                 new Pin("A/B", 0, PinType.INPUT),
                 new Pin("1A", 1, PinType.INPUT),
@@ -30,7 +31,7 @@ public class Chip74257 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Quad 2-Line to 1-Line Data Selectors";
+        return Localization.getString("chip74257_description");
     }
 
     @Override

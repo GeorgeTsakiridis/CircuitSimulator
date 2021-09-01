@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip744511 extends Chip {
 
     public Chip744511(){
-        super("744511", "BCD to 7-Segment Decoder",
+        super("744511", Localization.getString("chip744511_name"),
                 new Pin[]{
                 new Pin("B", 0, PinType.INPUT),
                 new Pin("C", 1, PinType.INPUT),
@@ -30,7 +31,7 @@ public class Chip744511 extends Chip {
 
     @Override
     public String getDescription() {
-        return "BCD to 7-Segment Decoder";
+        return Localization.getString("chip744511_description");
     }
 
     @Override

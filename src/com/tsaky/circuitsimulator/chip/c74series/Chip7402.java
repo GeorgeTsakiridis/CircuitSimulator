@@ -2,11 +2,12 @@ package com.tsaky.circuitsimulator.chip.c74series;
 
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 public class Chip7402 extends Chip {
 
     public Chip7402(){
-        super("7402", "NOR Gates IC",
+        super("7402", Localization.getString("chip7402_name"),
                 new Pin[]{
                 new Pin("1Y", 0, PinType.OUTPUT),
                 new Pin("1A", 1, PinType.INPUT),
@@ -28,7 +29,7 @@ public class Chip7402 extends Chip {
 
     @Override
     public String getDescription() {
-        return "Quad 2-Input NOR Gate IC";
+        return Localization.getString("chip7402_description");
     }
 
     @Override

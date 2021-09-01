@@ -3,6 +3,7 @@ package com.tsaky.circuitsimulator.chip.other;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class Chip16bitOutputLCD extends Chip {
     private int outputNumber = 0;
 
     public Chip16bitOutputLCD(){
-        super("16-Bit Output", "16-Bit Output",
+        super("16-Bit Output", Localization.getString("chip16bit_output_name"),
                 new Pin[]{
                         new Pin("Bit 0  ", 0, PinType.OUTPUT),
                         new Pin("Bit 1  ", 1, PinType.OUTPUT),
@@ -41,21 +42,21 @@ public class Chip16bitOutputLCD extends Chip {
 
     @Override
     public void toggle() {
-        String numberInput = JOptionPane.showInputDialog("Insert a 4 digit hexadecimal number");
+        String numberInput = JOptionPane.showInputDialog(Localization.getString("chip16bit_output_insert_4_digit_hex_number"));
         if (numberInput.matches("[0-9a-fA-F]+")) {
             if (numberInput.length() <= 4) {
                 outputNumber = Integer.valueOf(numberInput, 16);
             } else {
-                JOptionPane.showConfirmDialog(null, "You can only insert up to 4 digits.", "Max digits exceeded", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showConfirmDialog(null, Localization.getString("chip16bit_output_exceeded_digits_message"), Localization.getString("chip16bit_output_exceeded_digits_title"), JOptionPane.DEFAULT_OPTION);
             }
         } else {
-            JOptionPane.showConfirmDialog(null, "Not a valid HEX number.", "Invalid number", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showConfirmDialog(null, Localization.getString("chip16bit_output_invalid_number_message"), Localization.getString("chip16bit_output_invalid_number_title"), JOptionPane.DEFAULT_OPTION);
         }
     }
 
     @Override
     public String getDescription() {
-        return "Outputs the given hex number into a 16bit number in binary format";
+        return Localization.getString("chip16bit_output_descriptor");
     }
 
     @Override

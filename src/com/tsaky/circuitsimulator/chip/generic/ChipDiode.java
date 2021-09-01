@@ -3,22 +3,23 @@ package com.tsaky.circuitsimulator.chip.generic;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipDiode extends Chip {
 
     public ChipDiode() {
-        super("diode", "Diode", new Pin[]{
-                new Pin("Anode", 0, PinType.INPUT),
-                new Pin("Cathode", 1, PinType.OUTPUT)
+        super("diode", Localization.getString("diode_name"), new Pin[]{
+                new Pin(Localization.getString("anode"), 0, PinType.INPUT),
+                new Pin(Localization.getString("cathode"), 1, PinType.OUTPUT)
         });
         setSizeWithoutPins(50, 20);
     }
 
     @Override
     public String getDescription() {
-        return "A simple diode";
+        return Localization.getString("diode_description");
     }
 
     @Override

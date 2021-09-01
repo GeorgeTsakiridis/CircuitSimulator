@@ -1,15 +1,16 @@
 package com.tsaky.circuitsimulator.chip.generic;
 
-import com.tsaky.circuitsimulator.Linker;
+import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
+import com.tsaky.circuitsimulator.ui.Localization;
 
 import java.awt.*;
 
 public class ChipRelay extends Chip {
 
     public ChipRelay() {
-        super("relay", "Relay",
+        super("relay", Localization.getString("relay_name"),
                 new Pin[]{
                 new Pin("+", 0, PinType.POWER),
                 new Pin("GND", 1, PinType.GROUND),
@@ -26,7 +27,7 @@ public class ChipRelay extends Chip {
 
     @Override
     public String getDescription() {
-        return "A Dual Relay";
+        return Localization.getString("relay_description");
     }
 
     @Override
@@ -86,10 +87,10 @@ public class ChipRelay extends Chip {
         getPin(7).setBounds(x+24, y2, 14, 14);
         getPin(7).paint(g, offsetX, offsetY, false, false);
 
-        g.drawString("Relay", getPosX() + offsetX + 8, getPosY() + offsetY + g.getFont().getSize()/2-1);
+        g.drawString(Localization.getString("relay_name"), getPosX() + offsetX + 8, getPosY() + offsetY + g.getFont().getSize()/2-1);
 
         if(isPowered()){
-            g.drawString("Active", getPosX() + offsetX - 40, getPosY() + offsetY + g.getFont().getSize()/2-1);
+            g.drawString(Localization.getString("active"), getPosX() + offsetX - 40, getPosY() + offsetY + g.getFont().getSize()/2-1);
         }
 
         if(pinDescription){

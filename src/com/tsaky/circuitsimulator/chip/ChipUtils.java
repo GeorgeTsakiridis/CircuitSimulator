@@ -1,6 +1,6 @@
 package com.tsaky.circuitsimulator.chip;
 
-import com.tsaky.circuitsimulator.Linker;
+import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 
 import java.util.ArrayList;
