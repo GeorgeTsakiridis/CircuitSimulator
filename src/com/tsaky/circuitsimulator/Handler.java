@@ -251,6 +251,7 @@ public class Handler{
         for(Chip chip : chipsOnScreen)chip.onRemove();
         chipsOnScreen.clear();
         viewportPanel.setChipsToPaint(chipsOnScreen);
+        viewportPanel.updateGhostChip(null);
 
         selectedComponent = null;
         lastSelectedPin = null;

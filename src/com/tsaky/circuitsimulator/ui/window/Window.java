@@ -7,6 +7,7 @@ import com.tsaky.circuitsimulator.ui.LineViewMode;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 
+import javax.sql.rowset.WebRowSet;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -14,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Window {
@@ -219,23 +222,33 @@ public class Window {
         CSActionsManager.addAction("Start Simulation", "sim_start", KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), 'S', getChangeSimulationAction(EmulationAction.START), simulationMenu);
         CSActionsManager.addAction("Stop Simulation", "sim_stop", KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), 't', getChangeSimulationAction(EmulationAction.STOP), simulationMenu);
         CSActionsManager.addAction("Step Simulation", "sim_step", KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), 'e', getChangeSimulationAction(EmulationAction.STEP), simulationMenu);
-        CSActionsManager.addAction("Decrease Simulation Speed", null, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), 'D', getSimulationSpeedSliderChangeAction(false), simulationMenu);
-        CSActionsManager.addAction("Increase Simulation Speed", null, KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), 'I', getSimulationSpeedSliderChangeAction(true), simulationMenu);
+        CSActionsManager.addAction("Decrease Simulation Speed", "sim_decrease_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), 'D', getSimulationSpeedSliderChangeAction(false), simulationMenu, true);
+        CSActionsManager.addAction("Increase Simulation Speed", "sim_increase_speed", KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), 'I', getSimulationSpeedSliderChangeAction(true), simulationMenu);
         CSActionsManager.addAction("Lines Normal View", "view_line_normal", null, 'N', getChangeLineViewAction(LineViewMode.NORMAL), linesViewSubMenu);
         CSActionsManager.addAction("Lines Status View", "view_line_status", null, 'S', getChangeLineViewAction(LineViewMode.STATUS), linesViewSubMenu);
         CSActionsManager.addAction("Pins Normal View", "view_pin_normal", null, 'N', getChangePinViewAction(PinViewMode.NORMAL), pinsViewSubMenu);
         CSActionsManager.addAction("Pins Status View", "view_pin_status", null, 'S', getChangePinViewAction(PinViewMode.STATUS), pinsViewSubMenu);
         CSActionsManager.addAction("Pins Type View", "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
-        CSActionsManager.addAction("Show Custom/Real Chip Name", "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu);
+        CSActionsManager.addAction("Show Custom/Real Chip Name", "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu, true);
         CSActionsManager.addAction("Show/Hide Viewport Grid", "view_grid_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), 'G', gridToggleAction, viewMenu);
-        CSActionsManager.addAction("Zoom In", "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu);
+        CSActionsManager.addAction("Zoom In", "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu, true);
         CSActionsManager.addAction("Zoom In 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(1), null);
         CSActionsManager.addAction("Zoom Out", "view_zoom_out", KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), 'O', getZoomAction(0), viewMenu);
         CSActionsManager.addAction("Zoom Out 2", null, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(0), null);
         CSActionsManager.addAction("Reset Viewport", "view_zoom_reset", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), 'R', getZoomAction(2), viewMenu);
-        CSActionsManager.addAction("Show Component Info Window", "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu);
+        CSActionsManager.addAction("Show Component Info Window", "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu, true);
+        CSActionsManager.addAction("Settings", "settings", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), 'e', null, projectMenu, true);
+        CSActionsManager.addAction("Help", "help", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), 'H', helpAction, helpMenu);
+        CSActionsManager.addAction("About", "about", null, 'A', null, helpMenu, true);
 
         CSActionsManager.bindAllTo(viewportPanel);
+
+        helpMenu.addSeparator();
+        JMenuItem versionMenuItem = new JMenuItem("Build 010921");
+        versionMenuItem.setEnabled(false);
+        versionMenuItem.setFocusable(false);
+        versionMenuItem.setIcon(ResourceManager.getResource("build"));
+        helpMenu.add(versionMenuItem);
     }
 
     private JMenuBar getJMenuBar(){
@@ -248,8 +261,10 @@ public class Window {
 
         viewMenu.add(linesViewSubMenu);
         linesViewSubMenu.setMnemonic('l');
+        linesViewSubMenu.setIcon(ResourceManager.getResource("view_line_normal"));
         viewMenu.add(pinsViewSubMenu);
         pinsViewSubMenu.setMnemonic('p');
+        pinsViewSubMenu.setIcon(ResourceManager.getResource("view_pin_normal"));
 
         JMenu[] jMenus = new JMenu[]{projectMenu, viewMenu, simulationMenu, helpMenu};
 
@@ -462,6 +477,19 @@ public class Window {
         @Override
         public void actionPerformed(ActionEvent e) {
             componentInfoFrame.setVisible(true);
+        }
+    };
+
+    private AbstractAction helpAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)){
+                try {
+                    Desktop.getDesktop().browse(URI.create("https://www.tsaky.com"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     };
 

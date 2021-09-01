@@ -41,6 +41,8 @@ public class ChipSimulator {
         ResourceManager.addResource("sim_start", ResourceManager.EnumSubFolder.SIMULATION, "start.png");
         ResourceManager.addResource("sim_step", ResourceManager.EnumSubFolder.SIMULATION, "step.png");
         ResourceManager.addResource("sim_stop", ResourceManager.EnumSubFolder.SIMULATION, "stop.png");
+        ResourceManager.addResource("sim_increase_speed", ResourceManager.EnumSubFolder.SIMULATION, "increase_speed.png");
+        ResourceManager.addResource("sim_decrease_speed", ResourceManager.EnumSubFolder.SIMULATION, "decrease_speed.png");
 
         ResourceManager.addResource("view_chip_custom_name", ResourceManager.EnumSubFolder.VIEW, "chip_custom_name.png");
         ResourceManager.addResource("view_chip_real_name", ResourceManager.EnumSubFolder.VIEW, "chip_real_name.png");
@@ -58,6 +60,11 @@ public class ChipSimulator {
 
         ResourceManager.addResource("cmp_horizontal_segment", ResourceManager.EnumSubFolder.COMPONENT, "horizontal_segment.png");
         ResourceManager.addResource("cmp_vertical_segment", ResourceManager.EnumSubFolder.COMPONENT, "vertical_segment.png");
+
+        ResourceManager.addResource("help", ResourceManager.EnumSubFolder.OTHER, "help.png");
+        ResourceManager.addResource("about", ResourceManager.EnumSubFolder.OTHER, "about.png");
+        ResourceManager.addResource("settings", ResourceManager.EnumSubFolder.OTHER, "settings.png");
+        ResourceManager.addResource("build", ResourceManager.EnumSubFolder.OTHER, "build.png");
 
         ChipManager.addChip(new ChipNode());
         ChipManager.addChip(new ChipGround());

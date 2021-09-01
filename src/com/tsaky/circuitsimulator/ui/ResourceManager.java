@@ -15,7 +15,8 @@ public class ResourceManager {
         PROJECT("buttons/project/"),
         SIMULATION("buttons/simulation/"),
         VIEW("buttons/view/"),
-        COMPONENT("components/");
+        COMPONENT("components/"),
+        OTHER("buttons/other/");
 
         private final String folderName;
 

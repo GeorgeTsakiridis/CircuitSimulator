@@ -13,14 +13,14 @@ public class CSAction {
     private final Action action;
     private final JMenu menu;
 
-    public CSAction(String name, String iconAssetName, KeyStroke keystroke, int mnemonic, Action action, JMenu menu) {
+    public CSAction(String name, String iconAssetName, KeyStroke keystroke, int mnemonic, Action action, JMenu menu, boolean addSeperatorBeforeEntry) {
         this.name = name;
         this.iconAssetName = iconAssetName;
         this.keystroke = keystroke;
         this.mnemonic = mnemonic;
         this.action = action;
         this.menu = menu;
-        addToMenuBar();
+        addToMenuBar(addSeperatorBeforeEntry);
     }
 
     public String getName() {
@@ -50,8 +50,13 @@ public class CSAction {
         }
     }
 
-    public void addToMenuBar(){
+    public void addToMenuBar(boolean addSeperatorBeforeEntry){
         if(menu != null) {
+
+            if(addSeperatorBeforeEntry){
+                menu.addSeparator();
+            }
+
             JMenuItem jMenuItem = new JMenuItem(getName(), getMnemonic());
             jMenuItem.addActionListener(action);
 
