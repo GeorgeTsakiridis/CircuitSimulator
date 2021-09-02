@@ -4,6 +4,7 @@ import com.tsaky.circuitsimulator.logic.Linker;
 import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.*;
 import com.tsaky.circuitsimulator.ui.Localization;
+import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
 
@@ -22,7 +23,7 @@ public class ChipRelay extends Chip {
                 new Pin("NO2", 7, PinType.NOT_USED),
         });
 
-        setSizeWithoutPins(120, 60);
+        setSizeWithoutPins(120, 68);
     }
 
     @Override
@@ -87,10 +88,16 @@ public class ChipRelay extends Chip {
         getPin(7).setBounds(x+24, y2, 14, 14);
         getPin(7).paint(g, offsetX, offsetY, false, false);
 
-        g.drawString(Localization.getString("relay_name"), getPosX() + offsetX + 8, getPosY() + offsetY + g.getFont().getSize()/2-1);
+        String relayText = Localization.getString("relay_name");
+        String activeText = Localization.getString("active");
+        int relayTextWidth = PaintUtils.getStringBounds(g, relayText).width;
+        int activeTextWidth = PaintUtils.getStringBounds(g, activeText).width;
 
         if(isPowered()){
-            g.drawString(Localization.getString("active"), getPosX() + offsetX - 40, getPosY() + offsetY + g.getFont().getSize()/2-1);
+            g.drawString(relayText, getPosX() + offsetX - relayTextWidth/2, getPosY() + offsetY + g.getFont().getSize()-3);
+            g.drawString(activeText, getPosX() + offsetX - activeTextWidth/2, getPosY() + offsetY-3);
+        }else{
+            g.drawString(relayText, getPosX() + offsetX - relayTextWidth/2, getPosY() + offsetY + g.getFont().getSize()/2-1);
         }
 
         if(pinDescription){

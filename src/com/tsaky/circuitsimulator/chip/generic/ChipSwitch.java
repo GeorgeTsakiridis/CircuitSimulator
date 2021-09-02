@@ -5,6 +5,7 @@ import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.pin.Pin;
 import com.tsaky.circuitsimulator.chip.pin.PinType;
 import com.tsaky.circuitsimulator.ui.Localization;
+import com.tsaky.circuitsimulator.ui.PaintUtils;
 
 import java.awt.*;
 
@@ -19,7 +20,7 @@ public class ChipSwitch extends Chip {
                         new Pin("NO", 1, PinType.NOT_USED),
                         new Pin("NC", 2, PinType.NOT_USED)
         });
-        setSizeWithoutPins(75, 45);
+        setSizeWithoutPins(80, 60);
     }
 
     @Override
@@ -83,11 +84,17 @@ public class ChipSwitch extends Chip {
         getPin(2).setBounds(getPosX()+getWidth()/2 - 12, getPosY()+5, 10, 10);
         getPin(2).paint(g, offsetX, offsetY, pinDescription, false);
 
+        String pressedText = Localization.getString("pressed");
+        String switchText = Localization.getString("switch_name");
+
+        int pressedTextWidth = (int)PaintUtils.getStringBounds(g, pressedText).getWidth();
+        int switchTextWidth = (int)PaintUtils.getStringBounds(g, switchText).getWidth();
+
         if(toggled) {
-            g.drawString(Localization.getString("pressed"), getPosX()+offsetX-35, getPosY()+offsetY-8);
+            g.drawString(pressedText, getPosX()+offsetX-pressedTextWidth/2-1, getPosY()+offsetY-g.getFont().getSize()-1);
         }
 
-        g.drawString(Localization.getString("switch_name"), getPosX()-35 + offsetX, getPosY()+20 + offsetY);
+        g.drawString(switchText, getPosX()+offsetX-switchTextWidth/2-1, getPosY()+getHeight()/2+offsetY-2);
 
     }
 }

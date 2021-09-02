@@ -6,6 +6,7 @@ import com.tsaky.circuitsimulator.chip.Chip;
 import com.tsaky.circuitsimulator.chip.ChipUtils;
 import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.LineViewMode;
+import com.tsaky.circuitsimulator.ui.PaintUtils;
 import com.tsaky.circuitsimulator.ui.PinViewMode;
 
 import javax.swing.*;
@@ -163,13 +164,15 @@ public class ViewportPanel extends JPanel implements MouseListener, MouseMotionL
 
         if(Handler.SHORTED){
             String shortCircuitString = Localization.getString("short_circuit");
+            int shortCircuitStringWidth = PaintUtils.getStringBounds(g, shortCircuitString).width;
+
             g2d.scale(1d/scale, 1d/scale);
             g.setColor(Color.RED);
             g.drawRect(0, 0, getWidth()-1, getHeight()-1);
-            g.drawString(shortCircuitString, 10, 20);
-            g.drawString(shortCircuitString, 10, getHeight()-13);
-            g.drawString(shortCircuitString, getWidth()-100, getHeight()-13);
-            g.drawString(shortCircuitString, getWidth()-100, 20);
+            g.drawString(shortCircuitString, 12, g.getFont().getSize()+8);
+            g.drawString(shortCircuitString, 12, getHeight()-12);
+            g.drawString(shortCircuitString, getWidth()-shortCircuitStringWidth-16, getHeight()-12);
+            g.drawString(shortCircuitString, getWidth()-shortCircuitStringWidth-16, g.getFont().getSize()+8);
             g2d.scale(scale, scale);
             Handler.SHORTED = false;
         }

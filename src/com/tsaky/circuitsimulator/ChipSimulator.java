@@ -23,7 +23,7 @@ public class ChipSimulator {
     public static final long MAGIC_NUMBER = 1073147341387874804L;
 
     public ChipSimulator() {
-        Localization.setLocale(new Locale("el", "GR"));
+        Localization.setLocale(new Locale("en", "US"));
 
         ResourceManager.addResource("mf_add", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "add.png");
         ResourceManager.addResource("mf_link", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "link.png");
