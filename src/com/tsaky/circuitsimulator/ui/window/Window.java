@@ -230,7 +230,7 @@ public class Window {
         CSActionsManager.addAction(Localization.getString("lines_view_status"), "view_line_status", null, 'S', getChangeLineViewAction(LineViewMode.STATUS), linesViewSubMenu);
         CSActionsManager.addAction(Localization.getString("pins_view_normal"), "view_pin_normal", null, 'N', getChangePinViewAction(PinViewMode.NORMAL), pinsViewSubMenu);
         CSActionsManager.addAction(Localization.getString("pins_view_status"), "view_pin_status", null, 'S', getChangePinViewAction(PinViewMode.STATUS), pinsViewSubMenu);
-        CSActionsManager.addAction(Localization.getString("pins_view_status"), "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
+        CSActionsManager.addAction(Localization.getString("pins_view_type"), "view_pin_type", null, 'T', getChangePinViewAction(PinViewMode.TYPE), pinsViewSubMenu);
         CSActionsManager.addAction(Localization.getString("show_custom_real_chip_name"), "view_chip_custom_name", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK), 'C', chipNameToggleAction, viewMenu, true);
         CSActionsManager.addAction(Localization.getString("show_hide_grid"), "view_grid_toggle", KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK), 'G', gridToggleAction, viewMenu);
         CSActionsManager.addAction(Localization.getString("zoom_in"), "view_zoom_in", KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), 'I', getZoomAction(1), viewMenu, true);
@@ -239,7 +239,7 @@ public class Window {
         CSActionsManager.addAction(Localization.getString("zoom_out")+2, null, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK), 0, getZoomAction(0), null);
         CSActionsManager.addAction(Localization.getString("reset_viewport_position"), "view_zoom_reset", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK), 'R', getZoomAction(2), viewMenu);
         CSActionsManager.addAction(Localization.getString("show_component_info_window"), "view_show_component_info", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), 'n', showComponentInfoWindowAction, viewMenu, true);
-        CSActionsManager.addAction(Localization.getString("settings"), "settings", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), 'e', null, null, true);
+        CSActionsManager.addAction(Localization.getString("settings"), "settings", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), 'e', settingsAction, projectMenu, true);
         CSActionsManager.addAction(Localization.getString("help"), "help", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), 'H', helpAction, helpMenu);
         CSActionsManager.addAction(Localization.getString("about"), "about", null, 'A', aboutAction, helpMenu, true);
 
@@ -480,6 +480,13 @@ public class Window {
         @Override
         public void actionPerformed(ActionEvent e) {
             componentInfoFrame.setVisible(true);
+        }
+    };
+
+    private AbstractAction settingsAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new SettingsWindow(mainFrame);
         }
     };
 

@@ -12,16 +12,17 @@ public class AboutWindow {
         Dimension size = new Dimension(460, 260);
 
         JDialog frame = new JDialog(mainFrame, Localization.getString("about"));
-        frame.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         JPanel panel = new JPanel();
+
+        frame.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        frame.setSize(size);
+        frame.setResizable(false);
 
         JLabel programName = getCenteredLabel("Circuit Simulator");
         programName.setFont(programName.getFont().deriveFont(50f));
 
         JLabel programAuthor = new JLabel("by George Tsakiridis");
 
-        frame.setSize(size);
-        frame.setResizable(false);
         frame.setContentPane(panel);
 
 
@@ -36,6 +37,7 @@ public class AboutWindow {
         panel.add(getCenteredLabel("(C)2021 Tsaky. All rights reserved."));
         panel.add(Box.createGlue());
 
+        frame.setLocationRelativeTo(mainFrame);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }

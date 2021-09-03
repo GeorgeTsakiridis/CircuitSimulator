@@ -269,7 +269,7 @@ public class Handler{
 
         DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file));
 
-        dataOutputStream.writeLong(ChipSimulator.MAGIC_NUMBER);
+        dataOutputStream.writeLong(ChipSimulator.MAGIC_NUMBER_PROJ_SAVE);
         dataOutputStream.writeInt(ChipSimulator.PROGRAM_VERSION);
 
         dataOutputStream.writeInt(viewportPanel.getOffsetX());
@@ -318,7 +318,7 @@ public class Handler{
 
         Long fileMagicNumber = dataInputStream.readLong();
 
-        if(!fileMagicNumber.equals(ChipSimulator.MAGIC_NUMBER)){
+        if(!fileMagicNumber.equals(ChipSimulator.MAGIC_NUMBER_PROJ_SAVE)){
             JOptionPane.showMessageDialog(null, Localization.getString("invalid_project"),
                     Localization.getString("failed_to_open_project"), JOptionPane.ERROR_MESSAGE);
             return;

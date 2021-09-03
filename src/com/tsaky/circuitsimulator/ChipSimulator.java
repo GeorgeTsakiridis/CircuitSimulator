@@ -9,21 +9,36 @@ import com.tsaky.circuitsimulator.chip.other.Chip16bitInputLCD;
 import com.tsaky.circuitsimulator.chip.other.Chip16bitOutputLCD;
 import com.tsaky.circuitsimulator.chip.other.ChipPD43256BCZ;
 import com.tsaky.circuitsimulator.logic.Handler;
+import com.tsaky.circuitsimulator.settings.Settings;
 import com.tsaky.circuitsimulator.ui.Localization;
 import com.tsaky.circuitsimulator.ui.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class ChipSimulator {
 
     public static final int PROGRAM_VERSION = 40821;
     public static final String PROGRAM_VERSION_STRING = "1.0.0";
-    public static final long MAGIC_NUMBER = 1073147341387874804L;
+    public static final long MAGIC_NUMBER_PROJ_SAVE = 1073147341387874804L;
+    public static final long MAGIC_NUMBER_CONF_SAVE = 1123140789477211792L;
 
     public ChipSimulator() {
-        Localization.setLocale(new Locale("en", "US"));
+
+        try {
+            File confFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent() + "/configuration.cscf");
+
+            if (confFile.exists()) {
+                Settings.loadFromFile(confFile);
+            }else{
+                Localization.setLocale(Locale.getDefault());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ResourceManager.addResource("mf_add", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "add.png");
         ResourceManager.addResource("mf_link", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "link.png");
