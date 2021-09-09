@@ -347,7 +347,9 @@ public class Handler{
             Chip chip = ChipManager.getNewChipInstance(chipSaveName);
             chip.setDisplayName(chipDisplayName);
             chip.setPosition(posX, posY);
-            chip.setExtraData(dataInputStream.readNBytes(dataInputStream.readInt()));
+            byte[] chipData = new byte[dataInputStream.readInt()];
+            dataInputStream.read(chipData);
+            chip.setExtraData(chipData);
             chipsOnScreen.add(chip);
         }
 

@@ -114,8 +114,12 @@ public class Pin {
         g.drawRect(bounds.x + offsetX, bounds.y + offsetY, getBounds().width, getBounds().height);
 
         switch (ViewportPanel.pinViewMode){
-            case STATUS -> g.setColor(getStatusColor());
-            case TYPE -> g.setColor(getTypeColor());
+            case STATUS :
+                g.setColor(getStatusColor());
+                break;
+            case TYPE:
+                g.setColor(getTypeColor());
+                break;
         }
 
         if(ViewportPanel.pinViewMode != PinViewMode.NORMAL && g.getColor() != Color.WHITE){
@@ -148,14 +152,23 @@ public class Pin {
     }
 
     public Color getTypeColor(){
-        return switch (pinType) {
-            case INPUT -> Color.GREEN;
-            case OUTPUT -> Color.ORANGE;
-            case HIGH_Z -> Color.MAGENTA;
-            case GROUND, GROUND_SOURCE -> Color.BLUE;
-            case POWER, POWER_SOURCE -> Color.RED;
-            case NOT_USED -> Color.WHITE;
-        };
+        switch (pinType){
+            case INPUT:
+                return Color.GREEN;
+            case OUTPUT:
+                return Color.ORANGE;
+            case HIGH_Z:
+                return Color.MAGENTA;
+            case GROUND:
+            case GROUND_SOURCE:
+                return Color.BLUE;
+            case POWER:
+            case POWER_SOURCE:
+                return Color.RED;
+            case NOT_USED:
+            default:
+                return Color.WHITE;
+        }
     }
 
 }

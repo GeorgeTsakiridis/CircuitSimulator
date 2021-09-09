@@ -6,7 +6,7 @@ public class Localization {
 
     private static final String bundleBaseName = "com.tsaky.circuitsimulator.messages.messages";
     private static ResourceBundle resourceBundle;
-    private static final ResourceBundle defaultBundle = ResourceBundle.getBundle(bundleBaseName, new Locale("en", "US"));
+    private static final ResourceBundle defaultBundle = ResourceBundle.getBundle(bundleBaseName, new Locale("en"));
 
     public static void setLocale(Locale locale) {
         try {
@@ -47,8 +47,11 @@ public class Localization {
 
         return locales;
     }
+
     public static String getString(String key){
         String string;
+
+        if(resourceBundle == null)resourceBundle = defaultBundle;
 
         if(resourceBundle.containsKey(key)){
             string = resourceBundle.getString(key);

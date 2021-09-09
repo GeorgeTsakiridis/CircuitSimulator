@@ -468,9 +468,15 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (action){
-                    case 0 -> viewportPanel.decreaseScale();
-                    case 1 -> viewportPanel.increaseScale();
-                    case 2 -> viewportPanel.resetOffsetAndScale();
+                    case 0:
+                        viewportPanel.decreaseScale();
+                        break;
+                    case 1:
+                        viewportPanel.increaseScale();
+                        break;
+                    case 2:
+                        viewportPanel.resetOffsetAndScale();
+                        break;
                 }
             }
         };
@@ -495,7 +501,7 @@ public class Window {
         public void actionPerformed(ActionEvent e) {
             if(Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)){
                 try {
-                    Desktop.getDesktop().browse(URI.create("https://www.tsaky.com"));//TODO set correct link
+                    Desktop.getDesktop().browse(URI.create("https://tsaky.com/wp-content/uploads/2021/09/circuit-simulator-manual-b1090521.pdf"));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

@@ -15,29 +15,24 @@ import com.tsaky.circuitsimulator.ui.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class ChipSimulator {
 
-    public static final int PROGRAM_VERSION = 40821;
+    public static final int PROGRAM_VERSION = 1090521;
     public static final String PROGRAM_VERSION_STRING = "1.0.0";
     public static final long MAGIC_NUMBER_PROJ_SAVE = 1073147341387874804L;
     public static final long MAGIC_NUMBER_CONF_SAVE = 1123140789477211792L;
 
     public ChipSimulator() {
+        Localization.setLocale(Locale.getDefault());
 
-        try {
-            File confFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent() + "/configuration.cscf");
-
-            if (confFile.exists()) {
-                Settings.loadFromFile(confFile);
-            }else{
-                Localization.setLocale(Locale.getDefault());
-            }
-        } catch (Exception e) {
+        try{
+            Settings.load();
+        }catch (Exception e) {
+            System.err.println("Failed to load settings");
             e.printStackTrace();
+            System.exit(1);
         }
 
         ResourceManager.addResource("mf_add", ResourceManager.EnumSubFolder.MOUSE_FUNCTION, "add.png");

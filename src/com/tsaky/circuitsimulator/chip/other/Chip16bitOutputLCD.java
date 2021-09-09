@@ -43,6 +43,8 @@ public class Chip16bitOutputLCD extends Chip {
     @Override
     public void toggle() {
         String numberInput = JOptionPane.showInputDialog(Localization.getString("chip16bit_output_insert_4_digit_hex_number"));
+        if(numberInput == null)return;
+
         if (numberInput.matches("[0-9a-fA-F]+")) {
             if (numberInput.length() <= 4) {
                 outputNumber = Integer.valueOf(numberInput, 16);
