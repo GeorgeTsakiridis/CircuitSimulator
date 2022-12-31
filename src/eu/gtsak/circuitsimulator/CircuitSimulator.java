@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class CircuitSimulator {
 
-    public static final int PROGRAM_VERSION = 1311222;
+    public static final int PROGRAM_VERSION = 1010123;
     public static final String PROGRAM_VERSION_STRING = "1.0.1";
     public static final long MAGIC_NUMBER_PROJ_SAVE = 1073147341387874804L;
     public static final long MAGIC_NUMBER_CONF_SAVE = 1123140789477211792L;
@@ -112,7 +112,7 @@ public class CircuitSimulator {
     public static void main(String[] args) {
 
         try{
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch (Exception e){
             System.err.println("Couldn't change system look & feel.");
         }
